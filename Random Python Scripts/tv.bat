@@ -1,0 +1,2 @@
+python tv.py
+pause

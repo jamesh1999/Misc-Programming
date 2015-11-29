@@ -1,0 +1,20 @@
+CPU1:
+#ALU instructions input ra and rb and output into rb (CMP has no output and SHR/SHL take just ra as input)
+1000rarb ADD
+1001rarb SHR
+1010rarb SHL
+1011rarb NOT
+1100rarb AND
+1101rarb OR
+1110rarb XOR
+1111rarb CMP
+
+#Other
+0000rarb LD || Load rb from address in ra
+0001rarb ST || Store rb to address in ra
+001000rb DATA || Load next byte to rb
+001100rb JMPR || Jump to address in rb
+01000000 JMP || Jump to address in next byte
+0101caez JCAEZ || Jump if (flags: carry, a larger, equal, result 0)
+01100000 CLF || Clear flags
+01110000 PWR || Shutdown

@@ -1,0 +1,2 @@
+python physics.py
+pause

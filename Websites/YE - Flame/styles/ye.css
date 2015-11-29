@@ -1,0 +1,38 @@
+.yeContainer{
+    min-height: 500px;
+    margin-left: 10%;
+    width: 80%;
+}
+
+.yeContainer .btn{
+    position: relative;
+    left: 50%;
+    margin-left: -100px;
+    width: 200px;
+    height: 45px;
+    font-size: 22px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    background: #4873c7;
+    border: 0;
+    border-bottom: 2px solid #2e549b;
+    cursor: pointer;
+    -webkit-box-shadow: inset 0 -2px #2e549b;
+    box-shadow: inset 0 -2px #2e549b;
+}
+
+.yeContainer .btn:hover{
+    background: #3e63aa;
+}
+
+.yeContainer .btn:active{
+    top: 1px;
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.yeContainer img{
+    float: right;
+}

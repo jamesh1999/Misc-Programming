@@ -1,0 +1,49 @@
+<PROGRAM> 				::= <block> |  <PROGRAM> <block>
+<EXCLUDE> 				::= " " | "\t" | "\n"
+<OP_ORDER_1_R>			::= "++" | "--" | "!" | "~"
+<OP_ORDER_2_L>			::= "*" | "/" | "%" 
+<OP_ORDER_3_L>			::= "+" | "-"
+<OP_ORDER_4_L>			::= "<<" | ">>"
+<OP_ORDER_5_L>			::= "<" | "<=" | ">" | ">="
+<OP_ORDER_6_L>			::= "==" | "!="
+<OP_ORDER_7_L>			::= "&"
+<OP_ORDER_8_L>			::= "^"
+<OP_ORDER_9_L>			::= "|"
+<OP_ORDER_10_L>			::= "&&"
+<OP_ORDER_11_L>			::= "||"
+<OP_ORDER_12_R>			::= "=" | "+=" | "-=" 
+<TO_ORDER>				::= <expr>
+
+
+
+<block>					::= <line> | <block> <line>
+
+<line>					::= <statement> | <statement> "//" <TEXT>
+
+<statement>				::= <stmnt_compiler> | <stmnt_expr> ";" | <stmnt_initialization> ";" | <stmnt_flow> | <stmnt_call> ";" | <stmnt_null>
+<stmnt_compiler>		::= "#" <TEXT>
+<stmnt_expr>			::= <expr>
+<stmnt_initialization>	::= <type_declaration> <VARIABLE> | <type_declaration> <VARIABLE> <op_assignment_equals> <expr>
+<stmnt_flow>			::= <stmnt_flow_while> | <stmnt_flow_for> | <stmnt_flow_if> | <stmnt_flow_break> | <stmnt_flow_continue>
+<stmnt_call>			::= <FUNCTION> "(" <parameters> ")" | <FUNCTION> "()"
+<stmnt_null>			::= ";"
+
+<parameters>			::= <term> | <parameters> <term>
+
+<stmnt_flow_while>		::= "while(" <stmnt_expr> "){" <block> "}"
+<stmnt_flow_for>		::= "for(" <stmnt_initialization> ";" <stmnt_expr> ";" <stmnt_expr> "){" <block> "}"
+<stmnt_flow_if>			::= "if(" <stmnt_expr> "){" <block> "}"
+
+<stmnt_flow_break>		::= "break;"
+<stmnt_flow_continue>	::= "continue;"
+
+<type_declaration>		::= <type_modifier_pre> <types> <type_modifier_post>
+<types>					::= "int" | "char" | "bool"
+<type_modifier_pre>		::= "const"
+<type_modifier_post>	::= "[" <INT> "]" | "*" | "&"
+
+<expr>					::= <expr_term> <OP> <expr_term> | <OP> <expr_term>
+<expr_term>				::= <expr> | <term>
+<term>					::= <INT> | <CHAR> | <BOOL> | <VARIABLE>
+
+<op_assignment_equals>  ::= <OP_12_0>

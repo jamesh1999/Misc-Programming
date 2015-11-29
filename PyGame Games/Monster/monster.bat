@@ -1,0 +1,2 @@
+python monster.py
+pause

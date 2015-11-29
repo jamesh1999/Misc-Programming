@@ -1,0 +1,271 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #2d3f52;
+    font-family: 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #ddd;
+}
+
+p{
+    color: #7f8c8d;   
+}
+
+h1{
+    font-weight: 500;   
+}
+
+.clear{
+    clear: both;   
+}
+
+#navbar{
+    width:100%;
+    height: 50px;
+    background-color: #eee;
+    z-index: 1000;
+}
+
+#navbar-logo{
+    width:250px;
+    height: 85px;
+    background-color: #eee;
+    position: absolute;
+    left: 0;
+    top: -10px;
+    border-bottom-right-radius: 40px;
+}
+
+#navbar-logo-image{
+    width: 90px;
+    height: 90px;
+}
+
+#navbar-logo-text{
+    position: absolute;
+    left: 90px;
+    top: 0px;
+    font-size: 40px;
+}
+
+#navbar-links{
+    top: -3px;
+    left: 240px;
+}
+
+#navbar ul {
+    z-index: 10;
+	display: inline-table;
+    position: relative;
+    list-style-type: none;
+}
+
+nav ul:after {
+    content: ""; clear: both; display: block;
+}
+
+#navbar ul li {
+	float: left;
+    height: 50px;
+    margin-top: -15px;
+    padding-top: 13px;
+}
+	
+#navbar ul li a {
+    color: #555;
+    text-decoration: none;
+    font-size: 20px;
+    padding-left: 20px; 
+    padding-right: 20px; 
+    padding-top: 17px;
+    padding-bottom: 15px; 
+}
+
+#navbar ul li:hover a {
+    color: #2d3f52;
+}
+
+#navbar ul li:hover{
+    background: #ddd;
+}
+
+#navbar ul ul {
+	background: #eee;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding: 5px;
+    padding-bottom: 13px;
+	position: absolute;
+    margin-top: 14px;
+}
+
+#navbar ul ul {
+	display: none;
+}
+
+#navbar ul li:hover > ul {
+    display: block;
+}
+
+#navbar ul li ul:hover {
+    display: block;
+}
+
+#navbar ul ul li {
+    float: none;
+    white-space: nowrap;
+    width: 100%;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: -4px;
+    margin-bottom: -8px;
+}
+
+#navbar ul ul li a {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    width: 100%;
+}
+
+#navbar ul ul li:hover {
+    background: #4b545f;
+}
+
+#navbar ul ul li:hover a {
+    color: #fff;
+}
+
+#shop{
+    float: right;
+    margin-right: 50px;
+    margin-top: 5px;
+}
+
+#shop a{
+    text-decoration: none;  
+}
+
+#shop a span{
+    font-size: 40px; 
+    color: #555;
+}
+
+#shop a:hover span{
+     color: #2d3f52;
+}
+
+#footer{
+    position: absolute;
+    width: 100%;
+    overflow-y: visible;
+}
+
+#footer *{
+    position: absolute;
+}
+
+#footer h4{
+    font-size: 18px;   
+}
+
+#footer-contact{
+    left: 12%;
+    width: 300px;
+}
+
+#footer-contact div{
+    position: static;
+    margin-top: 50px;
+}
+
+#footer-contact div h4{
+    font-size: 16px;
+    margin-bottom: 0;
+    margin-top: 0;
+    position: static;
+}
+
+#footer-contact div p{
+    margin-bottom: 3px;
+    margin-top: 0;
+    position: static;
+}
+
+#footer-links{
+    right: 8%;
+    width: 300px;
+}
+
+#footer-links div{
+    position: static;
+    margin-top: 50px;
+}
+
+#footer-links div a{
+    font-size: 16px;
+    margin-bottom: 0;
+    margin-top: 0;
+    position: static;
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+}
+
+#footer-links div a:hover{
+    color: #2d3f52;
+}
+
+#footer-follow{
+    right: 140px;
+}
+
+#footer-follow ul{
+    list-style-type: none;
+}
+
+#footer-follow ul li{
+    position: static;
+    padding-bottom: 60px;
+}
+
+#footer-follow ul li span{
+    font-size: 50px;
+    color: #555;   
+}
+
+#footer-follow ul li span:hover{
+    font-size: 52px;
+    color: #2d3f52;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.hidden{visibility: hidden;}
+.hidden *{visibility: hidden;}
+
+.containerMain{
+    padding-top: 85px;
+    background: #fff;   
+    padding-bottom: 20px;
+}
+
+@media screen and (max-width: 820px) {
+
+    #navbar-logo{
+        width:110px;
+    }
+
+    #navbar-logo-text{
+        visibility: hidden;
+    }
+    
+    #navbar-links{
+        left: 70px;
+    }
+    
+}

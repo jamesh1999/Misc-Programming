@@ -1,0 +1,2 @@
+python ai.py
+pause

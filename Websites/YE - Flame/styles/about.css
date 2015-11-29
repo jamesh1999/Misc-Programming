@@ -1,0 +1,14 @@
+.aboutContainer{
+    min-height: 500px;
+    margin-left: 10%;
+    width: 80%;
+}
+
+.logo-image{
+    float: right;
+    width: 20%;
+    height: 20%;
+    margin-right: 100px;
+    margin-top: -20px;
+    margin-left: 20px;
+}

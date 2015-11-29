@@ -1,0 +1,64 @@
+CPU2:
+#ALU instructions input ra and rb and output into ra (CMP has no output) (unary operations take rb as input)
+
+00000000ra0000   ZERO
+00000001ra0000   ONE
+00000010rarb     ADD
+00000011rarb     ADDC
+00000100ra0000   INC
+00000101rarb     SUB
+00000110rarb     SUBC
+00000111rarb     RSUB     ||Reverse subtract e.g. ra=rb-ra
+00001000rarb     RSUBC
+00001001ra0000   DEC
+00001010rarb     MUL
+00001011rarb     DIV
+00001100rarb     MOD
+00001101ra0000   RAND     ||Set ra to a random binary number
+00010000ra0000   SHL
+00010001ra0000   SHLC
+00010010ra0000   SHR
+00010011ra0000   SHRC
+00010100ra0000   NOT
+00010101rarb     AND
+00010110rarb     NAND
+00010111rarb     OR
+00011000rarb     NOR
+00011001rarb     XOR
+00011010rarb     XNOR
+00011011rarb     BCLR     ||Set ra to ra AND NOT rb
+00011111rarb     CMP
+
+
+
+#RAM/Register operations
+00100000rarb     READ     ||Set ra to data at rb
+00100001ra0000   DATA     ||Set ra to data in next byte
+00100010rarb     WRITE    ||Write ra to rb
+00100011ra0000   WRITETO  ||Write ra to address in next byte
+00100100rarb     CLONE    ||Set ra to rb
+
+
+
+#Jump operations
+010000000000ra   JUMP     ||Jump to ra
+0100000100000000 JUMPTO   ||Jump to address in next byte
+01000010000caezd JUMPIF   ||Jump if caezd (Carry, A Greater, Equal, Output Zero (A=0 after operation), Zero Division) OR
+01000011000caezd JUMPIFA  ||Jump if caezd AND
+
+
+
+#Output operations
+10000000ra0000   IN       ||Gets input from current device
+10000001ra0000   OUT      ||Outputs to current device
+1000001000000000 DATAO    ||Output data in next byte
+1000001100000000 OUTFRM   ||Output data from address in next byte
+10000100ra0000   ADR      ||Sets current device on output bus
+10000101ra0000   OUTB     ||Outputs ra in binary to console
+10000110ra0000   OUTD     ||Outputs ra as a decimal to colsole
+
+
+
+#Other operations
+1110000000000000 CLF      ||Clear all flags
+1111111100000000 HALT     ||Halt system

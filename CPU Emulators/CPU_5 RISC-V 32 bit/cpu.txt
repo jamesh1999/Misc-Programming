@@ -1,0 +1,115 @@
+
+
+Registers:
+
+x0  - Hardwired zero (ZERO)
+x1  - Return address (RA)
+x2  - Frame pointer (FP)
+x3  - General purpose (S1)
+x4  - General purpose (S2)
+x5  - General purpose (S3)
+x6  - General purpose (S4)
+x7  - General purpose (S5)
+x8  - General purpose (S6)
+x9  - General purpose (S7)
+x10 - General purpose (S8)
+x11 - General purpose (S9)
+x12 - General purpose (S10)
+x13 - General purpose (S11)
+x14 - Stack pointer (SP)
+x15 - Thread pointer (TP)
+x16 - General purpose (S12)
+x17 - General purpose (S13)
+x18 - General purpose (S14)
+x19 - General purpose (S15)
+x20 - General purpose (S16)
+x21 - General purpose (S17)
+x22 - General purpose (S18)
+x23 - General purpose (S19)
+x24 - General purpose (S20)
+x25 - General purpose (S21)
+x26 - General purpose (S22)
+x27 - General purpose (S23)
+x28 - General purpose (S24)
+x29 - General purpose (S25)
+x30 - General purpose (S26)
+x31 - Global pointer (GP)
+
+
+Instruction Types:
+
+L - Type:
+opcode|rdest|immediate...
+I - Type:
+opcode|rdest|funct3|rega|immediate
+R - Type:
+opcode|rdest|funct3|rega|regb|funct7
+IR - Type:
+opcode|rdest|immediate[0:3]|rega|regb|immediate[3:]
+
+
+Instructions:
+
+0000000         | Load upper immediate (LUI) - Place immediate in upper 20 bytes of rdest
+0000001         | Jump and link (JAL) - Add signed immediate * 2 to program counter and place result in rdest
+0000010         | Core wait (CWAIT) - Wait until cores immediate[0:8] are also waiting
+0000011         | Time (TIME) - Stores the system time since program start (in ms) in rdest
+0000100         | Halt (HALT) - Halt the CPU
+
+1000001 f3: 100 | Load word (LW) - Load word to rdest from rega + signed immediate
+1000001 f3: 101 | Load word (LH) - Load half to rdest from rega + signed immediate
+1000001 f3: 110 | Load word (LB) - Load byte to rdest from rega + signed immediate
+1000001 f3: 001 | Load word (LHU) - Load unsigned half to rdest from rega + signed immediate
+1000001 f3: 010 | Load word (LBU) - Load unsigned byte to rdest from rega + signed immediate
+1000010 f3: 000 | Add immediate (ADDI) - Adds immediate to rega and places result into rdest
+1000010 f3: 001 | Add unsigned immediate (ADDUI) - Adds unsigned immediate to rega and places result into rdest
+1000010 f3: 010 | Subtract immediate (SUBI) - Subtracts immediate from rega and places result into rdest
+1000010 f3: 011 | Subtract unsigned immediate (SUBUI) - Subtracts unsigned immediate from rega and places result into rdest
+1000010 f3: 100 | And immediate (ANDI) - ANDs immediate with rega and places result into rdest
+1000010 f3: 101 | Or immediate (ORI) - ORs immediate with rega and places result into rdest
+1000010 f3: 110 | Xor immediate (XORI) - XORs immediate with rega and places result into rdest
+1000011 f3: 010 | Shift left immediate (SHLI) - Shifts rega left by immediate bits and places result into rdest
+1000011 f3: 110 | Shift left unsigned immediate (SHLUI) - Shifts unsigned rega left by immediate bits and places result into rdest
+1000011 f3: 001 | Shift right immediate (SHRI) - Shifts rega right by immediate bits and places result into rdest
+1000011 f3: 101 | Shift right unsigned immediate (SHRUI) - Shifts unsigned rega right by immediate bits and places result into rdest
+1000100 f3: 000 | Multiply immediate (MULI) - Multiplies rega by immediate and places lower bits of result into rdest
+1000100 f3: 001 | Multiply immediate (MULHI) - Multiplies rega by immediate and places higher bits of result into rdest
+1000100 f3: 100 | Multiply unsigned immediate (MULUI) - Multiplies rega by unsigned immediate and places lower bits of result into rdest
+1000100 f3: 101 | Multiply unsigned immediate (MULHUI) - Multiplies rega by unsigned immediate and places higher bits of result into rdest
+1000100 f3: 010 | Divide immediate (DIVI) - Divides rega by immediate and places result in rdest
+1000100 f3: 110 | Divide unsigned immediate (DIVUI) - Divides rega by unsigned immediate and places result in rdest
+1000100 f3: 011 | Remainder immediate (REMI) - Places the remainder when rega is divided by immediate into rdest
+1000100 f3: 111 | Remainder unsigned immediate (REMUI) - Places the remainder when rega is divided by unsigned immediate into rdest
+1000101 f3: 000 | Store word (SW) - Stores word in rdest to rega + signed immediate
+1000101 f3: 001 | Store half (SH) - Stores half in rdest to rega + signed immediate
+1000101 f3: 010 | Store byte (SB) - Stores byte in rdest to rega + signed immediate
+1000111         | Jump and link register (JALR) - Stores the program counter in rdest then sets it to rega + signed immediate
+
+0100000 f3: 000 | Add (ADD) - Adds regb to rega and places result into rdest
+0100000 f3: 001 | Add unsigned (ADDU) - Adds unsigned regb to rega and places result into rdest
+0100000 f3: 010 | Subtract (SUB) - Subtracts regb from rega and places result into rdest
+0100000 f3: 011 | Subtract unsigned (SUBU) - Subtracts unsigned regb from rega and places result into rdest
+0100000 f3: 100 | And (AND) - ANDs regb with rega and places result into rdest
+0100000 f3: 101 | Or (OR) - ORs regb with rega and places result into rdest
+0100000 f3: 110 | Xor (XOR) - XORs regb with rega and places result into rdest
+0100000 f3: 111 | Not (NOT) - NOTs regb with rega and places result into rdest
+0100001 f3: 010 | Shift left (SHL) - Shifts regb left by regb bits and places result into rdest
+0100001 f3: 110 | Shift left unsigned iediate (SHLU) - Shifts unsigned regb left by regb bits and places result into rdest
+0100001 f3: 001 | Shift right (SHR) - Shifts rega right by regb bits and places result into rdest
+0100001 f3: 101 | Shift right unsigned (SHRU) - Shifts unsigned regb right by regb bits and places result into rdest
+0100010 f3: 000 | Multiply (MUL) - Multiplies rega by regb and places lower bits of result into rdest
+0100010 f3: 001 | Multiply (MULH) - Multiplies rega by regb and places higher bits of result into rdest
+0100010 f3: 100 | Multiply unsigned (MULU) - Multiplies rega by unsigned regb and places lower bits of result into rdest
+0100010 f3: 101 | Multiply unsigned (MULHU) - Multiplies rega by unsigned regb and places higher bits of result into rdest
+0100010 f3: 010 | Divide (DIV) - Divides rega by regb and places result in rdest
+0100010 f3: 110 | Divide unsigned (DIVU) - Divides rega by unsigned regb and places result in rdest
+0100010 f3: 011 | Remainder (REM) - Places the remainder when rega is divided by regb into rdest
+0100010 f3: 111 | Remainder unsigned (REMU) - Places the remainder when rega is divided by unsigned regb into rdest
+0100011 f3: 000 | Branch not equal to (BNE) - Add signed funct7 * 2 to program counter if rega != regb
+0100011 f3: 010 | Branch equal to (BEQ) - Add signed funct7 * 2 to program counter if rega = regb
+0100011 f3: 001 | Branch less than (BLT) - Add signed funct7 * 2 to program counter if rega < regb
+0100011 f3: 011 | Branch less than or equal to (BLE) - Add signed funct7 * 2 to program counter if rega <= regb
+0100011 f3: 101 | Branch less than unsigned (BLTU) - Add signed funct7 * 2 to program counter if rega < regb (unsigned)
+0100011 f3: 111 | Branch less than or equal to unsigned (BLEU) - Add signed funct7 * 2 to program counter if rega <= regb (unsigned)
+
+1100000         | Atomic memory swap (AMOSWAP) - Swap regb + imm with rega and place origional in rdest

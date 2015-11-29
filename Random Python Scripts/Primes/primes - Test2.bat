@@ -1,0 +1,2 @@
+python specific_prime_test.py
+pause

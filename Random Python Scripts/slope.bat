@@ -1,0 +1,2 @@
+python slope.py
+pause

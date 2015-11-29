@@ -1,0 +1,2 @@
+python projecteuler.py
+pause

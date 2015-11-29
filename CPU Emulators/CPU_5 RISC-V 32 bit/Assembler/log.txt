@@ -1,0 +1,237 @@
+Assembling: brainfuck.al into bf.al
+
+
+Reading brainfuck.al...
+	0:    ['ADD', 'FP', '996']
+	1:    ['ADD', 'SP', '1000']
+	2:    ['ADD', 'GP', '2000']
+	0:    ['GOTO', ':', 'PRINT_SKIP']
+	1:    ['>', 'PRINT_D', 'S1']
+	2:    ['PUSH', 'ZERO']
+	3:    [':', 'PRINTD_REPEAT']
+	4:    ['REM', 'S2', 'S1', '10']
+	5:    ['ADD', 'S2', '48']
+	6:    ['PUSH', 'S2']
+	7:    ['DIV', 'S1', '10']
+	8:    ['BRANCH', '(', 'S1', '!=', 'ZERO', ')', ':', 'PRINTD_REPEAT']
+	9:    [':', 'PRINTD_DIGITS']
+	10:   ['POP', 'S1']
+	11:   ['BRANCH', '(', 'S1', '==', 'ZERO', ')', ':', 'PRINTD_DONE']
+	12:   ['OUT', 'S1']
+	13:   ['GOTO', ':', 'PRINTD_DIGITS']
+	14:   [':', 'PRINTD_DONE']
+	15:   ['ADD', 'S1', 'ZERO', '10']
+	16:   ['OUT', 'S1']
+	17:   ['RET']
+	18:   ['>', 'PRINT_CH', 'S1']
+	19:   ['OUT', 'S1']
+	20:   ['RET']
+	21:   ['>', 'PRINT_STR', 'S2']
+	22:   [':', 'PRINTSTR_AGAIN']
+	23:   ['LW', 'S1', 'S2']
+	24:   ['BRANCH', '(', 'S1', '==', 'ZERO', ')', ':', 'PRINTSTR_END']
+	25:   ['OUT', 'S1']
+	26:   ['ADD', 'S2', '4']
+	27:   ['GOTO', ':', 'PRINTSTR_AGAIN']
+	28:   [':', 'PRINTSTR_END']
+	29:   ['ADD', 'S1', 'ZERO', '10']
+	30:   ['OUT', 'S1']
+	31:   ['RET']
+	32:   [':', 'PRINT_SKIP']
+	36:   ['VAR', 'UNSIGNED', 'PROG_START', '=', '4000']
+	37:   ['VAR', 'UNSIGNED', 'PROG_LOCATION', '=', '4000']
+	38:   ['VAR', 'UNSIGNED', 'POINTER', '=', '3000']
+	39:   ['VAR', 'UNSIGNED', 'POINTER_START', '=', '3000']
+	40:   ['VAR', 'UNSIGNED', 'POINTER_END', '=', '3255']
+	41:   ['MOV', 'S1', 'PROG_START']
+	42:   ['IN', 'S2']
+	43:   [':', 'JUMPBACK']
+	44:   ['SW', 'S2', 'S1']
+	45:   ['ADD', 'S1', '4']
+	46:   ['IN', 'S2']
+	47:   ['BRANCH', '(', 'S2', '!=', 'ZERO', ')', ':', 'JUMPBACK']
+	48:   [':', 'LOOPBACK']
+	49:   ['LW', 'S1', 'PROG_LOCATION']
+	50:   ['ADD', 'S2', 'ZERO', '62']
+	51:   ['IF', '(', 'S1', '==', 'S2', ')']
+	52:   ['{']
+	53:   ['ADD', 'POINTER', '4']
+	54:   ['GOTO', ':', 'INSTR_END']
+	55:   ['}']
+	56:   ['ADD', 'S2', 'ZERO', '60']
+	57:   ['IF', '(', 'S1', '==', 'S2', ')']
+	58:   ['{']
+	59:   ['SUB', 'POINTER', '4']
+	60:   ['GOTO', ':', 'INSTR_END']
+	61:   ['}']
+	62:   ['ADD', 'S2', 'ZERO', '43']
+	63:   ['IF', '(', 'S1', '==', 'S2', ')']
+	64:   ['{']
+	65:   ['LW', 'S3', 'POINTER']
+	66:   ['ADD', 'S3', '1']
+	67:   ['SW', 'S3', 'POINTER']
+	68:   ['GOTO', ':', 'INSTR_END']
+	69:   ['}']
+	70:   ['ADD', 'S2', 'ZERO', '45']
+	71:   ['IF', '(', 'S1', '==', 'S2', ')']
+	72:   ['{']
+	73:   ['LW', 'S3', 'POINTER']
+	74:   ['SUB', 'S3', '1']
+	75:   ['SW', 'S3', 'POINTER']
+	76:   ['GOTO', ':', 'INSTR_END']
+	77:   ['}']
+	78:   ['ADD', 'S2', 'ZERO', '91']
+	79:   ['IF', '(', 'S1', '==', 'S2', ')']
+	80:   ['{']
+	81:   ['LW', 'S3', 'POINTER']
+	82:   ['IF', '(', 'S3', '==', 'ZERO', ')']
+	83:   ['{']
+	84:   [':', 'FORWARD_SEARCH_CALLBACK']
+	85:   ['ADD', 'PROG_LOCATION', '4']
+	86:   ['LW', 'S4', 'PROG_LOCATION']
+	87:   ['ADD', 'S5', 'ZERO', '93']
+	88:   ['BRANCH', '(', 'S4', '!=', 'S5', ')', ':', 'FORWARD_SEARCH_CALLBACK']
+	89:   ['}']
+	90:   ['GOTO', ':', 'INSTR_END']
+	91:   ['}']
+	92:   ['ADD', 'S2', 'ZERO', '93']
+	93:   ['IF', '(', 'S1', '==', 'S2', ')']
+	94:   ['{']
+	95:   ['LW', 'S3', 'POINTER']
+	96:   ['IF', '(', 'S3', '!=', 'ZERO', ')']
+	97:   ['{']
+	98:   [':', 'REVERSE_SEARCH_CALLBACK']
+	99:   ['SUB', 'PROG_LOCATION', '4']
+	100:  ['LW', 'S4', 'PROG_LOCATION']
+	101:  ['ADD', 'S5', 'ZERO', '91']
+	102:  ['BRANCH', '(', 'S4', '!=', 'S5', ')', ':', 'REVERSE_SEARCH_CALLBACK']
+	103:  ['}']
+	104:  ['GOTO', ':', 'INSTR_END']
+	105:  ['}']
+	106:  ['ADD', 'S2', 'ZERO', '44']
+	107:  ['IF', '(', 'S1', '==', 'S2', ')']
+	108:  ['{']
+	109:  ['LW', 'S3', 'POINTER']
+	110:  ['PUSH', 'S3']
+	111:  ['CALL', ':', 'PRINT_D']
+	112:  ['GOTO', ':', 'INSTR_END']
+	113:  ['}']
+	114:  ['ADD', 'S2', 'ZERO', '46']
+	115:  ['IF', '(', 'S1', '==', 'S2', ')']
+	116:  ['{']
+	117:  ['IN', 'S3']
+	118:  ['SW', 'S3', 'POINTER']
+	119:  ['GOTO', ':', 'INSTR_END']
+	120:  ['}']
+	121:  ['GOTO', ':', 'BREAK']
+	122:  [':', 'INSTR_END']
+	123:  ['ADD', 'POINTER', '4']
+	124:  ['BRANCH', '(', 'POINTER', '>', 'POINTER_END', ')', ':', 'BREAK']
+	125:  ['BRANCH', '(', 'POINTER', '>', 'POINTER_START', ')', ':', 'LOOPBACK']
+	126:  [':', 'BREAK']
+	127:  ['HALT']
+
+
+Converting high-level to low-level assembly:
+Expanding macros...
+	Removing ifs...
+	Removing branches...
+	Expanding macros...
+	['GOTO', ':', 'PRINT_SKIP']  =>  ['JAL', ':', 'PRINT_SKIP']
+
+	['>', 'PRINT_D', 'S1']  =>  [[':', 'PRINT_D'],
+			['LW', 'S1', 'SP', '-', '0'],
+			['SUBUI', 'SP', '4'],
+			['SW', 'FP', 'SP', '+', '4'],
+			['SW', 'RA', 'SP', '+', '8'],
+			['ADDUI', 'SP', '8'],
+			['ADDU', 'FP', 'SP', 'ZERO'],
+
+	['PUSH', 'ZERO']  =>  [['SW', 'ZERO', 'SP', '+', '4'],
+			['ADDUI', 'SP', '4'],
+
+	['PUSH', 'S2']  =>  [['SW', 'S2', 'SP', '+', '4'],
+			['ADDUI', 'SP', '4'],
+
+	['POP', 'S1']  =>  [['LW', 'S1', 'SP', '-', '0'],
+			['SUBUI', 'SP', '4'],
+
+	['GOTO', ':', 'PRINTD_DIGITS']  =>  ['JAL', ':', 'PRINTD_DIGITS']
+
+	['RET']  =>  [['SUBUI', 'SP', 'FP', '8'],
+			['LW', 'FP', 'SP', '+', '4'],
+			['LW', 'RA', 'SP', '+', '8'],
+			['JALR', 'ZERO', 'RA', '+', '4'],
+
+	['>', 'PRINT_CH', 'S1']  =>  [[':', 'PRINT_CH'],
+			['LW', 'S1', 'SP', '-', '0'],
+			['SUBUI', 'SP', '4'],
+			['SW', 'FP', 'SP', '+', '4'],
+			['SW', 'RA', 'SP', '+', '8'],
+			['ADDUI', 'SP', '8'],
+			['ADDU', 'FP', 'SP', 'ZERO'],
+
+	['RET']  =>  [['SUBUI', 'SP', 'FP', '8'],
+			['LW', 'FP', 'SP', '+', '4'],
+			['LW', 'RA', 'SP', '+', '8'],
+			['JALR', 'ZERO', 'RA', '+', '4'],
+
+	['>', 'PRINT_STR', 'S2']  =>  [[':', 'PRINT_STR'],
+			['LW', 'S2', 'SP', '-', '0'],
+			['SUBUI', 'SP', '4'],
+			['SW', 'FP', 'SP', '+', '4'],
+			['SW', 'RA', 'SP', '+', '8'],
+			['ADDUI', 'SP', '8'],
+			['ADDU', 'FP', 'SP', 'ZERO'],
+
+	['GOTO', ':', 'PRINTSTR_AGAIN']  =>  ['JAL', ':', 'PRINTSTR_AGAIN']
+
+	['RET']  =>  [['SUBUI', 'SP', 'FP', '8'],
+			['LW', 'FP', 'SP', '+', '4'],
+			['LW', 'RA', 'SP', '+', '8'],
+			['JALR', 'ZERO', 'RA', '+', '4'],
+
+	['MOV', 'S1', 'PROG_START']  =>  ['ADDUI', 'S1', 'PROG_START', '0']
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['PUSH', 'S3']  =>  [['SW', 'S3', 'SP', '+', '4'],
+			['ADDUI', 'SP', '4'],
+
+	['CALL', ':', 'PRINT_D']  =>  [['JAL', 'RA', '4'],
+			['JAL', ':', 'PRINT_D'],
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['GOTO', ':', 'INSTR_END']  =>  ['JAL', ':', 'INSTR_END']
+
+	['GOTO', ':', 'BREAK']  =>  ['JAL', ':', 'BREAK']
+
+	['BGT', 'ZERO', 'POINTER', 'POINTER_END', ':', 'BREAK']  =>  ['BLE', 'ZERO', 'POINTER_END', 'POINTER', ':', 'BREAK']
+
+	['BGT', 'ZERO', 'POINTER', 'POINTER_START', ':', 'LOOPBACK']  =>  ['BLE', 'ZERO', 'POINTER_START', 'POINTER', ':', 'LOOPBACK']
+
+
+
+Final pass...
+	Creating global variables...
+	Assigned PROG_START = 4000
+	Assigned PROG_LOCATION = 4000
+	Assigned POINTER = 3000
+	Assigned POINTER_START = 3000
+	Assigned POINTER_END = 3255
+	Removing globals...
+	Removing jump anchors...
+
+
+Writing to bf.al...

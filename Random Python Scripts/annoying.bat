@@ -1,0 +1,2 @@
+python annoying.py
+pause

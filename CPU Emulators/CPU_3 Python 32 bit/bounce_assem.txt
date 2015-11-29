@@ -1,0 +1,52 @@
+adr r1 #Output device: display
+data r11 #Refresh screen value
+65535
+data r4 #Screen width
+255
+data r5 #Screen height
+254
+one r6 #Dx 0=-1
+one r7 #Dy 0=-1
+rand r2
+rand r3
+mod r2 r4
+mod r3 r4
+cmp r6 r6
+jumpto z
+23
+inc r2
+cmp r2 r4
+jumpto l
+28
+zero r6
+jumpto
+28
+dec r2
+cmp r2 r2
+jumpto le
+28
+one r6
+cmp r7 r7
+jumpto z
+38
+inc r3
+cmp r3 r5
+jumpto l
+43
+zero r7
+jumpto
+43
+dec r3
+cmp r3 r3
+jumpto le
+43
+one r7
+clone r10 r3
+data r12
+256
+mul r10 r12
+add r10 r2
+out r10
+out r11
+jumpto
+13

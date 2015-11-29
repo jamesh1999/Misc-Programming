@@ -1,0 +1,1 @@
+open("o.txt","w").write(''.join(chr((ord(l)+ord(k)*(-1 if open('i.txt').read(1)=='d' else 1))%128) for k,l in zip(open("i.txt").read().split("/")[0][2:]*999,open("i.txt").read().split("/")[1])))

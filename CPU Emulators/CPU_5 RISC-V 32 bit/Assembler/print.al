@@ -1,0 +1,38 @@
+Goto :PRINT_SKIP
+
+>print_d S1
+Push ZERO
+:PRINTD_REPEAT
+Rem S2 S1 10
+Add S2 48
+Push S2
+Div S1 10
+Branch (S1 != ZERO) :PRINTD_REPEAT
+:PRINTD_DIGITS
+Pop S1
+Branch (S1 == ZERO) :PRINTD_DONE
+Out S1
+Goto :PRINTD_DIGITS
+:PRINTD_DONE
+Add S1 ZERO 10
+Out S1
+Ret
+
+>print_ch S1
+Out S1
+Ret
+
+>print_str S2
+:PRINTSTR_AGAIN
+Lw S1 S2
+Branch (S1 == ZERO) :PRINTSTR_END
+Out S1
+Add S2 4
+Goto :PRINTSTR_AGAIN
+:PRINTSTR_END
+Add S1 ZERO 10
+Out S1
+Ret
+
+
+:PRINT_SKIP

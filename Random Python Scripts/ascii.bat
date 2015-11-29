@@ -1,0 +1,2 @@
+python ascii.py
+pause

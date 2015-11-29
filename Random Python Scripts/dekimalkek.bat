@@ -1,0 +1,2 @@
+python dekimalkek.py
+pause

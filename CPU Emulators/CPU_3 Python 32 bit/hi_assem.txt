@@ -1,0 +1,70 @@
+adr r1
+data r1
+257
+out r1
+data r1
+261
+out r1
+data r1
+513
+out r1
+data r1
+517
+out r1
+data r1
+769
+out r1
+data r1
+770
+out r1
+data r1
+771
+out r1
+data r1
+772
+out r1
+data r1
+773
+out r1
+data r1
+1025
+out r1
+data r1
+1029
+out r1
+data r1
+1281
+out r1
+data r1
+1285
+out r1
+data r1
+264
+out r1
+data r1
+265
+out r1
+data r1
+266
+out r1
+data r1
+521
+out r1
+data r1
+777
+out r1
+data r1
+1033
+out r1
+data r1
+1288
+out r1
+data r1
+1289
+out r1
+data r1
+1290
+out r1
+data r1
+65535
+out r1

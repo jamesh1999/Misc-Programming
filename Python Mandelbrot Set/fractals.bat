@@ -1,0 +1,2 @@
+python fractals.py
+pause

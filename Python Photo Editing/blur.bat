@@ -1,0 +1,2 @@
+python blur.py
+pause

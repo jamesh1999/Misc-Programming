@@ -1,0 +1,2 @@
+python find_primes_atkin.py
+pause

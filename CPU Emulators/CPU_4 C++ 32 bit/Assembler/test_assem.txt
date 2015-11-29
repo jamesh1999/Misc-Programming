@@ -1,0 +1,8 @@
+data r1
+100
+outd r2
+inc r2
+cmp r1 r2
+jumpto a
+2
+halt

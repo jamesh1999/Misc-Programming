@@ -1,0 +1,656 @@
+adr r1
+data r100
+65535
+data r2 #Number to display
+42970
+data r5 #X-Buffer
+4
+data r6 #Y-Buffer
+4
+data r21
+1
+data r22
+10
+data r23
+100
+data r24
+1000
+data r25
+10000
+data r26
+100000
+data r27
+1000000
+data r28
+10000000
+data r29
+100000000
+data r30
+1000000000
+data r31
+1
+data r32
+2
+data r33
+3
+data r34
+4
+data r35
+5
+data r36
+6
+data r37
+7
+data r38
+8
+data r39
+9
+data r40
+0
+clone r20 r2 #Start converting to BCD
+div r20 r30
+clone r3 r30
+mul r3 r20
+sub r2 r3
+clone r19 r2
+div r19 r29
+clone r3 r29
+mul r3 r19
+sub r2 r3
+clone r18 r2
+div r18 r28
+clone r3 r28
+mul r3 r18
+sub r2 r3
+clone r17 r2
+div r17 r27
+clone r3 r27
+mul r3 r17
+sub r2 r3
+clone r16 r2
+div r16 r26
+clone r3 r26
+mul r3 r16
+sub r2 r3
+clone r15 r2
+div r15 r25
+clone r3 r25
+mul r3 r15
+sub r2 r3
+clone r14 r2
+div r14 r24
+clone r3 r24
+mul r3 r14
+sub r2 r3
+clone r13 r2
+div r13 r23
+clone r3 r23
+mul r3 r13
+sub r2 r3
+clone r12 r2
+div r12 r22
+clone r3 r22
+mul r3 r12
+sub r2 r3
+clone r11 r2
+div r11 r21
+clone r3 r21
+mul r3 r11
+sub r2 r3 #Finish converting to BCD
+data r1
+104
+clone r7 r20
+jumpto
+148
+data r1
+109
+clone r7 r19
+jumpto
+148
+data r1
+114
+clone r7 r18
+jumpto
+148
+data r1
+119
+clone r7 r17
+jumpto
+148
+data r1
+124
+clone r7 r16
+jumpto
+148
+data r1
+129
+clone r7 r15
+jumpto
+148
+data r1
+134
+clone r7 r14
+jumpto
+148
+data r1
+139
+clone r7 r13
+jumpto
+148
+data r1
+144
+clone r7 r12
+jumpto
+148
+data r1
+654
+clone r7 r11
+one r9 #Tells that it is last digit/ Also display zeros
+cmp r7 r40
+jumpto e
+183
+one r9
+cmp r7 r31
+jumpto e
+238
+cmp r7 r32
+jumpto e
+281
+cmp r7 r33
+jumpto e
+327
+cmp r7 r34
+jumpto e
+373
+cmp r7 r35
+jumpto e
+419
+cmp r7 r36
+jumpto e
+469
+cmp r7 r37
+jumpto e
+515
+cmp r7 r38
+jumpto e
+556
+cmp r7 r39
+jumpto e
+606
+data r200
+6
+add r5 r200
+jump r1
+cmp r9 r9 #Draw 0
+jump r1 z
+clone r80 r6
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r33
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r32
+out r90
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+out r90
+inc r90
+out r90
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 1
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 2
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 3
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 4
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+add r90 r33
+out r90
+jumpto
+179
+clone r80 r6 #Draw 5
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r80 r81
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 6
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+add r90 r32
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r80 r81
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 7
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+add r90 r32
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 8
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+clone r80 r6 #Draw 9
+data r81
+256
+mul r80 r81
+add r80 r5
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r81
+clone r90 r80
+add r90 r34
+out r90
+add r80 r81
+clone r90 r80
+add r90 r33
+out r90
+add r80 r81
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+179
+out r100
+halt

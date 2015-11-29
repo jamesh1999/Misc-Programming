@@ -1,0 +1,46 @@
+All of the CPU instructions are available including several macros:
+NOOP - No operation
+BGT - Branch greater than
+BGTU - Granch greater than unsigned
+BGE - Branch greater than or equal to
+BGEU - Branch greater than or equal to unsigned
+GOTO
+PUSH - Stack push
+POP - Stack pop
+DEL - Stack delete
+TOP - View top of stack
+CALL - Call a function
+RET - Return from a function
+INC - Increment
+INCU - Increment unsigned
+DEC - Decrement
+DECU - Decrement unsigned
+MOV - Move
+CLEAR - Sets the value of the specified register to 0
+
+It is recommended not to use the immediate or unsigned instructions since the assembler will automatically select the immediate varients if necessary and the unsigned varients will be selected if all of the involved registers are unsigned.
+
+The syntax for each instruction is as follows:
+OPCODE DESTINATION_REGISTER INPUT_REGISTER[S] [IMMEDIATE]
+
+Branches can use this alternative syntax:
+BRANCH (REGISTER BOOLEAN_OPERATOR REGISTER) :DEST [RDEST]
+
+Goto locations are set as follows:
+:LOOP
+
+Functions must begin:
+>FUNCTION
+
+and are called with:
+CALL :FUNCTION
+
+To set a register to signed/unsigned:
+SIGNED@REGISTER
+UNSIGNED@REGISTER
+
+To import another assembly file use:
+IMPORT filename.al
+The filename is caps sensitive
+
+Capitalization does not matter. The assembler will automatically capitalize everything before processing it.

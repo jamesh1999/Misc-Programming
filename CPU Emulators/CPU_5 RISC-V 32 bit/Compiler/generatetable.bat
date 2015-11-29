@@ -1,0 +1,2 @@
+python parse_table_generator.py
+pause

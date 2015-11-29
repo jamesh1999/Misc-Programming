@@ -1,0 +1,562 @@
+adr r1
+data r100-reset
+65535
+data r2-num
+1200228
+data r5-x
+4
+data r6-y
+4
+data r8-width #Screen width
+256
+data r22
+10
+data r23
+100
+data r24
+1000
+data r25
+10000
+data r26
+100000
+data r27
+1000000
+data r28
+10000000
+data r29
+100000000
+data r30
+1000000000
+one r31
+data r32
+2
+data r33
+3
+data r34
+4
+data r35
+5
+data r36
+6
+data r37
+7
+data r38
+8
+data r39
+9
+clone r20 num #Start converting to BCD
+div r20 r30
+clone r3 r30
+mul r3 r20
+sub num r3
+clone r19 r2
+div r19 r29
+clone r3 r29
+mul r3 r19
+sub num r3
+clone r18 r2
+div r18 r28
+clone r3 r28
+mul r3 r18
+sub num r3
+clone r17 r2
+div r17 r27
+clone r3 r27
+mul r3 r17
+sub num r3
+clone r16 r2
+div r16 r26
+clone r3 r26
+mul r3 r16
+sub num r3
+clone r15 r2
+div r15 r25
+clone r3 r25
+mul r3 r15
+sub num r3
+clone r14 r2
+div r14 r24
+clone r3 r24
+mul r3 r14
+sub num r3
+clone r13 r2
+div r13 r23
+clone r3 r23
+mul r3 r13
+sub num r3
+clone r12 r2
+div r12 r22
+clone r3 r22
+mul r3 r12
+sub num r3
+clone r11 num #Finish BCD conversion
+data r10
+604443648
+writeto r10
+96
+0
+sub r10 r8
+clone r80 r6
+mul r80 r8
+add r80 r5
+clone r90 r80
+cmp r7-dispnum r40
+jumpto e
+148
+one r9
+cmp dispnum r31
+jumpto e
+198
+cmp dispnum r32
+jumpto e
+235
+cmp dispnum r33
+jumpto e
+275
+cmp dispnum r34
+jumpto e
+315
+cmp dispnum r35
+jumpto e
+355
+cmp dispnum r36
+jumpto e
+399
+cmp dispnum r37
+jumpto e
+439
+cmp dispnum r38
+jumpto e
+474
+cmp dispnum r39
+jumpto e
+518
+one r150-done #Finished
+cmp r9 r9
+jumpto z
+139
+jumpto
+142
+one r9
+jumpto
+148
+add x r36
+cmp done done
+jumpto z
+94
+jumpto
+560
+cmp r9 r9 #Draw 0
+jumpto z
+94
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r33
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r32
+out r90
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+out r90
+inc r90
+out r90
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+add r90 r32 #Draw 1
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+inc r90 #Draw 2
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+out r90 #Draw 3
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+add r90 r33 #Draw 4
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+add r90 r33
+out r90
+jumpto
+142
+out r90 #Draw 5
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r80 r8
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+add r90 r32 #Draw 6
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r80 r8
+clone r90 r80
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+out r90 #Draw 7
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+add r90 r32
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+jumpto
+142
+inc r90 #Draw 8
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+inc r90 #Draw 9
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+out r90
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+inc r90
+out r90
+add r80 r8
+clone r90 r80
+add r90 r34
+out r90
+add r80 r8
+clone r90 r80
+add r90 r33
+out r90
+add r80 r8
+clone r90 r80
+inc r90
+out r90
+inc r90
+out r90
+jumpto
+142
+out reset
+halt

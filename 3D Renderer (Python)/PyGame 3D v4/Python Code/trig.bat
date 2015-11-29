@@ -1,0 +1,2 @@
+python trig.py
+pause
