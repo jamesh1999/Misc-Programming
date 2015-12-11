@@ -48,6 +48,11 @@
 
 <expr_unary2>[0]		::= "[" INT "]" <expr_unary2>
 
+<term>[0]				::= INT
+<term>[1]				::= "true"
+<term>[2]				::= "false"
+<term>[3]				::= STRING
+
 #SYMBOL
 <FORMAT> 				::= STRING <type_base> <type_pre> <type_post>
 <DEFINITION>			::= <definition>

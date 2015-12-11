@@ -69,31 +69,31 @@ Mov ?(STRING, val) @<expr>
 Add ?(STRING, val) @<expr>
 
 <<expr_assign>[2]>
-Sub STRING @<expr>
+Sub ?(STRING, addr) @<expr>
 
 <<expr_assign>[3]>
-Mul STRING @<expr>
+Mul ?(STRING, addr) @<expr>
 
 <<expr_assign>[4]>
-Div STRING @<expr>
+Div ?(STRING, addr) @<expr>
 
 <<expr_assign>[5]>
-Mod STRING @<expr>
+Mod ?(STRING, addr) @<expr>
 
 <<expr_assign>[6]>
-Shl STRING @<expr>
+Shl ?(STRING, addr) @<expr>
 
 <<expr_assign>[7]>
-Shr STRING @<expr>
+Shr ?(STRING, addr) @<expr>
 
 <<expr_assign>[8]>
-And STRING @<expr>
+And ?(STRING, addr) @<expr>
 
 <<expr_assign>[9]>
-Xor STRING @<expr>
+Xor ?(STRING, addr) @<expr>
 
 <<expr_assign>[10]>
-Or STRING @<expr>
+Or ?(STRING, addr) @<expr>
 
 <<expr_logical_or>[0]>
 Or @ @<expr_logical_or> @<expr_logical_and>
@@ -195,3 +195,15 @@ Not @ @<expr_unary>
 
 <<expr_unary>[4]>
 Sub @ ZERO @<expr_unary>
+
+<<term>[0]>
+Add @ ZERO INT
+
+<<term>[1]>
+Add @ ZERO 1
+
+<<term>[2]>
+Add @ ZERO 0
+
+<<term>[3]>
+Mov @ ?(STRING, addr)
