@@ -2,13 +2,13 @@
 import setup
 import print
 
-Add S2 SP 4
+Add $1 SP 4
 
 :JUMP_BACK
-In S1
-Push S1
-Branch(S1 != ZERO) :JUMP_BACK
+In $2
+Push $2
+Branch($2 != ZERO) :JUMP_BACK
 
-Push S2
+Push $1
 Call :print_str
 Halt

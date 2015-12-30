@@ -3,8 +3,8 @@ import print
 
 Var unsigned a = 19
 
-Add S1 ZERO 133
-Push S1
+Add $1 ZERO 133
+Push $1
 Call :print_d
 
 Push a
