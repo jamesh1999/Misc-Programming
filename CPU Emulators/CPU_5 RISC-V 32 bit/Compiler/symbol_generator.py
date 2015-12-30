@@ -4,6 +4,7 @@ blank = ""
 scoped = ""
 
 symbols = []
+CUR_ADDR = 0
 
 with open("definitions.bnf") as ifile:
 	lines = ifile.readlines()
@@ -62,9 +63,12 @@ def concatTerminals(node, reset = True):
 def addSymbol(node, main = True):
 	global symbols
 	global cur_scope
+	global CUR_ADDR
 
 	if main:
-		symbols.append([blank] * len(format) + [cur_scope[:]])
+		symbols.append([blank] * (len(format) + 1) + [cur_scope[:]])
+		symbols[-1][4] = CUR_ADDR
+		CUR_ADDR += 4
 
 	for part in node[1]:
 		#Add info if it isn't already there

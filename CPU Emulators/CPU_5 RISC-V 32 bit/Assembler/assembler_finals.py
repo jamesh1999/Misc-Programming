@@ -6,16 +6,19 @@ from assembler_data import *
 def removeAnchors(assembly):
 	jump_anchors = {} #Handle any :jumps
 
-	while True:
-		for i in range(len(assembly)):
-			line = assembly[i]
+	try:
+		while True:
+			for i in range(len(assembly)):
+				line = assembly[i]
 
-			if line[0] == ":":
-				jump_anchors[line[1]] = i
-				assembly.pop(i)
+				if line[0] == ":":
+					jump_anchors[line[1]] = i
+					assembly.pop(i)
+					break;
+			else:
 				break;
-		else:
-			break;
+	except IndexError:
+		raise AssemblerError("Jump anchor expected after ':'.")
 
 	#Calculate jump positions
 	while True:
@@ -25,14 +28,23 @@ def removeAnchors(assembly):
 			if ":" in line:
 				for j in range(len(line)):
 					if line[j] == ':':
-						diff = (jump_anchors[line[j+1]]-i)*4
+						try:
+							anchor = line[j + 1]
+						except IndexError:
+							raise AssemblerError("Jump anchor expected after ':'.")
+
+						try:
+							diff = (jump_anchors[anchor] - i) * 4
+						except IndexError:
+							raise AssemblerError(anchor + " is not a valid jump anchor.")
+
 						if diff < 0:
 							diff *= -1
 							line[j] = "-"
 						else:
 							line[j] = "+"
 
-						line[j+1] = str(diff)
+						line[j + 1] = str(diff)
 				assembly[i] = line
 				break;
 		else:
@@ -40,12 +52,11 @@ def removeAnchors(assembly):
 
 	return assembly
 
-def finalPassAssembly(assembly):
+#Assign memory locations and default values for global variables
+def createGlobals(assembly):
 	global GLOBAL_COUNT
-	
-	#Create Globals
-	p("\tCreating global variables...")
-	new_assembly1 = []
+
+	new_assembly = []
 	for line in assembly:
 		if line[0] == "VAR":
 			GLOBALS[line[2]] = [line[1], 0]
@@ -55,59 +66,120 @@ def finalPassAssembly(assembly):
 			else:
 				p("\tAssigned " + line[2] + " = NULL")
 
+			register = getNextArbitraryRegister()
+
 			assignment = []
 			if line[1] == "UNSIGNED":
-				assignment.append(["ADDUI", "X30", "ZERO", GLOBALS[line[2]][1]])
+				assignment.append(["ADDUI"] + register + ["ZERO", GLOBALS[line[2]][1]])
 			else:
-				assignment.append(["ADDI", "X30", "ZERO", GLOBALS[line[2]][1]])
-			assignment.append(["SW", "X30", "GP", "+", str(GLOBAL_COUNT * 4)])
-			new_assembly1 += assignment
+				assignment.append(["ADDI"] + register + ["ZERO", GLOBALS[line[2]][1]])
+			assignment.append(["SW"] + register + ["GP", "+", str(GLOBAL_COUNT * 4)])
+			new_assembly += assignment
 			GLOBALS[line[2]][1] = GLOBAL_COUNT * 4
 			GLOBAL_COUNT += 1
 
 		else:
-			new_assembly1.append(line);
+			new_assembly.append(line);
+
+	return new_assembly
+
+#Substitute any references to globals
+def removeGlobalReferences(assembly):
+	new_assembly = []
+	for line in assembly:
+		splitted = splitInstruction(line)
+
+		#Handle global as output register
+		append_extra = None
+		if splitted[1] in GLOBALS.keys():
+			register_out = getNextArbitraryRegister()
+			if not splitted[0] == "SW":
+				append_extra = ["SW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]][1])]
+			else:
+				new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]][1])])
+			line = line[:line.index(splitted[1])] + register_out + line[line.index(splitted[1]) + 1:]
+
+		#Handle globals as input registers
+		for (i,r) in enumerate(splitted[2]):
+			if r in GLOBALS.keys():
+				if not r in line:
+					new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[r][1])])
+				else:
+					register = getNextArbitraryRegister()
+					new_assembly.append(["LW"] + register + ["GP", "+", str(GLOBALS[r][1])])
+					while r in line:
+						line = line[:line.index(r)] + register + line[line.index(r) + 1:]
+
+		new_assembly.append(line)
+
+		if not append_extra == None:
+			new_assembly.append(append_extra)
+	print(new_assembly)
+	return new_assembly
+
+#Remove any instances of #xx denoting an address relative to GP
+def removeGlobalAddresses(assembly):
+	new_assembly = []
+	for line in assembly:
+		if "#" in line:
+			register = getNextArbitraryRegister()
+			addr = line.index("#") + 1
+			new_assembly.append(["LW"] + register + ["GP", "+", str(addr)])
+			new_assembly.append(line[:line.index("#")] + register + line[line.index("#") + 2:])
+			new_assembly.append(["SW"] + register + ["GP", "+", str(addr)])
+		else:
+			new_assembly.append(line)
+
+	return new_assembly
+
+def removeArbitraryRegisters(assembly):
+	global REGISTER_CONTENTS
+	last_used = ASSIGNABLE[:]
+
+	new_assembly = []
+	for line in assembly:
+		for token in line:
+			if token[0] == "$":
+				for r in REGISTER_CONTENTS:
+					if REGISTER_CONTENTS[r] == line[line.index(token)]:
+						register = r
+						break;
+				else:
+					register = last_used[0]
+					#Store old
+					#Load new
+
+				#Move register to end of queue
+				last_used.remove(register)
+				last_used.append(getRegister(register))
+				REGISTER_CONTENTS[getRegister(register)] = line[line.index(token)]
+
+				line[line.index(token)] = register
+
+		new_assembly.append(line)
+
+	return new_assembly
+
+def finalPassAssembly(assembly):
+	
+	#Create Globals
+	p("\tCreating global variables...")
+	assembly = createGlobals(assembly)
 
 	#Remove Globals
 	p("\tRemoving globals...")
-	new_assembly2 = []
-	spare = []
-	for r in REGISTER_STATUS.keys():
-			if REGISTER_STATUS[r] == "ASSEMBLER":
-				spare.append(r)
+	assembly = removeGlobalReferences(assembly)
 
-	for line in new_assembly1:
-		splitted = splitInstruction(line)
-		used = 0
+	#Remove global addresses
+	p("\tRemoving global addresses...")
+	assembly = removeGlobalAddresses(assembly)
 
-		append_extra = None
-		if splitted[1] in GLOBALS.keys():
-			if not splitted[0] == "SW":
-				append_extra = ["SW", spare[0], "GP", "+", str(GLOBALS[splitted[1]][1])]
-				line[line.index(splitted[1])] = spare[0]
-				used += 1
-			else:
-				new_assembly2.append(["LW", spare[0], "GP", "+", str(GLOBALS[splitted[1]][1])])
-				line[line.index(splitted[1])] = spare[0]
-				used += 1
-
-		for (i,r) in enumerate(splitted[2]):
-			if r in GLOBALS.keys():
-				if not splitted[2][i] in line:
-					new_assembly2.append(["LW", spare[0], "GP", "+", str(GLOBALS[r][1])])
-				else:
-					new_assembly2.append(["LW", spare[used], "GP", "+", str(GLOBALS[r][1])])
-					while splitted[2][i] in line:
-						line[line.index(splitted[2][i])] = spare[used]
-					used += 1
-
-		new_assembly2.append(line)
-
-		if not append_extra == None:
-			new_assembly2.append(append_extra)
+	#Remove arbitrary registers
+	p("\tRemoving arbitrary registers...")
+	assembly = removeArbitraryRegisters(assembly)
 
 	#Jump anchors
 	p("\tRemoving jump anchors...")
-	new_assembly3 = removeAnchors(new_assembly2)
+	assembly = removeAnchors(assembly)
 
-	return new_assembly3
+	return assembly

@@ -12,8 +12,8 @@ Var unsigned r = 114
 Var unsigned d = 100
 Var unsigned nl = 10
 
-Mov S1 SP
-Add S1 4
-Push h, e, l, l, o, space, w, o, r, l, d, nl, ZERO, S1
+Mov $0 SP
+Add $0 4
+Push h, e, l, l, o, space, w, o, r, l, d, nl, ZERO, $0
 Call :print_str
 Halt

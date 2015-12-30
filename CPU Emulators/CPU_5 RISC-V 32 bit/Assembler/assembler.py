@@ -29,22 +29,31 @@ def assembleLowLevel(assembly):
 
 #Main function
 def assemble(filename, ofilename, doHighLevel, doLowLevel):
-	p("Assembling: " + filename + " into " + ofilename)
-	p("\n\nReading " + filename + "...")
-	assembly = readAssembly(filename)
-	
-	if high:
-		assembly = assembleHighLevel(assembly)
+	try:
+		p("Assembling: " + filename + " into " + ofilename)
+		assembly = readAssembly(filename)
+		assembly = linkAssembly(assembly, filename)
+		
+		if high:
+			assembly = assembleHighLevel(assembly)
 
-	if low:
-		binary = assembleLowLevel(assembly)
-		p("\n\nWriting to " + ofilename + "...")
-		writeBinary(ofilename, binary)
-	else:
-		p("\n\nWriting to " + ofilename + "...")
-		writeAssembly(ofilename, assembly)
+		if low:
+			binary = assembleLowLevel(assembly)
+			writeBinary(ofilename, binary)
+		else:
+			writeAssembly(ofilename, assembly)
 
-	saveLog()
+		print("Writing to log...")
+		saveLog()
+		print("Done!")
+
+	#For AssemblerErrors just print message
+	except AssemblerError as e:
+		print(e)
+	#Print stack trace for unhandled errors
+	except:
+		print("\n\n\n\nWhat did you do?!?!?\nUnhandled error in assembler: \n\n")
+		raise
 
 
 

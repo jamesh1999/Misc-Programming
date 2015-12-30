@@ -65,71 +65,41 @@ REGISTER_STATUS = {"X0":"UNSIGNED",
 					"X30":"ASSEMBLER",
 					"X31":"UNSIGNED"}
 
-LAST_CHANGED = {"X0":-1,
-					"X1":-1,
-					"X2":-1,
-					"X3":-1,
-					"X4":-1,
-					"X5":-1,
-					"X6":-1,
-					"X7":-1,
-					"X8":-1,
-					"X9":-1,
-					"X10":-1,
-					"X11":-1,
-					"X12":-1,
-					"X13":-1,
-					"X14":-1,
-					"X15":-1,
-					"X16":-1,
-					"X17":-1,
-					"X18":-1,
-					"X19":-1,
-					"X20":-1,
-					"X21":-1,
-					"X22":-1,
-					"X23":-1,
-					"X24":-1,
-					"X25":-1,
-					"X26":-1,
-					"X27":-1,
-					"X28":-1,
-					"X29":-1,
-					"X30":-1,
-					"X31":-1}
+REGISTER_CONTENTS = {"X0":None,
+					"X1":None,
+					"X2":None,
+					"X3":None,
+					"X4":None,
+					"X5":None,
+					"X6":None,
+					"X7":None,
+					"X8":None,
+					"X9":None,
+					"X10":None,
+					"X11":None,
+					"X12":None,
+					"X13":None,
+					"X14":None,
+					"X15":None,
+					"X16":None,
+					"X17":None,
+					"X18":None,
+					"X19":None,
+					"X20":None,
+					"X21":None,
+					"X22":None,
+					"X23":None,
+					"X24":None,
+					"X25":None,
+					"X26":None,
+					"X27":None,
+					"X28":None,
+					"X29":None,
+					"X30":None,
+					"X31":None}
 
-REGISTER_CONTENTS = {"X0":0,
-					"X1":0,
-					"X2":0,
-					"X3":0,
-					"X4":0,
-					"X5":0,
-					"X6":0,
-					"X7":0,
-					"X8":0,
-					"X9":0,
-					"X10":0,
-					"X11":0,
-					"X12":0,
-					"X13":0,
-					"X14":0,
-					"X15":0,
-					"X16":0,
-					"X17":0,
-					"X18":0,
-					"X19":0,
-					"X20":0,
-					"X21":0,
-					"X22":0,
-					"X23":0,
-					"X24":0,
-					"X25":0,
-					"X26":0,
-					"X27":0,
-					"X28":0,
-					"X29":0,
-					"X30":0,
-					"X31":0}
+ASSIGNABLE = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19", "S20", "S21", "S22", "S23", "S24", "S25", "S26"]
+CUR_REGISTER = -1
 
 
 
@@ -243,7 +213,10 @@ LOG_TEXT = ""
 #---------------- ERRORS ----------------#
 #Generic error for anything in the assembler
 class AssemblerError(Exception):
-    pass
+    def __init__(self, val):
+    	self.val = val
+    def __str__(self):
+    	return "\n\n\nOh noes! The assembler ground to a halt!\nAssemblerError:\n" + repr(self.val)
 
 
 
@@ -261,9 +234,49 @@ def saveLog():
 		log_file.write(LOG_TEXT)
 		log_file.close()
 
+#Get all arbitrary registers assigned in input assembly
+def initArbitraryRegisters(assembly):
+	global CUR_REGISTER
+	CUR_REGISTER = -1
+	for line in assembly:
+		for token in line:
+			try:
+				if token[0] == "$" and int(token[1:]) > CUR_REGISTER:
+					CUR_REGISTER = int(token[1:])
+			except ValueError:
+				raise AssemblerError("Integer expected after '$'.")
+
+#Get the next arbitrary register that hasn't been used
+def getNextArbitraryRegister():
+	return ["$" + str(getNextArbitraryRegisterNum())]
+def getNextArbitraryRegisterNum():
+	global CUR_REGISTER
+	CUR_REGISTER += 1
+	return CUR_REGISTER
+
+#Resolve conflicts in arbitrary registers between assembly files
+def setUniqueRegisters(assembly):
+	global CUR_REGISTER
+	maximum = -1
+	for i,line in enumerate(assembly):
+		for j,token in enumerate(line):
+			if token[0] == "$":
+				try:
+					if int(token[1:]) > maximum:
+						maximum = int(token[1:])
+				except ValueError:
+					raise AssemblerError("Integer expected after '$'.")
+				assembly[i][j] = "$" + str(int(token[1:]) + CUR_REGISTER + 1)
+
+	CUR_REGISTER += maximum + 1
+	return assembly
+
 #Return the name of a register X--
 def getRegister(reg):
-	return REGISTER_NAMES[reg] if reg in REGISTER_NAMES else reg
+	if not isReg(reg):
+		raise AssemblerError(reg + " is not a register.")
+	else:
+		return REGISTER_NAMES[reg] if reg in REGISTER_NAMES else reg
 
 #Checks whether rg i a register
 def isReg(reg):
@@ -294,6 +307,8 @@ def splitInstruction(instruction):
 			if instruction[i] == "-":
 				immediate = "-" + immediate
 
+
+	#Remove output register if a separate input A is provided
 	if OPCODES[op][:2]=="01" and len(registers)==3:
 		registers = registers[1:]
 

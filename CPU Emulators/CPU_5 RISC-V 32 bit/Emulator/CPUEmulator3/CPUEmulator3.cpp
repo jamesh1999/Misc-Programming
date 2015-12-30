@@ -12,7 +12,6 @@
 #include "CPU.h"
 
 
-
 //Takes an unsigned and sign-extends it before returning a signed int
 inline int convertSigned(unsigned val, int signBit)
 {
@@ -22,7 +21,6 @@ inline int convertSigned(unsigned val, int signBit)
 		return static_cast<int>(val) >> signBit; //Positive value returned
 	return (static_cast<int>(val - INT_MIN) + INT_MIN) >> signBit; //Negative value returned
 }
-
 
 
 CPU::CPU()
@@ -553,12 +551,12 @@ inline void CPU::cpu_shlui()
 
 inline void CPU::cpu_shr()
 {
-	rd->setValue(static_cast<unsigned>(static_cast<int> (rs1->getValue()) >> rd->getValue()));
+	rd->setValue(static_cast<unsigned>(static_cast<int>(rs1->getValue()) >> rd->getValue()));
 }
 
 inline void CPU::cpu_shl()
 {
-	rd->setValue(static_cast<unsigned>(static_cast<int> (rs1->getValue()) << rd->getValue()));
+	rd->setValue(static_cast<unsigned>(static_cast<int>(rs1->getValue()) << rd->getValue()));
 }
 
 inline void CPU::cpu_shru()
@@ -710,17 +708,14 @@ inline void CPU::cpu_jalr()
 
 inline void CPU::cpu_core()
 {
-
 }
 
 inline void CPU::cpu_cwait()
 {
-
 }
 
 inline void CPU::cpu_time()
 {
-
 }
 
 inline void CPU::cpu_in()
@@ -754,7 +749,6 @@ inline void CPU::cpu_out()
 	else
 		std::cout << static_cast<char>(rd->getValue() & 0xff);
 }
-
 
 
 int _tmain(int argc, _TCHAR* argv[])
