@@ -65,12 +65,12 @@ if __name__ == "__main__":
 		args = [None] + input("<input filename> <output filename> -flags\n\n-H   - Treat input as high-level assembly\n-L   - Output binary\n\n>>> ").split()
 
 	#Switches
-	if "-H" in args:
+	if "-H" in args[3:]:
 		high = True
 	else:
 		high = False
 
-	if "-L" in args:
+	if "-L" in args[3:]:
 		low = True
 	else:
 		low = False

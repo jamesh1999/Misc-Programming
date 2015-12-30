@@ -55,28 +55,35 @@ def removeAnchors(assembly):
 #Assign memory locations and default values for global variables
 def createGlobals(assembly):
 	global GLOBAL_COUNT
+	global GLOBALS
 
 	new_assembly = []
 	for line in assembly:
-		if line[0] == "VAR":
-			GLOBALS[line[2]] = [line[1], 0]
-			if "=" in line:
-				GLOBALS[line[2]][1] = line[line.index("=") + 1]
-				p("\tAssigned " + line[2] + " = " + line[line.index("=") + 1])
-			else:
-				p("\tAssigned " + line[2] + " = NULL")
+		try:
 
-			register = getNextArbitraryRegister()
+			if line[0] == "VAR":
+				GLOBALS[line[2]] = [line[1], 0]
 
-			assignment = []
-			if line[1] == "UNSIGNED":
-				assignment.append(["ADDUI"] + register + ["ZERO", GLOBALS[line[2]][1]])
-			else:
-				assignment.append(["ADDI"] + register + ["ZERO", GLOBALS[line[2]][1]])
-			assignment.append(["SW"] + register + ["GP", "+", str(GLOBAL_COUNT * 4)])
-			new_assembly += assignment
-			GLOBALS[line[2]][1] = GLOBAL_COUNT * 4
-			GLOBAL_COUNT += 1
+				if "=" in line:
+					GLOBALS[line[2]][1] = line[line.index("=") + 1]
+					p("\tAssigned " + line[2] + " = " + line[line.index("=") + 1])
+				else:
+					p("\tAssigned " + line[2] + " = NULL")
+
+				assignment = []
+				if line[1] == "UNSIGNED":
+					assignment.append(["ADDUI", line[2], "ZERO", GLOBALS[line[2]][1]])
+				elif line[1] == "SIGNED":
+					assignment.append(["ADDI", line[2], "ZERO", GLOBALS[line[2]][1]])
+				else:
+					raise AssemblerError("Expected unsigned/signed instead of " + line[1] + ".")
+
+				new_assembly += assignment
+				GLOBALS[line[2]][1] = GLOBAL_COUNT * 4
+				GLOBAL_COUNT += 1
+
+		except IndexError:
+			raise AssemblerError(str(line) + " is not a valid global declaration.")
 
 		else:
 			new_assembly.append(line);
@@ -93,15 +100,18 @@ def removeGlobalReferences(assembly):
 		append_extra = None
 		if splitted[1] in GLOBALS.keys():
 			register_out = getNextArbitraryRegister()
+
 			if not splitted[0] == "SW":
 				append_extra = ["SW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]][1])]
 			else:
 				new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]][1])])
+
 			line = line[:line.index(splitted[1])] + register_out + line[line.index(splitted[1]) + 1:]
 
 		#Handle globals as input registers
 		for (i,r) in enumerate(splitted[2]):
 			if r in GLOBALS.keys():
+
 				if not r in line:
 					new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[r][1])])
 				else:
@@ -114,7 +124,6 @@ def removeGlobalReferences(assembly):
 
 		if not append_extra == None:
 			new_assembly.append(append_extra)
-	print(new_assembly)
 	return new_assembly
 
 #Remove any instances of #xx denoting an address relative to GP
@@ -124,9 +133,9 @@ def removeGlobalAddresses(assembly):
 		if "#" in line:
 			register = getNextArbitraryRegister()
 			addr = line.index("#") + 1
-			new_assembly.append(["LW"] + register + ["GP", "+", str(addr)])
+			new_assembly.append(["LW"] + register + ["GP", "+", line[addr]])
 			new_assembly.append(line[:line.index("#")] + register + line[line.index("#") + 2:])
-			new_assembly.append(["SW"] + register + ["GP", "+", str(addr)])
+			new_assembly.append(["SW"] + register + ["GP", "+", line[addr]])
 		else:
 			new_assembly.append(line)
 
