@@ -1,6 +1,6 @@
-#include "globalsettings.h"
+#include "GlobalSettings.h"
+#include "ui_GlobalSettings.h"
 #include "Globals.h"
-#include <iostream>
 
 GlobalSettings::GlobalSettings(QWidget *parent) : QDialog(parent)
 {

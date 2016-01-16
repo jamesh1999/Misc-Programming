@@ -1,8 +1,56 @@
-#ifndef __BIFID_INCLUDED__
-#define __BIFID_INCLUDED__
+#ifndef BIFID_H
+#define BIFID_H
 
-#include <string>
+#include <QString>
+#include <QWidget>
+#include <QThread>
+#include "Cipher.h"
 
-void bifid(std::string);
+namespace Ui {
+class Bifid;
+}
 
-#endif
+namespace Cipher
+{
+    class BifidWorker : public QObject, public ICipherWorker
+    {
+        Q_OBJECT
+        Q_INTERFACES(Cipher::ICipherWorker)
+
+    signals:
+        void finished();
+        void progress(int);
+        void setPlainText(QString);
+        void appendToConsole(QString);
+
+    protected:
+        std::string decrypt(int, const std::string&, const std::string&);
+
+    public slots:
+        void crack(int, QString);
+        void useKey(int, QString,QString);
+    };
+
+    class Bifid : public QWidget, public ICipher
+    {
+        Q_OBJECT
+        Q_INTERFACES(Cipher::ICipher)
+
+    public:
+        explicit Bifid(QWidget *parent = 0);
+        ~Bifid();
+
+        void start(QString);
+        ICipherWorker* getWorker();
+
+    private:
+        Ui::Bifid *ui;
+        BifidWorker* worker;
+
+    signals:
+        void crack(int,QString);
+        void useKey(int,QString,QString);
+    };
+}
+
+#endif // BIFID_H

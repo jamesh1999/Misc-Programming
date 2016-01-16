@@ -1,88 +1,117 @@
+#include "Bifid.h"
+#include "ui_Bifid.h"
+#include <vector>
 #include <iostream>
-#include <algorithm>
 #include <sstream>
 #include <float.h>
-#include "Bifid.h"
 #include "Globals.h"
-#include "decrypt.h"
 
+using namespace Cipher;
 
-
-//Crack simple substitution ciphers
-void bifid(std::string text)
+std::string BifidWorker::decrypt(int period, const std::string& key, const std::string& text)
 {
-    unsigned period = 0;
+    std::string result = text;
 
-	if (period == 0)
-	{
-		period = text.length();
-	}
+    for (unsigned i = 0; i < text.length(); i += period)
+    {
+        if (i + period > text.length())
+            period = text.length() - i;
 
-	//Decrypt text with key
-	auto decrypt = [](int period, std::string key, std::string text)
-	{
+        for (int j = 0; j < period; ++j)
+        {
+            //Letters that were encoded by the letter i+j
+            char a = text[i + (j / 2)];
+            char b = text[i + ((j + period) / 2)];
 
-		std::string result = text;
+            //Get the coordinates of the letters that came from letter i+j
+            int a_part = key.find_first_of(a) / (int)std::pow(5, (j % 2)) % 5;
+            int b_part = key.find_first_of(b) / (int)std::pow(5, ((j + period) % 2)) % 5;
 
-		for (unsigned i = 0; i < text.length(); i += period)
-		{
-			if (i + period > text.length())
-			{
-				period = text.length() - i;
-			}
+            result[i + j] = key[a_part + b_part * 5];
+        }
+    }
+    return result;
+}
 
-			for (int j = 0; j < period; ++j)
-			{
-				//Letters that were encoded by the letter i+j
-				char a = text[i + (j / 2)];
-				char b = text[i + ((j + period) / 2)];
+void BifidWorker::crack(int period, QString qtext)
+{
+    std::string text = qtext.toStdString();
 
-				//Get the coordinates of the letters that came from letter i+j
-				int a_part = key.find_first_of(a) / (int)std::pow(5, (j % 2)) % 5;
-				int b_part = key.find_first_of(b) / (int)std::pow(5, ((j + period) % 2)) % 5;
+    if (period == 0)
+        period = text.length();
 
-				result[i + j] = key[a_part + b_part * 5];
-			}
-		}
-		return result;
-	};
+    //Overall max key
+    std::string parent_key = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+    std::random_shuffle(parent_key.begin(), parent_key.end());
+    double parent_eval = -DBL_MAX;
 
-	//Overall max key
-	std::string parent_key = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+    //Implement simulated annealing
+    for (double T = TEMP; T >= 0; T -= STEP)
+    {
+        for (unsigned i = 0; i < COUNT; ++i)
+        {
+            std::string child_key = parent_key;
 
-	double parent_eval = -DBL_MAX;
+            //Swap letters
+            std::swap(child_key[rand() % 25], child_key[rand() % 25]);
 
-	std::random_shuffle(parent_key.begin(), parent_key.end());
+            double eval = evaluate(decrypt(period,child_key, text));
 
-	//Implement simulated annealing
-	for (double T = TEMP; T >= 0; T -= STEP)
-	{
-		for (unsigned cnt = 0; cnt < 624; ++cnt)
-		{
-			std::string child_key = parent_key;
-
-			//Swap letters
-			std::swap(child_key[cnt / 25], child_key[cnt % 25]);
-
-			double eval = evaluate(decrypt(period,child_key, text));
-
-			//If key is better then always switch
-			if (eval > parent_eval)
-			{
-				parent_eval = eval;
-				parent_key = child_key;
-			}
+            //If key is better then always switch
             //Otherwise switch if temperature is high enough
-            else if (T>0 && exp((eval - parent_eval) / T) > 1.0*rand() / (double)RAND_MAX)
-			{
+            if (eval > parent_eval ||
+                T>0 && exp((eval - parent_eval) / T) > 1.0*rand() / (double)RAND_MAX)
+            {
                 parent_eval = eval;
                 parent_key = child_key;
-			}
-		}
+            }
+        }
+
         std::stringstream ss;
         ss << "\nPeriod: " << period << "\nCurrent score: " << parent_eval << "\nCurrent Temp.: " << T << "\nBest key:  " << parent_key << std::endl;
-        pWorker->appendToConsole(QString::fromStdString(ss.str()));
+        emit appendToConsole(QString::fromStdString(ss.str()));
 
-        pWorker->setPlainTextOutput(QString::fromStdString(decrypt(period,parent_key, text)));
+        emit setPlainText(QString::fromStdString(decrypt(period,parent_key, text)));
     }
+}
+
+void BifidWorker::useKey(int period, QString key, QString text)
+{
+    emit setPlainText(QString::fromStdString(decrypt(period, key.toStdString(), text.toStdString())));
+}
+
+Bifid::Bifid(QWidget *parent) : QWidget(parent), ui(new Ui::Bifid)
+{
+    cipher_data = {"Bifid", 25, 47, 58, 77, 24, 23, 7, 49, 517, 118, false};
+    ui->setupUi(this);
+
+    worker = new BifidWorker();
+    worker->moveToThread(&worker_thread);
+
+    connect(&worker_thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(this, SIGNAL(useKey(int,QString,QString)), worker, SLOT(useKey(int,QString,QString)));
+    connect(this, SIGNAL(crack(int,QString)), worker, SLOT(crack(int,QString)));
+
+    worker_thread.start();
+}
+
+Bifid::~Bifid()
+{
+    delete ui;
+
+    worker_thread.quit();
+    worker_thread.wait();
+}
+
+ICipherWorker* Bifid::getWorker()
+{
+    return qobject_cast<ICipherWorker*>(worker);
+}
+
+void Bifid::start(QString text)
+{
+    if(ui->use_key->isChecked())
+        useKey(ui->period->value(), ui->key->text(), text);
+    else
+        crack(ui->period->value(), text);
 }

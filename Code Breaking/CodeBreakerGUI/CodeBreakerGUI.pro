@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-04-03T17:17:29
+# Project created by QtCreator 2016-01-09T17:58:59
 #
 #-------------------------------------------------
 
@@ -13,50 +13,31 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    Amsco.cpp \
+        CodeBreakerMain.cpp \
     Bifid.cpp \
-    BinaryConvert.cpp \
-    Cadenus.cpp \
-    ColumnarTransposition.cpp \
-    FourSquare.cpp \
     Globals.cpp \
-    Hill.cpp \
-    Playfair.cpp \
-    PolybiusSquare.cpp \
-    RailFence.cpp \
-    SimpleSubstitution.cpp \
-    Trifid.cpp \
+    GuessCipher.cpp \
+    GlobalSettings.cpp \
     Vigenere.cpp \
-    decrypt.cpp \
-    globalsettings.cpp \
-    guesscipher.cpp
+    SimpleSubstitution.cpp
 
-HEADERS  += mainwindow.h \
-    decrypt.h \
-    Amsco.h \
+HEADERS  += CodeBreakerMain.h \
     Bifid.h \
     Bigrams.h \
-    BinaryConvert.h \
-    Cadenus.h \
-    ColumnarTransposition.h \
-    FourSquare.h \
     Globals.h \
-    Hill.h \
-    Playfair.h \
-    PolybiusSquare.h \
     Quadgrams.h \
-    RailFence.h \
-    SimpleSubstitution.h \
-    Trifid.h \
     Trigrams.h \
+    GuessCipher.h \
+    GlobalSettings.h \
     Vigenere.h \
-    globalsettings.h \
-    guesscipher.h
+    SimpleSubstitution.h \
+    Cipher.h
 
-FORMS    += mainwindow.ui \
-    globalsettings.ui \
-    guesscipher.ui
+FORMS    += CodeBreakerMain.ui \
+    GuessCipher.ui \
+    GlobalSettings.ui \
+    Vigenere.ui \
+    SimpleSubstitution.ui \
+    Bifid.ui
 
-DISTFILES +=
-CONFIG += c++11
+CONFIG += c++11 \ console

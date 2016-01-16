@@ -1,0 +1,16 @@
+INPUT(
+./release\main.o
+./release\CodeBreakerMain.o
+./release\Bifid.o
+./release\Globals.o
+./release\GuessCipher.o
+./release\GlobalSettings.o
+./release\Vigenere.o
+./release\SimpleSubstitution.o
+./release\moc_CodeBreakerMain.o
+./release\moc_Bifid.o
+./release\moc_GuessCipher.o
+./release\moc_GlobalSettings.o
+./release\moc_Vigenere.o
+./release\moc_SimpleSubstitution.o
+);
