@@ -25,11 +25,8 @@ class Ui_SimpleSubstitution
 {
 public:
     QCheckBox *use_key;
-    QLineEdit *crib;
-    QCheckBox *use_crib;
     QLineEdit *key;
     QLabel *label_5;
-    QLabel *label_6;
 
     void setupUi(QWidget *SimpleSubstitution)
     {
@@ -45,22 +42,13 @@ public:
         SimpleSubstitution->setMaximumSize(QSize(492, 100));
         use_key = new QCheckBox(SimpleSubstitution);
         use_key->setObjectName(QStringLiteral("use_key"));
-        use_key->setGeometry(QRect(290, 20, 70, 17));
-        crib = new QLineEdit(SimpleSubstitution);
-        crib->setObjectName(QStringLiteral("crib"));
-        crib->setGeometry(QRect(50, 50, 201, 20));
-        use_crib = new QCheckBox(SimpleSubstitution);
-        use_crib->setObjectName(QStringLiteral("use_crib"));
-        use_crib->setGeometry(QRect(290, 50, 70, 17));
+        use_key->setGeometry(QRect(290, 10, 70, 21));
         key = new QLineEdit(SimpleSubstitution);
         key->setObjectName(QStringLiteral("key"));
-        key->setGeometry(QRect(50, 20, 201, 20));
+        key->setGeometry(QRect(50, 10, 201, 20));
         label_5 = new QLabel(SimpleSubstitution);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(10, 20, 47, 16));
-        label_6 = new QLabel(SimpleSubstitution);
-        label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(10, 50, 47, 16));
+        label_5->setGeometry(QRect(10, 10, 47, 16));
 
         retranslateUi(SimpleSubstitution);
 
@@ -71,9 +59,7 @@ public:
     {
         SimpleSubstitution->setWindowTitle(QApplication::translate("SimpleSubstitution", "Form", 0));
         use_key->setText(QApplication::translate("SimpleSubstitution", "Use Key", 0));
-        use_crib->setText(QApplication::translate("SimpleSubstitution", "Use Crib", 0));
         label_5->setText(QApplication::translate("SimpleSubstitution", "Key:", 0));
-        label_6->setText(QApplication::translate("SimpleSubstitution", "Crib:", 0));
     } // retranslateUi
 
 };

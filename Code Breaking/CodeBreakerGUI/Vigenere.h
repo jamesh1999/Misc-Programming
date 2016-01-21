@@ -27,7 +27,7 @@ namespace Cipher
         std::string decrypt(const std::string&, std::string);
 
     public slots:
-        void crack(QString);
+        void crack(QString,bool,QString);
         void useKey(QString,QString);
     };
 
@@ -41,6 +41,7 @@ namespace Cipher
         ~Vigenere();
 
         void start(QString);
+        void cancel();
         ICipherWorker* getWorker();
 
     private:
@@ -48,8 +49,11 @@ namespace Cipher
         VigenereWorker* worker;
 
     signals:
-        void crack(QString);
+        void crack(QString,bool,QString);
         void useKey(QString,QString);
+    private slots:
+        void on_key_editingFinished();
+        void on_crib_editingFinished();
     };
 }
 

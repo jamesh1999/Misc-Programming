@@ -7,10 +7,12 @@ INPUT(
 ./debug\GlobalSettings.o
 ./debug\Vigenere.o
 ./debug\SimpleSubstitution.o
+./debug\RailFence.o
 ./debug\moc_CodeBreakerMain.o
 ./debug\moc_Bifid.o
 ./debug\moc_GuessCipher.o
 ./debug\moc_GlobalSettings.o
 ./debug\moc_Vigenere.o
 ./debug\moc_SimpleSubstitution.o
+./debug\moc_RailFence.o
 );

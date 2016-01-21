@@ -41,6 +41,7 @@ namespace Cipher
         ~SimpleSubstitution();
 
         void start(QString);
+        void cancel();
         ICipherWorker* getWorker();
 
     private:
@@ -50,6 +51,9 @@ namespace Cipher
     signals:
         void crack(QString);
         void useKey(QString,QString);
+
+    private slots:
+        void on_key_editingFinished();
     };
 }
 

@@ -1,14 +1,17 @@
 #include <regex>
 #include <iostream>
+#include <vector>
 #include "CodeBreakerMain.h"
 #include "Globals.h"
 #include "ui_CodeBreakerMain.h"
 #include "QThread"
+#include <QMessageBox>
 #include "GlobalSettings.h"
 #include "GuessCipher.h"
 #include "Vigenere.h"
 #include "SimpleSubstitution.h"
 #include "Bifid.h"
+#include "RailFence.h"
 
 CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new Ui::CodeBreakerMain)
 {
@@ -16,6 +19,7 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
 
     //Add ciphers
     ui->stackedWidget->addWidget(new Cipher::Bifid());
+    ui->stackedWidget->addWidget(new Cipher::RailFence());
     ui->stackedWidget->addWidget(new Cipher::SimpleSubstitution());
     ui->stackedWidget->addWidget(new Cipher::Vigenere());
 
@@ -45,20 +49,42 @@ void CodeBreakerMain::decryptWithCipher(int id)
 
     Cipher::ICipher* cipher = qobject_cast<Cipher::ICipher*>(ui->stackedWidget->widget(id));
 
-    cipher->start(QString::fromStdString(std::regex_replace(text, e, "")));
+    text = std::regex_replace(text, e, "");
+
+    //Check whether cipher is compatible
+    std::vector<char> letters;
+    for(char c : text)
+    {
+        if(std::find(letters.begin(), letters.end(), c) == letters.end())
+            letters.push_back(c);
+    }
+
+    if(letters.size() <= cipher->cipher_data.nchars)
+    {
+        is_working = true;
+        ui->decrypt->setText("Cancel");
+        cipher->start(QString::fromStdString(std::regex_replace(text, e, "")));
+    }
+    else
+    {
+        QMessageBox warning;
+        warning.warning(this, "Warning", "This ciphertext cannot be decrypted using this method! (There are too many unique characters)");
+        warning.setFixedSize(500,200);
+    }
 }
 
 void CodeBreakerMain::on_decrypt_clicked()
 {
     if(connected_cipher == -1) return;
 
-    is_working = !is_working;
-    ui->decrypt->setText(is_working ? QString("Cancel") : QString("Decrypt"));
-
     if(is_working)
-        decryptWithCipher(ui->cipher->currentIndex());
-    else
+    {
+        is_working = false;
+        ui->decrypt->setText("Decrypt");
         qobject_cast<Cipher::ICipher*>(ui->stackedWidget->currentWidget())->cancel();
+    }
+    else
+        decryptWithCipher(ui->cipher->currentIndex());
 }
 
 void CodeBreakerMain::on_guess_cipher_clicked()

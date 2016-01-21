@@ -19,6 +19,7 @@ std::string SubstitutionWorker::decrypt(const std::string& key, std::string text
 void SubstitutionWorker::crack(QString qtext)
 {
     std::string text = qtext.toStdString();
+
     //Overall max key
     std::string max_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     double max_score = -DBL_MAX;
@@ -27,7 +28,7 @@ void SubstitutionWorker::crack(QString qtext)
     std::string parent_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     double parent_score = -DBL_MAX;
 
-    for (unsigned iter = 0; iter < 50; ++iter)
+    for (unsigned iter = 0; iter < 50 && keep_working; ++iter)
     {
         //Generate and evaluate random parent
         std::random_shuffle(parent_key.begin(),parent_key.end());
@@ -39,13 +40,13 @@ void SubstitutionWorker::crack(QString qtext)
             std::string child_key = parent_key;
 
             //Swap next two characters
-            std::swap(child_key[cnt/26],child_key[cnt%26]);
+            std::swap(child_key[cnt / 26],child_key[cnt % 26]);
 
             //Evaluate new key
             double child_score = evaluate(decrypt(child_key,text));
 
             //Compare scores changing parent if child is better
-            if(child_score>parent_score)
+            if(child_score > parent_score && keep_working)
             {
                 parent_key = child_key;
                 parent_score = child_score;
@@ -54,7 +55,7 @@ void SubstitutionWorker::crack(QString qtext)
         }
 
         //Print results if better
-        if(parent_score>max_score)
+        if(parent_score > max_score)
         {
             max_score = parent_score;
             max_key = parent_key;
@@ -72,7 +73,13 @@ void SubstitutionWorker::crack(QString qtext)
 
 void SubstitutionWorker::useKey(QString key, QString text)
 {
-    emit setPlainText(QString::fromStdString(decrypt(key.toStdString(), text.toStdString())));
+    //Work out key for decryption
+    std::string encrypt_key = key.toStdString();
+    std::string decrypt_key = "AAAAAAAAAAAAAAAAAAAAAAAAAA";
+    for(int i = 0; i < 26; ++i)
+        decrypt_key[encrypt_key[i] - 'A'] = 'A' + i;
+
+    emit setPlainText(QString::fromStdString(decrypt(decrypt_key, text.toStdString())));
     emit finished();
 }
 
@@ -81,6 +88,7 @@ SimpleSubstitution::SimpleSubstitution(QWidget *parent) : QWidget(parent), ui(ne
     cipher_data = {"Simple Substitution", 26, 63, 73, 95, 72, 73, 22, 50, 450, 120, false};
     ui->setupUi(this);
 
+    //Setup worker thread
     worker = new SubstitutionWorker();
     worker->moveToThread(&worker_thread);
 
@@ -106,9 +114,38 @@ ICipherWorker* SimpleSubstitution::getWorker()
 
 void SimpleSubstitution::start(QString text)
 {
+    worker->reset();
     if(ui->use_key->isChecked())
         useKey(ui->key->text(), text);
     else
         crack(text);
 }
 
+void SimpleSubstitution::cancel()
+{
+    worker->cancel();
+}
+
+void Cipher::SimpleSubstitution::on_key_editingFinished()
+{
+    //Sanitize key
+    std::string text = "";
+    for(char c : ui->key->text().toStdString())
+    {
+        if('a' <= c && c <= 'z')
+            c -= 32;
+
+        if('A' <= c && c <= 'Z' &&
+            std::find(text.begin(), text.end(), c) == text.end())
+            text += c;
+    }
+
+    //Add missing letters
+    for(char c = 'A'; c <= 'Z'; ++c)
+    {
+        if(std::find(text.begin(), text.end(), c) == text.end())
+            text += c;
+    }
+
+    ui->key->setText(QString::fromStdString(text));
+}

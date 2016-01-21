@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     GuessCipher.cpp \
     GlobalSettings.cpp \
     Vigenere.cpp \
-    SimpleSubstitution.cpp
+    SimpleSubstitution.cpp \
+    RailFence.cpp
 
 HEADERS  += CodeBreakerMain.h \
     Bifid.h \
@@ -31,13 +32,15 @@ HEADERS  += CodeBreakerMain.h \
     GlobalSettings.h \
     Vigenere.h \
     SimpleSubstitution.h \
-    Cipher.h
+    Cipher.h \
+    RailFence.h
 
 FORMS    += CodeBreakerMain.ui \
     GuessCipher.ui \
     GlobalSettings.ui \
     Vigenere.ui \
     SimpleSubstitution.ui \
-    Bifid.ui
+    Bifid.ui \
+    RailFence.ui
 
 CONFIG += c++11 \ console

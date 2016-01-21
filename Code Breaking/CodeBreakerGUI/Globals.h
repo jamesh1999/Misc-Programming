@@ -14,5 +14,6 @@ extern float TEMP;
 extern float STEP;
 extern unsigned COUNT;
 extern int LENGTH;
+extern unsigned MAX_RAILS;
 
 #endif

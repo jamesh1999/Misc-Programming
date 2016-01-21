@@ -27,7 +27,7 @@ namespace Cipher
         std::string decrypt(int, const std::string&, const std::string&);
 
     public slots:
-        void crack(int, QString);
+        void crack(int, QString, QString);
         void useKey(int, QString,QString);
     };
 
@@ -41,15 +41,19 @@ namespace Cipher
         ~Bifid();
 
         void start(QString);
+        void cancel();
         ICipherWorker* getWorker();
 
     private:
         Ui::Bifid *ui;
         BifidWorker* worker;
+        QString getBaseKey(QString);
 
     signals:
-        void crack(int,QString);
+        void crack(int,QString, QString);
         void useKey(int,QString,QString);
+    private slots:
+        void on_key_editingFinished();
     };
 }
 

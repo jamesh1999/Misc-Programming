@@ -27,18 +27,24 @@ namespace Cipher
     //Signals and slots for cipher worker
     class ICipherWorker
     {
+    protected:
+        bool keep_working = true;
+
     signals:
         virtual void finished() = 0;
         virtual void progress(int) = 0;
         virtual void setPlainText(QString) = 0;
         virtual void appendToConsole(QString) = 0;
+
+    public:
+        void cancel(){keep_working = false;}
+        void reset(){keep_working = true;}
     };
 
     //Signals/slots for a cipher widget
     class ICipher
     {
     protected:
-        bool is_stopped = false;
         QThread worker_thread;
 
     public:
@@ -46,7 +52,7 @@ namespace Cipher
         CipherData cipher_data;
         virtual void start(QString) = 0;
         virtual ICipherWorker* getWorker() = 0;
-        void cancel(){is_stopped = true;}
+        virtual void cancel() = 0;
     };
 }
 

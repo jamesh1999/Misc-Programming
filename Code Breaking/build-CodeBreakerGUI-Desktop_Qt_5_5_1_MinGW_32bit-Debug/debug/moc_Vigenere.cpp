@@ -65,8 +65,8 @@ static const uint qt_meta_data_Cipher__VigenereWorker[] = {
        5,    1,   51,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       6,    1,   54,    2, 0x0a /* Public */,
-       7,    2,   57,    2, 0x0a /* Public */,
+       6,    3,   54,    2, 0x0a /* Public */,
+       7,    2,   61,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -75,7 +75,7 @@ static const uint qt_meta_data_Cipher__VigenereWorker[] = {
     QMetaType::Void, QMetaType::QString,    2,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::QString,    2,
+    QMetaType::Void, QMetaType::QString, QMetaType::Bool, QMetaType::QString,    2,    2,    2,
     QMetaType::Void, QMetaType::QString, QMetaType::QString,    2,    2,
 
        0        // eod
@@ -91,7 +91,7 @@ void Cipher::VigenereWorker::qt_static_metacall(QObject *_o, QMetaObject::Call _
         case 1: _t->progress((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 2: _t->setPlainText((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 3: _t->appendToConsole((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 4: _t->crack((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 4: _t->crack((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
         case 5: _t->useKey((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         default: ;
         }
@@ -192,8 +192,8 @@ void Cipher::VigenereWorker::appendToConsole(QString _t1)
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 struct qt_meta_stringdata_Cipher__Vigenere_t {
-    QByteArrayData data[4];
-    char stringdata0[31];
+    QByteArrayData data[6];
+    char stringdata0[78];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -205,10 +205,13 @@ static const qt_meta_stringdata_Cipher__Vigenere_t qt_meta_stringdata_Cipher__Vi
 QT_MOC_LITERAL(0, 0, 16), // "Cipher::Vigenere"
 QT_MOC_LITERAL(1, 17, 5), // "crack"
 QT_MOC_LITERAL(2, 23, 0), // ""
-QT_MOC_LITERAL(3, 24, 6) // "useKey"
+QT_MOC_LITERAL(3, 24, 6), // "useKey"
+QT_MOC_LITERAL(4, 31, 22), // "on_key_editingFinished"
+QT_MOC_LITERAL(5, 54, 23) // "on_crib_editingFinished"
 
     },
-    "Cipher::Vigenere\0crack\0\0useKey"
+    "Cipher::Vigenere\0crack\0\0useKey\0"
+    "on_key_editingFinished\0on_crib_editingFinished"
 };
 #undef QT_MOC_LITERAL
 
@@ -218,7 +221,7 @@ static const uint qt_meta_data_Cipher__Vigenere[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -226,12 +229,20 @@ static const uint qt_meta_data_Cipher__Vigenere[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   24,    2, 0x06 /* Public */,
-       3,    2,   27,    2, 0x06 /* Public */,
+       1,    3,   34,    2, 0x06 /* Public */,
+       3,    2,   41,    2, 0x06 /* Public */,
+
+ // slots: name, argc, parameters, tag, flags
+       4,    0,   46,    2, 0x08 /* Private */,
+       5,    0,   47,    2, 0x08 /* Private */,
 
  // signals: parameters
-    QMetaType::Void, QMetaType::QString,    2,
+    QMetaType::Void, QMetaType::QString, QMetaType::Bool, QMetaType::QString,    2,    2,    2,
     QMetaType::Void, QMetaType::QString, QMetaType::QString,    2,    2,
+
+ // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -242,15 +253,17 @@ void Cipher::Vigenere::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
         Vigenere *_t = static_cast<Vigenere *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->crack((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 0: _t->crack((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
         case 1: _t->useKey((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 2: _t->on_key_editingFinished(); break;
+        case 3: _t->on_crib_editingFinished(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (Vigenere::*_t)(QString );
+            typedef void (Vigenere::*_t)(QString , bool , QString );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Vigenere::crack)) {
                 *result = 0;
             }
@@ -293,21 +306,21 @@ int Cipher::Vigenere::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 4)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 4;
     }
     return _id;
 }
 
 // SIGNAL 0
-void Cipher::Vigenere::crack(QString _t1)
+void Cipher::Vigenere::crack(QString _t1, bool _t2, QString _t3)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 

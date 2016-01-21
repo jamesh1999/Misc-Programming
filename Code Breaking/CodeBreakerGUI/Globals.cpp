@@ -12,6 +12,7 @@ float TEMP = 20.0f;
 float STEP = 0.1f;
 unsigned COUNT = 10000;
 int LENGTH = 4;
+unsigned MAX_RAILS = 99;
 
 /*CipherData CIPHERS[MAX_CIPHER] = {{"Amsco", 26, 63, 72, 94, 44, 43, 11, 50, 688, 188, false},
                                   {"Bifid", 25, 47, 58, 77, 24, 23, 7, 49, 517, 118, false},

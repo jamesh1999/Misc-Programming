@@ -33,7 +33,7 @@ std::string BifidWorker::decrypt(int period, const std::string& key, const std::
     return result;
 }
 
-void BifidWorker::crack(int period, QString qtext)
+void BifidWorker::crack(int period, QString qtext, QString key)
 {
     std::string text = qtext.toStdString();
 
@@ -41,12 +41,12 @@ void BifidWorker::crack(int period, QString qtext)
         period = text.length();
 
     //Overall max key
-    std::string parent_key = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+    std::string parent_key = key.toStdString();
     std::random_shuffle(parent_key.begin(), parent_key.end());
     double parent_eval = -DBL_MAX;
 
     //Implement simulated annealing
-    for (double T = TEMP; T >= 0; T -= STEP)
+    for (double T = TEMP; T >= 0 && keep_working; T -= STEP)
     {
         for (unsigned i = 0; i < COUNT; ++i)
         {
@@ -73,11 +73,14 @@ void BifidWorker::crack(int period, QString qtext)
 
         emit setPlainText(QString::fromStdString(decrypt(period,parent_key, text)));
     }
+
+    emit finished();
 }
 
 void BifidWorker::useKey(int period, QString key, QString text)
 {
     emit setPlainText(QString::fromStdString(decrypt(period, key.toStdString(), text.toStdString())));
+    emit finished();
 }
 
 Bifid::Bifid(QWidget *parent) : QWidget(parent), ui(new Ui::Bifid)
@@ -85,12 +88,13 @@ Bifid::Bifid(QWidget *parent) : QWidget(parent), ui(new Ui::Bifid)
     cipher_data = {"Bifid", 25, 47, 58, 77, 24, 23, 7, 49, 517, 118, false};
     ui->setupUi(this);
 
+    //Setup worker thread
     worker = new BifidWorker();
     worker->moveToThread(&worker_thread);
 
     connect(&worker_thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
     connect(this, SIGNAL(useKey(int,QString,QString)), worker, SLOT(useKey(int,QString,QString)));
-    connect(this, SIGNAL(crack(int,QString)), worker, SLOT(crack(int,QString)));
+    connect(this, SIGNAL(crack(int,QString,QString)), worker, SLOT(crack(int,QString,QString)));
 
     worker_thread.start();
 }
@@ -110,8 +114,71 @@ ICipherWorker* Bifid::getWorker()
 
 void Bifid::start(QString text)
 {
+    worker->reset();
     if(ui->use_key->isChecked())
         useKey(ui->period->value(), ui->key->text(), text);
     else
-        crack(ui->period->value(), text);
+        crack(ui->period->value(), text, getBaseKey(text));
+}
+
+void Bifid::cancel()
+{
+    worker->cancel();
+}
+
+//Get missing letter and generate base key from it
+QString Bifid::getBaseKey(QString text)
+{
+    char missing = 'A';
+    for(; missing <= 'Z'; ++missing)
+    {
+        if(std::find(text.begin(), text.end(), missing) == text.end())
+            break;
+    }
+
+    QString key;
+    for(char c = 'A'; c <= 'Z'; ++c)
+        key += c;
+
+    return key;
+}
+
+void Cipher::Bifid::on_key_editingFinished()
+{
+    //Sanitize key
+    std::string text = "";
+    for(char c : ui->key->text().toStdString())
+    {
+        if('a' <= c && c <= 'z')
+            c -= 32;
+
+        if('A' <= c && c <= 'Z' &&
+            std::find(text.begin(), text.end(), c) == text.end())
+            text += c;
+    }
+
+    //Identify omitted letter
+    char missing;
+    if(std::find(text.begin(), text.end(), 'J') == text.end())
+        missing = 'J';
+    else
+    {
+        missing = 'A';
+        for(; missing <= 'Z'; ++missing)
+        {
+            if(std::find(text.begin(), text.end(), missing) == text.end())
+                break;
+        }
+    }
+
+    //Add other missing letters
+    for(char c = 'A'; c <= 'Z'; ++c)
+    {
+        if(c == missing) continue;
+
+        if(std::find(text.begin(), text.end(), c) == text.end())
+            text += c;
+    }
+
+    ui->key->setText(QString::fromStdString(text));
 }

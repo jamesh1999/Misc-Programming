@@ -26,11 +26,8 @@ class Ui_Bifid
 {
 public:
     QCheckBox *use_key;
-    QLineEdit *crib;
-    QCheckBox *use_crib;
     QLineEdit *key;
     QLabel *label_5;
-    QLabel *label_6;
     QLabel *label_7;
     QSpinBox *period;
 
@@ -49,21 +46,12 @@ public:
         use_key = new QCheckBox(Bifid);
         use_key->setObjectName(QStringLiteral("use_key"));
         use_key->setGeometry(QRect(290, 10, 70, 21));
-        crib = new QLineEdit(Bifid);
-        crib->setObjectName(QStringLiteral("crib"));
-        crib->setGeometry(QRect(50, 70, 201, 20));
-        use_crib = new QCheckBox(Bifid);
-        use_crib->setObjectName(QStringLiteral("use_crib"));
-        use_crib->setGeometry(QRect(290, 70, 70, 21));
         key = new QLineEdit(Bifid);
         key->setObjectName(QStringLiteral("key"));
         key->setGeometry(QRect(50, 10, 201, 20));
         label_5 = new QLabel(Bifid);
         label_5->setObjectName(QStringLiteral("label_5"));
         label_5->setGeometry(QRect(10, 10, 47, 16));
-        label_6 = new QLabel(Bifid);
-        label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(10, 70, 47, 16));
         label_7 = new QLabel(Bifid);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(10, 35, 47, 31));
@@ -80,9 +68,7 @@ public:
     {
         Bifid->setWindowTitle(QApplication::translate("Bifid", "Form", 0));
         use_key->setText(QApplication::translate("Bifid", "Use Key", 0));
-        use_crib->setText(QApplication::translate("Bifid", "Use Crib", 0));
         label_5->setText(QApplication::translate("Bifid", "Key:", 0));
-        label_6->setText(QApplication::translate("Bifid", "Crib:", 0));
         label_7->setText(QApplication::translate("Bifid", "Period:", 0));
     } // retranslateUi
 
