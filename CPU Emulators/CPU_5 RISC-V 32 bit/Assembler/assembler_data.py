@@ -195,7 +195,7 @@ BASIC_MACROS = {"NOOP":["ADD", "ZERO", "ZERO"], 				#No operation
 				"MOV":["ADDUI", "%1", "%2", "0"],				#Move
 				"CLEAR":["ADD", "%1", "ZERO", "ZERO"]}			#Clear register
 
-OTHER_MACROS = ["PUSH", "POP", "DEL", "CALL", ">", "RET"]
+OTHER_MACROS = ["PUSH", "POP", "DEL", "CALL", ">", "RET", "SET"]
 
 
 

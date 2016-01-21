@@ -126,21 +126,6 @@ def removeGlobalReferences(assembly):
 			new_assembly.append(append_extra)
 	return new_assembly
 
-#Remove any instances of #xx denoting an address relative to GP
-def removeGlobalAddresses(assembly):
-	new_assembly = []
-	for line in assembly:
-		if "#" in line:
-			register = getNextArbitraryRegister()
-			addr = line.index("#") + 1
-			new_assembly.append(["LW"] + register + ["GP", "+", line[addr]])
-			new_assembly.append(line[:line.index("#")] + register + line[line.index("#") + 2:])
-			new_assembly.append(["SW"] + register + ["GP", "+", line[addr]])
-		else:
-			new_assembly.append(line)
-
-	return new_assembly
-
 def removeArbitraryRegisters(assembly):
 	global REGISTER_CONTENTS
 	last_used = ASSIGNABLE[:]
@@ -150,18 +135,18 @@ def removeArbitraryRegisters(assembly):
 		for token in line:
 			if token[0] == "$":
 				for r in REGISTER_CONTENTS:
-					if REGISTER_CONTENTS[r] == line[line.index(token)]:
+					if REGISTER_CONTENTS[r] == token[1:]:
 						register = r
 						break;
 				else:
 					register = last_used[0]
-					#Store old
-					#Load new
+					new_assembly.append(["SW", register, "GP", "-", str(int(REGISTER_CONTENTS[getRegister(register)]) * 4)])
+					new_assembly.append(["LW", register, "GP", "-", str(int(token[1:]) * 4)])
 
 				#Move register to end of queue
 				last_used.remove(register)
 				last_used.append(getRegister(register))
-				REGISTER_CONTENTS[getRegister(register)] = line[line.index(token)]
+				REGISTER_CONTENTS[getRegister(register)] = token[1:]
 
 				line[line.index(token)] = register
 
@@ -178,10 +163,6 @@ def finalPassAssembly(assembly):
 	#Remove Globals
 	p("\tRemoving globals...")
 	assembly = removeGlobalReferences(assembly)
-
-	#Remove global addresses
-	p("\tRemoving global addresses...")
-	assembly = removeGlobalAddresses(assembly)
 
 	#Remove arbitrary registers
 	p("\tRemoving arbitrary registers...")

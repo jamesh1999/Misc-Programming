@@ -1,4 +1,4 @@
-import copy, json
+import copy, json, os
 import tokeniser
 
 
@@ -43,12 +43,14 @@ def parseBNF(bnf):
 			while True:
 				for definition in rhs:
 					for i,term in enumerate(definition):
+
 						if term[0] == '[' and term[-1] == ']':
 							definition[i] = term[1:-1].strip()
 							new_definition = copy.copy(definition)
 							new_definition = new_definition[:i] + new_definition[i + 1:]
 							rhs.append(new_definition)
 							break;
+							
 						if term[0] == '{' and term[-1] == '}':
 							nlhs = "ebnf_" + str(EBNF_EXPANSION)
 							EBNF_EXPANSION += 1
@@ -322,7 +324,8 @@ def generateParseTable():
 						for lookahead in production.lookaheads:
 							parse_table["actions"][lookahead][-1] = "R" + str(index)
 
-with open("grammar.bnf", "r") as grammar:
+path = os.path.join(os.path.dirname(__file__), "Configuration/grammar.bnf")
+with open(path, "r") as grammar:
 	#Set up rules
 	print("Reading grammar...")
 	parseBNF(grammar.readlines())

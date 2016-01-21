@@ -6,6 +6,9 @@ import print
 <<END>>
 Halt
 
+<<SCOPE_END>>
+Sub SP ?(SCOPE_OFFSET)
+
 <<stmnt_init>[0]>
 Mov ?(STRING, addr) @<expr>
 

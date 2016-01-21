@@ -12,12 +12,12 @@ def compile_file(filename):
 		tokens = tokenise('\n'.join(inputf.readlines()))
 		tree = parse(tokens)
 		symbols = generateSymbolTable(tree)
-		assembly = generateCode(tree, symbols)
+		#assembly = generateCode(tree, symbols)
 		print(tree)
 		print("\n\n\n")
 		print(symbols)
-		print("\n\n\n")
-		print(assembly)
+		#print("\n\n\n")
+		#print(assembly)
 
 #Automatically compile if main
 if __name__ == "__main__":

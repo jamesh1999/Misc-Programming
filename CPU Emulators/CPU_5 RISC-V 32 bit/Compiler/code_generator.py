@@ -1,27 +1,22 @@
+import os
 from tokeniser import *
 
 CURRENT_REGISTER = 0
 
 definitions = []
 templates = {}
+built_in = {}
+
 symbols = []
 
-with open("definitions.bnf", "r") as ifile:
-	#Get lines for code generator
-	relevant = []
-	reading = False
-	for line in ifile.readlines():
-		if line.strip() == "#CODEGENERATOR":
-			reading = True
-			continue;
-		elif line[0] == "#":
-			reading = False
-			continue;
 
-		if reading:
-			relevant.append(line)
 
-	for line in relevant:
+#Read code generator config
+path = os.path.join(os.path.dirname(__file__), "Configuration/code_generator.conf")
+with open(path, "r") as ifile:
+	lines = ifile.readlines()
+
+	for line in lines:
 		parts = line.split("::=")
 
 		if len(parts) == 2:
@@ -44,11 +39,14 @@ with open("definitions.bnf", "r") as ifile:
 
 			definitions.append([lhs, num + 1, nrhs]) #Increment num 0 is default case
 
+#Read templates
+path = os.path.join(os.path.dirname(__file__), "Configuration/templates.al")
+with open(path, "r") as ifile:
+	lines = ifile.readlines()
 
-with open("templates.al", "r") as ifile:
 	#Separate templates
 	temp = []
-	for line in ifile.readlines():
+	for line in lines:
 		tokens = tokenise(line)
 		if len(tokens) > 0 and tokens[0] == "<":
 			temp.append([tokens])
@@ -71,6 +69,17 @@ with open("templates.al", "r") as ifile:
 			templates[node[2]].append([])
 
 		templates[node[2]][num] = template[1:]
+
+#Read built-in functions
+path = os.path.join(os.path.dirname(__file__), "Configuration/Built-in Functions")
+for filename in next(os.walk(path))[2]:
+	file_path = os.path.join(path, filename)
+
+	with open(file_path, "r") as ifile:
+		lines = ifile.readlines()
+		built_in[filename.split('.')[0]] = lines
+
+
 
 #Get the first instance of a node in a parse tree
 def getFirstInstanceOf(tree, search):
@@ -125,15 +134,6 @@ def isDefinitionMatch(tree, definition, pos = 0, root = True):
 	else:
 		return False, 0
 
-def symbolQuery(query):
-	for symbol in symbols:
-		if symbol[0] == query[2]:
-			if query[4] == "id":
-				return symbol[0]
-			elif query[4] == "addr":
-				return '#' + str(symbol[4])
-	
-
 #Generate the assembly for a single node in the parse tree
 def generateNode(parse_tree):
 	global CURRENT_REGISTER
@@ -171,7 +171,7 @@ def generateNode(parse_tree):
 		if "?" in line:
 			segment = line[line.index("?"):]
 			query = line[line.index("?"):line.index("?") + segment.index(")") + 1]
-			template[i] = line[:line.index("?")] + [symbolQuery(query)] + line[line.index("?") + segment.index(")") + 1:]
+			template[i] = line[:line.index("?")] + [symbols.symbolQuery(query)] + line[line.index("?") + segment.index(")") + 1:]
 
 	#Assign registers used only by template
 	assigned = {}
