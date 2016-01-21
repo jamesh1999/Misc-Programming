@@ -1,0 +1,2 @@
+python basen.py
+pause
