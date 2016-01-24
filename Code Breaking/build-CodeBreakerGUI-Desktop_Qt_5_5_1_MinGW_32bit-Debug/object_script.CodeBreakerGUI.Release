@@ -8,6 +8,8 @@ INPUT(
 ./release\Vigenere.o
 ./release\SimpleSubstitution.o
 ./release\RailFence.o
+./release\Trifid.o
+./release\BinaryConvert.o
 ./release\moc_CodeBreakerMain.o
 ./release\moc_Bifid.o
 ./release\moc_GuessCipher.o
@@ -15,4 +17,6 @@ INPUT(
 ./release\moc_Vigenere.o
 ./release\moc_SimpleSubstitution.o
 ./release\moc_RailFence.o
+./release\moc_Trifid.o
+./release\moc_BinaryConvert.o
 );

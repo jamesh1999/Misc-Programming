@@ -12,6 +12,8 @@
 #include "SimpleSubstitution.h"
 #include "Bifid.h"
 #include "RailFence.h"
+#include "Trifid.h"
+#include "BinaryConvert.h"
 
 CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new Ui::CodeBreakerMain)
 {
@@ -19,8 +21,10 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
 
     //Add ciphers
     ui->stackedWidget->addWidget(new Cipher::Bifid());
+    ui->stackedWidget->addWidget(new Cipher::BinaryConvert());
     ui->stackedWidget->addWidget(new Cipher::RailFence());
     ui->stackedWidget->addWidget(new Cipher::SimpleSubstitution());
+    ui->stackedWidget->addWidget(new Cipher::Trifid());
     ui->stackedWidget->addWidget(new Cipher::Vigenere());
 
 

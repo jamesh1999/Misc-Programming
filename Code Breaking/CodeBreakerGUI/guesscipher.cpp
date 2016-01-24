@@ -190,6 +190,8 @@ void GuessCipher::guessCipher()
 
     for(unsigned i = 0; i < text.length() - 1; ++i)
     {
+        if(text[i] >= 'A' && text[i] <= 'Z' &&
+           text[i + 1] >= 'A' && text[i + 1] <= 'Z')
         ldi += LDI_ARR[text[i] - 'A'][text[i + 1] - 'A'];
         sdd += SDD_ARR[text[i] - 'A'][text[i + 1] - 'A'];
     }

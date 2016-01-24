@@ -45,23 +45,23 @@ public:
         RailFence->setMaximumSize(QSize(492, 100));
         rail_count = new QSpinBox(RailFence);
         rail_count->setObjectName(QStringLiteral("rail_count"));
-        rail_count->setGeometry(QRect(90, 10, 42, 22));
+        rail_count->setGeometry(QRect(80, 10, 42, 22));
         rail_count->setMinimum(1);
         label = new QLabel(RailFence);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(20, 10, 61, 20));
+        label->setGeometry(QRect(10, 10, 61, 20));
         label_2 = new QLabel(RailFence);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(20, 50, 71, 20));
+        label_2->setGeometry(QRect(10, 40, 71, 20));
         starting_rail = new QSpinBox(RailFence);
         starting_rail->setObjectName(QStringLiteral("starting_rail"));
-        starting_rail->setGeometry(QRect(90, 50, 42, 22));
+        starting_rail->setGeometry(QRect(80, 40, 42, 22));
         use_key = new QCheckBox(RailFence);
         use_key->setObjectName(QStringLiteral("use_key"));
-        use_key->setGeometry(QRect(160, 10, 70, 21));
+        use_key->setGeometry(QRect(150, 10, 70, 21));
         reversed = new QCheckBox(RailFence);
         reversed->setObjectName(QStringLiteral("reversed"));
-        reversed->setGeometry(QRect(160, 50, 101, 21));
+        reversed->setGeometry(QRect(150, 40, 101, 21));
 
         retranslateUi(RailFence);
 

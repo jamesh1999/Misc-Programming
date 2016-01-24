@@ -79,6 +79,8 @@ void BifidWorker::crack(int period, QString qtext, QString key)
 
 void BifidWorker::useKey(int period, QString key, QString text)
 {
+    if(period == 0)
+        period = text.size();
     emit setPlainText(QString::fromStdString(decrypt(period, key.toStdString(), text.toStdString())));
     emit finished();
 }

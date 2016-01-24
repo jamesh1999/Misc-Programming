@@ -20,7 +20,10 @@ SOURCES += main.cpp\
     GlobalSettings.cpp \
     Vigenere.cpp \
     SimpleSubstitution.cpp \
-    RailFence.cpp
+    RailFence.cpp \
+    Trifid.cpp \
+    BinaryConvert.cpp \
+    Space.cpp
 
 HEADERS  += CodeBreakerMain.h \
     Bifid.h \
@@ -33,7 +36,10 @@ HEADERS  += CodeBreakerMain.h \
     Vigenere.h \
     SimpleSubstitution.h \
     Cipher.h \
-    RailFence.h
+    RailFence.h \
+    Trifid.h \
+    BinaryConvert.h \
+    Space.h
 
 FORMS    += CodeBreakerMain.ui \
     GuessCipher.ui \
@@ -41,6 +47,8 @@ FORMS    += CodeBreakerMain.ui \
     Vigenere.ui \
     SimpleSubstitution.ui \
     Bifid.ui \
-    RailFence.ui
+    RailFence.ui \
+    Trifid.ui \
+    BinaryConvert.ui
 
 CONFIG += c++11 \ console
