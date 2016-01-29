@@ -72,6 +72,8 @@ void CPU::loop()
 	std::cout << "Instructions ran: " << instructions_completed << std::endl;
 	std::cout << "Time taken: " << seconds << "s" << std::endl;
 	std::cout << "Instructions per second: " << static_cast<long>(instructions_completed / seconds) << "s-1" << std::endl;
+	std::cout << "FP: " << m_registers[2].getValue() << std::endl;
+	std::cout << "SP: " << m_registers[14].getValue() << std::endl;
 }
 
 inline void CPU::operation()

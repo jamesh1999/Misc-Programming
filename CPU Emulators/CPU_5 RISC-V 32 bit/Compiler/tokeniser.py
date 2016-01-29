@@ -7,7 +7,7 @@ def removeSpecials(string):
 	in_comment = False
 	for i in range(len(string)):
 		#Update state
-		if string[i:i + 1] == "//":
+		if string[i:i + 2] == "//":
 			in_comment = True
 		elif string[i] == "\n":
 			in_comment = False

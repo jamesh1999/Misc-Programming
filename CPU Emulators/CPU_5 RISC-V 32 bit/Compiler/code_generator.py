@@ -1,7 +1,10 @@
 import os
 from tokeniser import *
+import copy
 
 CURRENT_REGISTER = 0
+CURRENT_SCOPE = []
+MAX_AT_LEVEL = 0
 
 definitions = []
 templates = {}
@@ -134,9 +137,63 @@ def isDefinitionMatch(tree, definition, pos = 0, root = True):
 	else:
 		return False, 0
 
+#Set all arbitrary registers to unique values
+def setUniqueRegisters(template, child_nodes, child_templates):
+	global CURRENT_REGISTER
+
+	#Assign registers used only by template
+	assigned = {}
+	for i,line in enumerate(template):
+		for j,token in enumerate(line):
+			if token[0] == '$':
+				if not token[1:] in assigned:
+					assigned[token[1:]] = "$" + str(CURRENT_REGISTER)
+					CURRENT_REGISTER += 1
+
+				template[i] = line[:j] + [assigned[token[1:]]] + line[j + 1:]
+
+	#Assign i/o registers
+	assigned = [None] * len(child_nodes)
+	for i in range(len(template)):
+
+		#Continue until finished
+		while True:
+			line = template[i]
+			for j in range(len(line)):
+				if line[j] == '@' and line[j + 1] == '<' and line[j + 3] == '>':
+
+					#Not assigned
+					if assigned[child_nodes.index(line[j + 2])] == None:
+						assigned[child_nodes.index(line[j + 2])] = '$' + str(CURRENT_REGISTER)
+
+						#Update child template
+						for k, child_line in enumerate(child_templates[child_nodes.index(line[j + 2])]):
+
+							while '@' in child_line:
+								y = child_line.index('@')
+								child_line = child_line[:y] + ['$' + str(CURRENT_REGISTER)] + child_line[y + 1:]
+
+							child_templates[child_nodes.index(line[j + 2])][k] = child_line
+
+						#Move to new register
+						CURRENT_REGISTER += 1
+						
+					#Update assembly
+					template[i] = line[:j] + [assigned[child_nodes.index(line[j + 2])]] + line[j + 4:]
+					break;
+			else:
+				break;
+
+	return [template, child_templates]
+
 #Generate the assembly for a single node in the parse tree
 def generateNode(parse_tree):
-	global CURRENT_REGISTER
+	global CURRENT_SCOPE
+	global MAX_AT_LEVEL
+
+	if symbols.isScoped(parse_tree):
+		CURRENT_SCOPE.append(MAX_AT_LEVEL)
+		symbols.updateScope(CURRENT_SCOPE)
 
 	child_nodes = []
 	child_templates = []
@@ -152,10 +209,19 @@ def generateNode(parse_tree):
 	if parse_tree[0] in templates:
 		for definition in definitions:
 			if isDefinitionMatch(parse_tree, definition):
-				template = templates[parse_tree[0]][definition[1]][:]
+				template = copy.deepcopy(templates[parse_tree[0]][definition[1]])
 				break;
 		else:
-			template = templates[parse_tree[0]][0][:]
+			template = copy.deepcopy(templates[parse_tree[0]][0])
+
+	#Insert pre-frame-change assembly
+	prepend = []
+	if symbols.isScoped(parse_tree):
+		prepend += copy.deepcopy(templates["SCOPE_START"][0])
+
+	#Insert post-frame-change assembly
+	if symbols.isScoped(parse_tree):
+		template += copy.deepcopy(templates["SCOPE_END"][0])
 
 	#Substitute STRING and INT placeholders
 	for i,line in enumerate(template):
@@ -172,52 +238,43 @@ def generateNode(parse_tree):
 			segment = line[line.index("?"):]
 			query = line[line.index("?"):line.index("?") + segment.index(")") + 1]
 			template[i] = line[:line.index("?")] + [symbols.symbolQuery(query)] + line[line.index("?") + segment.index(")") + 1:]
+	for i,line in enumerate(prepend):
+		if "?" in line:
+			segment = line[line.index("?"):]
+			query = line[line.index("?"):line.index("?") + segment.index(")") + 1]
+			prepend[i] = line[:line.index("?")] + [symbols.symbolQuery(query)] + line[line.index("?") + segment.index(")") + 1:]
 
-	#Assign registers used only by template
-	assigned = {}
-	for i,line in enumerate(template):
-		if "$" in line:
-			x = line.index("$")
-
-			if not line[x + 1] in assigned:
-				assigned[line[x + 1]] = str(CURRENT_REGISTER)
-				CURRENT_REGISTER += 1
-
-			template[i] = line[:x + 1] + assigned[line[x + 1]] +line[x + 2:]
-
-	#Assign i/o registers
-	assigned = [None] * len(child_nodes)
-	for i,line in enumerate(template):
-		if '@' in line:
-			x = line.index('@')
-			if line[x + 1] == '<' and line[x + 3] == '>':
-				#Not assigned
-				if assigned[child_nodes.index(line[x + 2])] == None:
-					assigned[child_nodes.index(line[x + 2])] = CURRENT_REGISTER
-
-					#Update child template
-					for j,cline in enumerate(child_templates[child_nodes.index(line[x + 2])]):
-						if '@' in cline:
-							y = cline.index('@')
-							child_templates[child_nodes.index(line[x + 2])][j] = cline[:y] + ["$", str(CURRENT_REGISTER)] + cline[y + 1:]
-
-					CURRENT_REGISTER += 1
-				#Update assembly
-				template[i] = template[i][:x] + ["$", str(assigned[child_nodes.index(line[x + 2])])] + template[i][x + 4:]
+	corrected = setUniqueRegisters(template, child_nodes, child_templates)
+	template = corrected[0]
+	child_templates = corrected[1]
 
 	#Insert the assembly from the child nodes
 	#Insert the assembly for child nodes in the middle
-	for i,line in enumerate(template):
-		if len(line) >= 3 and line[0] == "[" and line[2] == "]":
-			insert = child_templates[child_nodes.index(line[1])][:]
-			child_templates[child_nodes.index(line[1])] = []
-			template = template[:i] + insert + templates[i + 1:]
-	
+	while True:
+		for i,line in enumerate(template):
+			if len(line) >= 3 and line[0] == "[" and line[4] == "]":
+
+				#If template exists
+				if line[2] in child_nodes:
+					insert = list(child_templates[child_nodes.index(line[2])])
+					child_templates[child_nodes.index(line[2])] = []
+					template = template[:i] + insert + template[i + 1:]
+				else:
+					template = template[:i] + template[i + 1:]
+
+				break;
+		else:
+			break;
+
 	#Insert the assembly for child nodes at the start
-	prepend = []
 	for t in child_templates:
 		prepend += t
 	template = prepend + template
+
+	if symbols.isScoped(parse_tree):
+		CURRENT_SCOPE = CURRENT_SCOPE[:-1]
+		symbols.updateScope(CURRENT_SCOPE)
+		MAX_AT_LEVEL += 1
 
 	return template
 
@@ -228,4 +285,4 @@ def generateCode(parse_tree, symbols_in):
 	global symbols
 	symbols = symbols_in
 
-	return templates["START"][0][:] + generateNode(parse_tree) + templates["END"][0][:]
+	return setUniqueRegisters(copy.deepcopy(templates["START"][0]), [], [])[0] + generateNode(parse_tree) + setUniqueRegisters(copy.deepcopy(templates["END"][0]), [], [])[0]

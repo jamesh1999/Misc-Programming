@@ -73,18 +73,18 @@ def convertMacro(macro):
 			instructions.append(["SW", "FP", "SP", "+", "4"])
 			instructions.append(["SW", "RA", "SP", "+", "8"])
 			instructions.append(["ADDUI", "SP", "8"])
-			instructions.append(["ADDU", "FP", "SP", "ZERO"])
+			instructions.append(["ADDUI", "FP", "SP", "4"])
 		
 		#Stack return
 		elif op == "RET":
-			instructions.append(["SUBUI", "SP", "FP", "8"])
+			instructions.append(["SUBUI", "SP", "FP", "12"])
 			instructions.append(["LW", "FP", "SP", "+", "4"])
 			instructions.append(["LW", "RA", "SP", "+", "8"])
 			instructions.append(["JALR", "ZERO", "RA", "+", "4"])
 
 		elif op == "SET":
-			upper = macro[2] // 4096
-			lower = macro[2] % 4096
+			upper = int(macro[2]) // 4096
+			lower = int(macro[2]) % 4096
 
 			if upper:
 				instructions.append(["LUI", macro[1], str(upper)])

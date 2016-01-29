@@ -1,3 +1,3 @@
 pause
-python compiler.py test.cm
+python compiler.py test.cm output.al
 pause

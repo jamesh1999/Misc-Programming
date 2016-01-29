@@ -140,7 +140,8 @@ def removeArbitraryRegisters(assembly):
 						break;
 				else:
 					register = last_used[0]
-					new_assembly.append(["SW", register, "GP", "-", str(int(REGISTER_CONTENTS[getRegister(register)]) * 4)])
+					if not REGISTER_CONTENTS[getRegister(register)] == None:
+						new_assembly.append(["SW", register, "GP", "-", str(int(REGISTER_CONTENTS[getRegister(register)]) * 4)])
 					new_assembly.append(["LW", register, "GP", "-", str(int(token[1:]) * 4)])
 
 				#Move register to end of queue

@@ -1,8 +1,9 @@
-<PROGRAM> 				::= {<statement>}
+<PROGRAM> 				::= <program_block>
 
 
 
 //Generic structures
+<program_block>			::= {<statement>}
 <statement>				::= <stmnt_assign> ";" | <stmnt_init> ";" | <stmnt_func> | <stmnt_flow> | <stmnt_call> ";" | <stmnt_null> | <block>
 <block>					::= "{" [{<statement>}] "}"
 

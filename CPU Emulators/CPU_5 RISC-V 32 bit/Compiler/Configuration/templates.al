@@ -4,13 +4,72 @@ import setup
 import print
 
 <<END>>
+Call :main
+Mov $0 SP
+Add $0 4
+Add $2 ZERO 'M'
+Push $2
+Add $2 ZERO 'a'
+Push $2
+Add $2 ZERO 'i'
+Push $2
+Add $2 ZERO 'n'
+Push $2
+Add $2 ZERO ' '
+Push $2
+Add $2 ZERO 'e'
+Push $2
+Add $2 ZERO 'x'
+Push $2
+Add $2 ZERO 'i'
+Push $2
+Add $2 ZERO 't'
+Push $2
+Add $2 ZERO 'e'
+Push $2
+Add $2 ZERO 'd'
+Push $2
+Add $2 ZERO ' '
+Push $2
+Add $2 ZERO 'w'
+Push $2
+Add $2 ZERO 'i'
+Push $2
+Add $2 ZERO 't'
+Push $2
+Add $2 ZERO 'h'
+Push $2
+Add $2 ZERO ' '
+Push $2
+Add $2 ZERO 'c'
+Push $2
+Add $2 ZERO 'o'
+Push $2
+Add $2 ZERO 'd'
+Push $2
+Add $2 ZERO 'e'
+Push $2
+Add $2 ZERO ':'
+Push $2
+Add $2 ZERO ' '
+Push $2
+Push ZERO, $0
+Call :print_str
+Push $1
+Call :print_d
 Halt
+
+<<SCOPE_START>>
+Add SP ?(SCOPE_OFFSET)
 
 <<SCOPE_END>>
 Sub SP ?(SCOPE_OFFSET)
 
+<<MACRO>>
+
 <<stmnt_init>[0]>
-Mov ?(STRING, addr) @<expr>
+Mov $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<stmnt_init>[1]>
 
@@ -53,50 +112,75 @@ Goto :ENDLOOP
 Goto :LOOP
 
 <<stmnt_flow_return>[0]>
+Sub SP ?(SCOPE_OFFSET)
 Ret
 
 <<stmnt_flow_return>[1]>
+Sub SP ?(SCOPE_OFFSET)
 Push @<expr>
 Ret
 
 <<arguments>>
-Pop ?(STRING, addr)
+Pop $1
+Sw $1 FP + ?(STRING, addr)
 
-<<parameters>>
-Push ?(STRING, addr)
+<<parameters>[0]>
+Lw $1 FP + ?(STRING, addr)
+Push $1
 
 <<expr_assign>[0]>
-Mov ?(STRING, val) @<expr>
+Mov $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[1]>
-Add ?(STRING, val) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Add $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[2]>
-Sub ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Sub $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[3]>
-Mul ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Mul $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[4]>
-Div ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Div $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[5]>
-Mod ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Mod $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[6]>
-Shl ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Shl $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[7]>
-Shr ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Shr $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[8]>
-And ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+And $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[9]>
-Xor ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Xor $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_assign>[10]>
-Or ?(STRING, addr) @<expr>
+Lw $1 FP + ?(STRING, addr)
+Or $1 @<expr>
+Sw $1 FP + ?(STRING, addr)
 
 <<expr_logical_or>[0]>
 Or @ @<expr_logical_or> @<expr_logical_and>
@@ -209,4 +293,5 @@ Add @ ZERO 1
 Add @ ZERO 0
 
 <<term>[3]>
-Mov @ ?(STRING, addr)
+Lw $1 FP + ?(STRING, addr)
+Mov @ $1

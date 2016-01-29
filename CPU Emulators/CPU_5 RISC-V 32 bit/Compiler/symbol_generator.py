@@ -1,9 +1,9 @@
 import os
 
 format = []
-search = ""
+search = []
 blank = ""
-scoped = ""
+scoped = []
 
 size_rules = []
 default_size = 0
@@ -17,7 +17,7 @@ symbols = []
 class SymbolTable(object):
 	def __init__(self):
 		self.format = []
-		self.scoped = ""
+		self.scoped = []
 
 		self.symbols = []
 		self.scope_offsets = []
@@ -33,12 +33,19 @@ class SymbolTable(object):
 			if not token == ',':
 				args.append(token)
 
+		#Get corresponding symbol (if any)
 		highest = -1
 		symbol = []
 		for s in self.symbols:
 
 			#Check whether symbol is in scope
 			test_scope = s[self.format.index("SCOPE")]
+
+			#In sub-scope
+			if len(test_scope) > len(self.cur_scope):
+				continue;
+
+			#In different scope
 			for i,level in enumerate(test_scope):
 				if not level == self.cur_scope[i]:
 					break;
@@ -47,12 +54,11 @@ class SymbolTable(object):
 				if s[0] == args[0]:
 					highest = len(test_scope)
 					symbol = s
-		else:
-			return None
+					break;
 
 		#Scope query
-		if(args[0] == "SCOPE_LEN"):
-			for offset in scope_offsets:
+		if(args[0] == "SCOPE_OFFSET"):
+			for offset in self.scope_offsets:
 				if offset[0] == self.cur_scope:
 					return str(offset[1])
 
@@ -89,8 +95,8 @@ class SymbolTable(object):
 			return str(self.symbolQuery(nquery) == args[2])
 
 	#Check whether a node is scoped (for code generator)
-	def isScoped(node):
-		return node[0] == self.scoped
+	def isScoped(self, node):
+		return node[0] in self.scoped
 
 	#Set the current scope for queries
 	def updateScope(self, scope):
@@ -98,13 +104,17 @@ class SymbolTable(object):
 
 	#Print the table
 	def __str__(self):
-		ret = " | ".join(self.format)
+		ret = ""
+		for col in self.format:
+			ret += max(10 - len(str(col)), 0) * " " + str(col) + " | "
+		ret = ret[:-3]
+		ret += "\n" + "-" * len(ret)
+
 		for symbol in self.symbols:
 			ret += "\n"
 			for i,val in enumerate(symbol):
-				if len(str(val)) < len(str(self.format[i])):
-					ret += (len(str(self.format[i])) - len(str(val))) * ' '
-				ret += str(val) + " | "
+					ret += max(10 - len(str(val)), 0) * " " + str(val) + " | "
+			ret = ret[:-3]
 
 		return ret
 
@@ -131,11 +141,11 @@ with open(path, "r") as ifile:
 			if lhs == "FORMAT":
 				format = rhs
 			elif lhs == "DEFINITION":
-				search = rhs[0]
+				search = rhs
 			elif lhs == "DEFAULT":
 				blank = rhs[0].strip("\"'")
 			elif lhs == "SCOPED":
-				scoped = rhs[0]
+				scoped = rhs
 
 			#Type size configuration
 			elif "->" in rhs:
@@ -177,7 +187,7 @@ def addSymbol(node, main = True):
 				break;
 
 		symbols[-1][format.index("ADDR")] = symbol_offsets[i][1]
-		symbols[-1][format.index("SCOPE")] = cur_scope[:]
+		symbols[-1][format.index("SCOPE")] = list(cur_scope)
 
 	#Get type from parse tree
 	for part in node[1]:
@@ -209,7 +219,6 @@ def getSymbols(parse_tree):
 	global cur_scope
 	global max_at_level
 	global symbol_offsets
-	symbol_offsets.append([cur_scope, 0])
 
 	for node in parse_tree[1]:
 		#Ignore terminals
@@ -217,9 +226,10 @@ def getSymbols(parse_tree):
 			continue;
 
 		#Set scope for next symbols & search new scope
-		if node[0] == scoped:
+		if node[0] in scoped:
 
 			cur_scope.append(max_at_level)
+			symbol_offsets.append([list(cur_scope), 0])
 			tmp = max_at_level + 1
 			max_at_level = 0
 
@@ -229,7 +239,7 @@ def getSymbols(parse_tree):
 			cur_scope = cur_scope[:-1]
 
 		#Add symbol
-		elif node[0] == search:
+		elif node[0] in search:
 			addSymbol(node)
 
 		#Search child node

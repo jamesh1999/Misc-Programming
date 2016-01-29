@@ -67,8 +67,8 @@ def parseBNF(bnf):
 			rules.append(Rule(lhs, rhs, cnt))
 			cnt+= 1
 
-#Split literals as tokeniser will
-def tokeniseRules():
+#Split literals as tokenizer will
+def tokenizeRules():
 	global rules
 
 	for rule in rules:
@@ -76,7 +76,7 @@ def tokeniseRules():
 			new_definition = []
 			for term in definition:
 				if term[0] == '"' and term[-1] == '"':
-					tokens = tokeniser.tokenise(term[1:-1]) #Tokenise literal
+					tokens = tokeniser.tokenise(term[1:-1]) #Tokenize literal
 					for token in tokens:
 						new_definition.append('"' + token + '"')
 
@@ -327,20 +327,33 @@ def generateParseTable():
 path = os.path.join(os.path.dirname(__file__), "Configuration/grammar.bnf")
 with open(path, "r") as grammar:
 	#Set up rules
-	print("Reading grammar...")
-	parseBNF(grammar.readlines())
-	tokeniseRules()
+	print("\nReading grammar.bnf...")
+	lines = grammar.readlines()
+	print("Read!\n")
+	print("Setting up rules...")
+	parseBNF(lines)
+	print("\tGenerated " + str(len(rules)) + " rules!")
+	tokenizeRules()
+	print("\tTokenized rules!")
 	linkRules()
+	print("\tLinked rules!")
 	getLookAheads()
+	print("\tFound all lookaheads!")
+	print("Done!\n")
 
 	#Create tree of states
 	print("Creating states...")
 	states.append(State([Production(rules[0].lhs, copy.deepcopy(rules[0].rhs), 0, ["$"])]))
 	generateAllStates()
+	print("\tGenerated " + str(len(states)) + " states!")
+	print("Done!\n")
 
 	#Generate parse table
 	print("Generating parse table...")
 	generateParseTable()
+	print("Done!\n")
 
+	print("Writing table to parse_table.txt...")
 	with open("parse_table.txt", "w") as out:
 		out.write(json.dumps(parse_table, separators = (",", ":")))
+	print("Done!")

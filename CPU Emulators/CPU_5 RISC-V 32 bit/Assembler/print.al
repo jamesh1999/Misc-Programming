@@ -18,20 +18,20 @@ Add $0 ZERO 10
 Out $0
 Ret
 
->print_ch $0
-Out $0
+>print_ch $2
+Out $2
 Ret
 
->print_str $1
+>print_str $4
 :PRINTSTR_AGAIN
-Lw $0 $1
-Branch ($0 == ZERO) :PRINTSTR_END
-Out $0
-Add $1 4
+Lw $3 $4
+Branch ($3 == ZERO) :PRINTSTR_END
+Out $3
+Add $4 4
 Goto :PRINTSTR_AGAIN
 :PRINTSTR_END
-Add $0 ZERO 10
-Out $0
+Add $3 ZERO 10
+Out $3
 Ret
 
 
