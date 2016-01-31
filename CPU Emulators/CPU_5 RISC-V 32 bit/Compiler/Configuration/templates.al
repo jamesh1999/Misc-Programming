@@ -1,62 +1,66 @@
-<<START>>
+<<SETUP>>
 //Setup assembly
 import setup
 import print
+
+<<START>>
 
 <<END>>
 Call :main
 Mov $0 SP
 Add $0 4
-Add $2 ZERO 'M'
+Set $2 'M'
 Push $2
-Add $2 ZERO 'a'
+Set $2 'a'
 Push $2
-Add $2 ZERO 'i'
+Set $2 'i'
 Push $2
-Add $2 ZERO 'n'
+Set $2 'n'
 Push $2
-Add $2 ZERO ' '
+Set $2 ' '
 Push $2
-Add $2 ZERO 'e'
+Set $2 'e'
 Push $2
-Add $2 ZERO 'x'
+Set $2 'x'
 Push $2
-Add $2 ZERO 'i'
+Set $2 'i'
 Push $2
-Add $2 ZERO 't'
+Set $2 't'
 Push $2
-Add $2 ZERO 'e'
+Set $2 'e'
 Push $2
-Add $2 ZERO 'd'
+Set $2 'd'
 Push $2
-Add $2 ZERO ' '
+Set $2 ' '
 Push $2
-Add $2 ZERO 'w'
+Set $2 'w'
 Push $2
-Add $2 ZERO 'i'
+Set $2 'i'
 Push $2
-Add $2 ZERO 't'
+Set $2 't'
 Push $2
-Add $2 ZERO 'h'
+Set $2 'h'
 Push $2
-Add $2 ZERO ' '
+Set $2 ' '
 Push $2
-Add $2 ZERO 'c'
+Set $2 'c'
 Push $2
-Add $2 ZERO 'o'
+Set $2 'o'
 Push $2
-Add $2 ZERO 'd'
+Set $2 'd'
 Push $2
-Add $2 ZERO 'e'
+Set $2 'e'
 Push $2
-Add $2 ZERO ':'
+Set $2 ':'
 Push $2
-Add $2 ZERO ' '
-Push $2
-Push ZERO, $0
+Set $2 ' '
+Push $2, ZERO, $0
 Call :print_str
+Lw $1 FP ?(main, addr)
 Push $1
 Call :print_d
+
+<<FINISH>>
 Halt
 
 <<SCOPE_START>>
@@ -69,32 +73,35 @@ Sub SP ?(SCOPE_OFFSET)
 
 <<stmnt_init>[0]>
 Mov $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<stmnt_init>[1]>
 
 
 <<stmnt_func>>
 Goto :SKIP
+?(FUNCTION = STRING)
 > ?(STRING, id)
 [<arguments>]
 [<block>]
+?(FUNCTION = NULL)
 :SKIP
 
 <<stmnt_call>>
 Call :?(STRING, id)
+Lw @ FP ?(STRING, addr)
 
 <<stmnt_flow_while>>
 :LOOP
 [<expr>]
-Branch (@<expr> == ZERO) :END
+Branch (@<expr> == ZERO) :ENDLOOP
 [<statement>]
 Goto :LOOP
 :ENDLOOP
 
 <<stmnt_flow_for>>
 :LOOP
-Branch (@<expr> == ZERO) :END
+Branch (@<expr> == ZERO) :ENDLOOP
 [<statement>]
 [<stmnt_assign>]
 Goto :LOOP
@@ -117,70 +124,70 @@ Ret
 
 <<stmnt_flow_return>[1]>
 Sub SP ?(SCOPE_OFFSET)
-Push @<expr>
+Sw @<expr> FP ?(FUNCTION, addr)
 Ret
 
 <<arguments>>
 Pop $1
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<parameters>[0]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Push $1
 
 <<expr_assign>[0]>
 Mov $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[1]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Add $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[2]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Sub $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[3]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Mul $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[4]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Div $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[5]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Mod $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[6]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Shl $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[7]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Shr $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[8]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 And $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[9]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Xor $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[10]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Or $1 @<expr>
-Sw $1 FP + ?(STRING, addr)
+Sw $1 FP ?(STRING, addr)
 
 <<expr_logical_or>[0]>
 Or @ @<expr_logical_or> @<expr_logical_and>
@@ -293,5 +300,5 @@ Add @ ZERO 1
 Add @ ZERO 0
 
 <<term>[3]>
-Lw $1 FP + ?(STRING, addr)
+Lw $1 FP ?(STRING, addr)
 Mov @ $1

@@ -89,9 +89,9 @@ def convertMacro(macro):
 			if upper:
 				instructions.append(["LUI", macro[1], str(upper)])
 				if lower:
-					instructions.append(["ADDUI", macro[1], str(upper)])
+					instructions.append(["ADDUI", macro[1], str(lower)])
 			elif lower:
-				instructions.append(["ADDUI", macro[1], "ZERO", str(upper)])
+				instructions.append(["ADDUI", macro[1], "ZERO", str(lower)])
 
 	except IndexError:
 		raise AssemblerError(macro[0] + " requires more terms.")

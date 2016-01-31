@@ -1,12 +1,9 @@
-Addui S2 4095
-Addui S3 4095
+import setup
+import print
 
-:LOOPTWO
-:LOOP
-Addui S1 1
-Branch (S1 != S2) :LOOP
-Add S1 ZERO ZERO
-Addui S4 1
-Branch (S4 != S3) :LOOPTWO
-
+Set $0 6
+Set $1 2
+Div $0 $1
+Push $0
+Call :print_d
 Halt

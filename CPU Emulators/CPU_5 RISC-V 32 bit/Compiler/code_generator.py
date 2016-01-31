@@ -11,6 +11,7 @@ templates = {}
 built_in = {}
 
 symbols = []
+entire_tree = []
 
 
 
@@ -86,6 +87,7 @@ for filename in next(os.walk(path))[2]:
 
 #Get the first instance of a node in a parse tree
 def getFirstInstanceOf(tree, search):
+	#Search children
 	for node in tree[1]:
 		#Skip string literals
 		if isinstance(node, str):
@@ -150,7 +152,8 @@ def setUniqueRegisters(template, child_nodes, child_templates):
 					assigned[token[1:]] = "$" + str(CURRENT_REGISTER)
 					CURRENT_REGISTER += 1
 
-				template[i] = line[:j] + [assigned[token[1:]]] + line[j + 1:]
+				line[j] = assigned[token[1:]]
+		template[i] = line
 
 	#Assign i/o registers
 	assigned = [None] * len(child_nodes)
@@ -186,23 +189,41 @@ def setUniqueRegisters(template, child_nodes, child_templates):
 
 	return [template, child_templates]
 
+#Handle all symbol queries on a line
+def handleSymbolQueries(line):
+	while "?" in line:
+		segment = line[line.index("?"):]
+		query = segment[:segment.index(")") + 1]
+		result = symbols.symbolQuery(query)
+		if result == None:
+			line = line[:line.index("?")] + segment[len(query):]
+			continue;
+
+		if isinstance(result, str):
+			result = [result]
+
+		line = line[:line.index("?")] + result + segment[len(query):]
+
+	return line
+
 #Generate the assembly for a single node in the parse tree
+current_node = []
 def generateNode(parse_tree):
 	global CURRENT_SCOPE
 	global MAX_AT_LEVEL
+	global current_node
 
 	if symbols.isScoped(parse_tree):
 		CURRENT_SCOPE.append(MAX_AT_LEVEL)
 		symbols.updateScope(CURRENT_SCOPE)
 
+	#Get nodes
 	child_nodes = []
 	child_templates = []
 	for node in parse_tree[1]:
-		child_nodes.append(node[0])
 		if not isinstance(node, str):
-			child_templates.append(generateNode(node))
-		else:
-			child_templates.append([])
+			child_nodes.append(node[0])
+	child_templates = [[]] * len(child_nodes)
 
 	#Get the correct template
 	template = []
@@ -214,62 +235,76 @@ def generateNode(parse_tree):
 		else:
 			template = copy.deepcopy(templates[parse_tree[0]][0])
 
+	#Add child template insertion marks
+	for node in reversed(child_nodes):
+		if not ["[", "<", node, ">", "]"] in template:
+			template = [["[", "<", node, ">", "]"]] + template
+
 	#Insert pre-frame-change assembly
-	prepend = []
 	if symbols.isScoped(parse_tree):
-		prepend += copy.deepcopy(templates["SCOPE_START"][0])
+		template = copy.deepcopy(templates["SCOPE_START"][0]) + template
 
 	#Insert post-frame-change assembly
 	if symbols.isScoped(parse_tree):
 		template += copy.deepcopy(templates["SCOPE_END"][0])
 
-	#Substitute STRING and INT placeholders
-	for i,line in enumerate(template):
-		if "INT" in line:
+	#Generate template line by line
+	for i, line in enumerate(template):
+		#Substitute STRING and INT placeholders
+		while "INT" in line:
 			x = line.index("INT")
 			template[i][x] = getFirstInstanceOf(parse_tree, "INT")[1][0]
-		if "STRING" in line:
+		while "STRING" in line:
 			x = line.index("STRING")
 			template[i][x] = getFirstInstanceOf(parse_tree, "STRING")[1][0]
 
-	#Handle all symbol queries
-	for i,line in enumerate(template):
-		if "?" in line:
-			segment = line[line.index("?"):]
-			query = line[line.index("?"):line.index("?") + segment.index(")") + 1]
-			template[i] = line[:line.index("?")] + [symbols.symbolQuery(query)] + line[line.index("?") + segment.index(")") + 1:]
-	for i,line in enumerate(prepend):
-		if "?" in line:
-			segment = line[line.index("?"):]
-			query = line[line.index("?"):line.index("?") + segment.index(")") + 1]
-			prepend[i] = line[:line.index("?")] + [symbols.symbolQuery(query)] + line[line.index("?") + segment.index(")") + 1:]
+		#Set custom symbols
+		if line[0] == "?" and line[3] == "=":
+			template[i] = handleSymbolQueries(line)
+
+		#Substitute custom symbols
+		template[i] = symbols.replaceSymbols(line)
+
+		#Handle any other symbol queries
+		template[i] = handleSymbolQueries(line)
+
+		#Generate child nodes
+		if len(line) == 5 and line[0] == "[" and line[4] == "]":
+
+			#Find respective node
+			for j, node in enumerate(parse_tree[1]):
+				if not isinstance(node, str) and node[0] == line[2]:
+					break;
+			else:
+				#Node not present: move to next line
+				template[i] = []
+				continue;
+
+			#Generate node & change scope
+			current_node.append(j)
+			child_templates[child_nodes.index(line[2])] = generateNode(node)
+			current_node.pop()
 
 	corrected = setUniqueRegisters(template, child_nodes, child_templates)
 	template = corrected[0]
 	child_templates = corrected[1]
 
-	#Insert the assembly from the child nodes
+	#Remove empty lines
+	while [] in template:
+		template.remove([])
+
 	#Insert the assembly for child nodes in the middle
 	while True:
 		for i,line in enumerate(template):
 			if len(line) >= 3 and line[0] == "[" and line[4] == "]":
 
-				#If template exists
-				if line[2] in child_nodes:
-					insert = list(child_templates[child_nodes.index(line[2])])
-					child_templates[child_nodes.index(line[2])] = []
-					template = template[:i] + insert + template[i + 1:]
-				else:
-					template = template[:i] + template[i + 1:]
+				insert = list(child_templates[child_nodes.index(line[2])])
+				child_templates[child_nodes.index(line[2])] = []
+				template = template[:i] + insert + template[i + 1:]
 
 				break;
 		else:
 			break;
-
-	#Insert the assembly for child nodes at the start
-	for t in child_templates:
-		prepend += t
-	template = prepend + template
 
 	if symbols.isScoped(parse_tree):
 		CURRENT_SCOPE = CURRENT_SCOPE[:-1]
@@ -283,6 +318,12 @@ def generateNode(parse_tree):
 #Run the code generator on the entire parse tree
 def generateCode(parse_tree, symbols_in):
 	global symbols
-	symbols = symbols_in
+	global entire_tree
 
-	return setUniqueRegisters(copy.deepcopy(templates["START"][0]), [], [])[0] + generateNode(parse_tree) + setUniqueRegisters(copy.deepcopy(templates["END"][0]), [], [])[0]
+	#Add START and END nodes
+	parse_tree[1] = [["START", []]] + parse_tree[1] + [["END", []]]
+
+	symbols = symbols_in
+	entire_tree = parse_tree
+
+	return copy.deepcopy(templates["SETUP"][0]) + generateNode(parse_tree) + copy.deepcopy(templates["FINISH"][0])
