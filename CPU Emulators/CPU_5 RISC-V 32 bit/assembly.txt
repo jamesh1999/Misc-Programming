@@ -17,14 +17,13 @@ DEC - Decrement
 DECU - Decrement unsigned
 MOV - Move
 CLEAR - Sets the value of the specified register to 0
-
-It is recommended not to use the immediate or unsigned instructions since the assembler will automatically select the immediate varients if necessary and the unsigned varients will be selected if all of the involved registers are unsigned.
+SET - Sets a register to a specific value
 
 The syntax for each instruction is as follows:
 OPCODE DESTINATION_REGISTER INPUT_REGISTER[S] [IMMEDIATE]
 
 Branches can use this alternative syntax:
-BRANCH (REGISTER BOOLEAN_OPERATOR REGISTER) :DEST [RDEST]
+BRANCH REGISTER BOOLEAN_OPERATOR REGISTER :DEST
 
 Goto locations are set as follows:
 :LOOP
@@ -35,12 +34,12 @@ Functions must begin:
 and are called with:
 CALL :FUNCTION
 
-To set a register to signed/unsigned:
-SIGNED@REGISTER
-UNSIGNED@REGISTER
-
 To import another assembly file use:
-IMPORT filename.al
+IMPORT filename
 The filename is caps sensitive
+
+The assembler can also automatically assign registers using the syntax:
+$n
+These are file specific and will automatically be loaded/stored when required. They will not work in conjunction with definite registers.
 
 Capitalization does not matter. The assembler will automatically capitalize everything before processing it.

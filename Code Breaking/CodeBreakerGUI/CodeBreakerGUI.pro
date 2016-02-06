@@ -39,7 +39,8 @@ HEADERS  += CodeBreakerMain.h \
     RailFence.h \
     Trifid.h \
     BinaryConvert.h \
-    Space.h
+    Space.h \
+    smallwords.h
 
 FORMS    += CodeBreakerMain.ui \
     GuessCipher.ui \
@@ -52,3 +53,4 @@ FORMS    += CodeBreakerMain.ui \
     BinaryConvert.ui
 
 CONFIG += c++11 \ console
+QT += sql

@@ -14,10 +14,12 @@
 #include "RailFence.h"
 #include "Trifid.h"
 #include "BinaryConvert.h"
+#include "space.h"
 
 CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new Ui::CodeBreakerMain)
 {
     ui->setupUi(this);
+    initDb();
 
     //Add ciphers
     ui->stackedWidget->addWidget(new Cipher::Bifid());
@@ -41,6 +43,7 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
 CodeBreakerMain::~CodeBreakerMain()
 {
     delete ui;
+    closeDb();
 }
 
 void CodeBreakerMain::decryptWithCipher(int id)
@@ -171,4 +174,9 @@ void CodeBreakerMain::setPlainTextOutput(QString text)
 void CodeBreakerMain::appendToConsole(QString text)
 {
     ui->textBrowser->append(text);
+}
+
+void CodeBreakerMain::on_actionAdd_Spaces_triggered()
+{
+    ui->plaintext->setPlainText(QString::fromStdString(addSpaces(ui->plaintext->toPlainText().toStdString())));
 }

@@ -82,12 +82,16 @@ Sw $1 FP ?(STRING, addr)
 Goto :SKIP
 ?(FUNCTION = STRING)
 > ?(STRING, id)
-[<arguments>]
-[<block>]
+[<func_scope>]
 ?(FUNCTION = NULL)
 :SKIP
 
 <<stmnt_call>>
+?(PARAMS = 0)
+Mov $0 SP
+Add SP 8
+[<parameters>]
+Mov SP $0
 Call :?(STRING, id)
 Lw @ FP ?(STRING, addr)
 
@@ -101,6 +105,7 @@ Goto :LOOP
 
 <<stmnt_flow_for>>
 :LOOP
+[<expr>]
 Branch (@<expr> == ZERO) :ENDLOOP
 [<statement>]
 [<stmnt_assign>]
@@ -108,7 +113,7 @@ Goto :LOOP
 :ENDLOOP
 
 <<stmnt_flow_if>>
-Brance (@<expr> == ZERO) :END
+Branch (@<expr> == ZERO) :END
 [<statement>]
 :END
 
@@ -127,13 +132,9 @@ Sub SP ?(SCOPE_OFFSET)
 Sw @<expr> FP ?(FUNCTION, addr)
 Ret
 
-<<arguments>>
-Pop $1
-Sw $1 FP ?(STRING, addr)
-
-<<parameters>[0]>
-Lw $1 FP ?(STRING, addr)
-Push $1
+<<parameters>>
+Push @<expr>
+?(PARAMS + 1)
 
 <<expr_assign>[0]>
 Mov $1 @<expr>
@@ -161,7 +162,7 @@ Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[5]>
 Lw $1 FP ?(STRING, addr)
-Mod $1 @<expr>
+Rem $1 @<expr>
 Sw $1 FP ?(STRING, addr)
 
 <<expr_assign>[6]>
@@ -274,7 +275,7 @@ Mul @ @<expr_mul> @<expr_unary>
 Div @ @<expr_mul> @<expr_unary>
 
 <<expr_mul>[2]>
-Mod @ @<expr_mul> @<expr_unary>
+Rem @ @<expr_mul> @<expr_unary>
 
 <<expr_unary>[2]>
 Branch (@<expr_unary> == ZERO) :RET_ONE
@@ -302,3 +303,12 @@ Add @ ZERO 0
 <<term>[3]>
 Lw $1 FP ?(STRING, addr)
 Mov @ $1
+
+<<scoped_block>>
+Add SP 8
+Mov $0 FP
+Sub FP SP ?(SCOPE_OFFSET)
+Add FP 4
+[<block>]
+Mov FP $0
+Sub SP 8

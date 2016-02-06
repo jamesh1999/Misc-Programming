@@ -10,6 +10,7 @@ INPUT(
 ./debug\RailFence.o
 ./debug\Trifid.o
 ./debug\BinaryConvert.o
+./debug\Space.o
 ./debug\moc_CodeBreakerMain.o
 ./debug\moc_Bifid.o
 ./debug\moc_GuessCipher.o

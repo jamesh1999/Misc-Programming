@@ -1,0 +1,2 @@
+python ../assembler.py
+pause

@@ -1,54 +1,106 @@
-from assembler_data import *
+from Assembler.assembler_data import *
 
 
 
 #Remove all jump anchors
 def removeAnchors(assembly):
-	jump_anchors = {} #Handle any :jumps
+	inserted = 0
 
-	try:
-		while True:
-			for i in range(len(assembly)):
-				line = assembly[i]
-
-				if line[0] == ":":
-					jump_anchors[line[1]] = i
-					assembly.pop(i)
-					break;
-			else:
-				break;
-	except IndexError:
-		raise AssemblerError("Jump anchor expected after ':'.")
-
-	#Calculate jump positions
+	#Add necessary placeholder instructions
 	while True:
-		for i in range(len(assembly)):
-			line = assembly[i]
+		i_offset = 0
+		for i, line in enumerate(assembly):
 
 			if ":" in line:
-				for j in range(len(line)):
-					if line[j] == ':':
-						try:
-							anchor = line[j + 1]
-						except IndexError:
-							raise AssemblerError("Jump anchor expected after ':'.")
+				if line[0] == ":":
+					i_offset += 1
+				else:
+					x = line.index(":")
 
-						try:
-							diff = (jump_anchors[anchor] - i) * 4
-						except IndexError:
-							raise AssemblerError(anchor + " is not a valid jump anchor.")
+					try:
+						anchor = line[x + 1]
+					except IndexError:
+						raise AssemblerError("Jump anchor expected after ':'.")
 
-						if diff < 0:
-							diff *= -1
-							line[j] = "-"
+					j_offset = 0
+					for j, test_line in enumerate(assembly):
+						if test_line[0] == ":":
+							if test_line[1] == anchor:
+								break;
+							else:
+								j_offset += 1
+					else:
+						raise AssemblerError(anchor + " is not a valid jump anchor.")
+
+					#Get difference
+					diff = ((j - j_offset) - (i - i_offset)) * 4
+
+					#Difference too great
+					if line[0] in MAX_JUMPS and (diff > MAX_JUMPS[line[0]] or diff < -MAX_JUMPS[line[0]] - 1):
+						#Substitute in JAL instruction
+						if -MAX_JUMPS["JAL"] - 1 <= diff <= MAX_JUMPS["JAL"]:
+							insert = [["JAL", ":", "INSERTED_" + str(inserted)],
+									  ["JAL", ":", line[line.index(":") + 1]],
+									  [":", "INSERTED_" + str(inserted)]]
+							inserted += 1
+							line[line.index(":") + 1] = "8"
+							line[line.index(":")] = "+"
+
+
+						#Substitute a JALR instruction
 						else:
-							line[j] = "+"
+							insert = [["JAL", ":", "INSERTED_" + str(inserted)],
+									  ["ADDUI", "ZERO", "ZERO"],
+									  ["ADDUI", "ZERO", "ZERO"],
+									  ["JALR", "ZERO", "JMP", line[line.index(":") + 1]],
+									  [":", "INSERTED_" + str(inserted)]]
+							inserted += 1
+							line[line.index(":") + 1] = "8"
+							line[line.index(":")] = "+"
 
-						line[j + 1] = str(diff)
-				assembly[i] = line
+						assembly = assembly[:i] + [line] + insert + assembly[i + 1:]
+						break;
+		else:
+			break;
+
+	#Remove anchors and calculate definite positions
+	jump_anchors = {}
+	while True:
+		for i, line in enumerate(assembly):
+			if line[0] == ":":
+				jump_anchors[line[1]] = i
+				assembly.pop(i)
 				break;
 		else:
 			break;
+
+	#Calculate jump positions
+	for i, line in enumerate(assembly):
+
+		if ':' in line:
+			for j in range(len(line)):
+				if line[j] == ':':
+					anchor = line[j + 1]
+					
+					#Normal jump no need to set JMP
+					if not line[0] == "JALR":
+						diff = (jump_anchors[anchor] - i) * 4
+
+						if diff < 0:
+							diff *= -1
+							line[j] = '-'
+						else:
+							line[j] = '+'
+
+						line[j + 1] = str(diff)
+
+					#JALR instruction requires JMP
+					else:
+						assembly[i - 2] = ["LUI", "JMP", str(jump_anchors[anchor] // 4096)]
+						assembly[i - 1] = ["ADDUI", "JMP", str(jump_anchors[anchor] % 4096)]
+						line = ["JALR", "ZERO", "JMP", '+', '0']
+
+			assembly[i] = line
 
 	return assembly
 
@@ -82,11 +134,11 @@ def createGlobals(assembly):
 				GLOBALS[line[2]][1] = GLOBAL_COUNT * 4
 				GLOBAL_COUNT += 1
 
+			else:
+				new_assembly.append(line)
+
 		except IndexError:
 			raise AssemblerError(str(line) + " is not a valid global declaration.")
-
-		else:
-			new_assembly.append(line);
 
 	return new_assembly
 
@@ -141,8 +193,8 @@ def removeArbitraryRegisters(assembly):
 				else:
 					register = last_used[0]
 					if not REGISTER_CONTENTS[getRegister(register)] == None:
-						new_assembly.append(["SW", register, "GP", "-", str(int(REGISTER_CONTENTS[getRegister(register)]) * 4)])
-					new_assembly.append(["LW", register, "GP", "-", str(int(token[1:]) * 4)])
+						new_assembly.append(["SW", register, "GP", "-", str(int(REGISTER_CONTENTS[getRegister(register)]) * 4 + 4)])
+					new_assembly.append(["LW", register, "GP", "-", str(int(token[1:]) * 4 + 4)])
 
 				#Move register to end of queue
 				last_used.remove(register)

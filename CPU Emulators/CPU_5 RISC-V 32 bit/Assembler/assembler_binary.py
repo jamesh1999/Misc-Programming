@@ -1,4 +1,28 @@
-from assembler_data import *
+from Assembler.assembler_data import *
+
+
+#Find out whether an instruction should be signed/unsigned or immediate/register
+def getInstructionType(instruction):
+	#Check if all registers are unsigned
+	for i in instruction:
+		if (isReg(i) and REGISTER_STATUS[getRegister(i)] == "SIGNED") or (i in GLOBALS.keys() and GLOBALS[i][0] == "SIGNED"):
+			unsigned = False
+			break;
+	else:
+		unsigned = True
+
+	#Check for an immediate
+	for i in instruction:
+		try:
+			i = int(i)
+			immediate = True
+			break;
+		except:
+			pass
+	else:
+		immediate = False
+
+	return unsigned, immediate
 
 #Return binary value for a register
 def getRegisterBinary(reg):
@@ -155,7 +179,7 @@ def convertInstruction(instruction):
 				binary += "110" + getRegisterBinary(splitted[2][0]) + getRegisterBinary(splitted[2][1]) + "0000000"
 
 			elif splitted[0] == "NOT":
-				binary += "111" + getRegisterBinary(splitted[2][0]) + "000000000000"
+				binary += "111" + getRegisterBinary(splitted[2][1]) + "000000000000"
 
 			elif splitted[0] == "SHLI":
 				binary += "010" + getRegisterBinary(splitted[2][0]) + immToBinary(splitted[3], 12)

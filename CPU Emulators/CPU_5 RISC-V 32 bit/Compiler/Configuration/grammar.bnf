@@ -3,16 +3,19 @@
 
 
 //Generic structures
-<statement>				::= <stmnt_assign> ";" | <stmnt_init> ";" | <stmnt_func> | <stmnt_flow> | <stmnt_call> ";" | <stmnt_null> | <block>
+<statement>				::= <stmnt_assign> ";" | <stmnt_init> ";" | <stmnt_func> | <stmnt_flow> | <stmnt_call> ";" | <stmnt_null> | <scoped_block>
+<scoped_block>			::= <block>
 <block>					::= "{" [{<statement>}] "}"
 
 //Statement types
 <stmnt_assign>			::= <expr_assign>
 <stmnt_init>	        ::= <definition> | <definition> "=" <expr> | <definition> "=" <array>
-<stmnt_func>			::= <definition> "(" [<arguments>] ")" <block>
+<stmnt_func>			::= <definition> <func_scope>
 <stmnt_flow>			::= <stmnt_flow_while> | <stmnt_flow_for> | <stmnt_flow_if> | <stmnt_flow_break> | <stmnt_flow_continue> | <stmnt_flow_return>
 <stmnt_call>			::= STRING "(" [<parameters>] ")"
 <stmnt_null>			::= ";"
+
+<func_scope>			::= "(" [<arguments>] ")" <block>
 
 //Main control flow
 <stmnt_flow_while>		::= "while(" <expr> ")" <statement>
@@ -24,7 +27,8 @@
 <stmnt_flow_continue>	::= "continue;"
 <stmnt_flow_return>		::= "return;" | "return" <expr> ";"
 
-<arguments>				::= <definition> | <arguments> "," <definition>
+<arguments>				::= <argument_list>
+<argument_list>			::= <definition> | <argument_list> "," <definition>
 <parameters>			::= <expr> | <parameters> "," <expr>
 
 <array>					::= "{" <parameters> "}"

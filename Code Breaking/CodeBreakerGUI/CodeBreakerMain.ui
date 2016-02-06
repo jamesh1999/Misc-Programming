@@ -279,6 +279,7 @@ padding-left: 2px;
     </property>
     <addaction name="actionCipher_2"/>
     <addaction name="actionGlobal_Settings"/>
+    <addaction name="actionAdd_Spaces"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOptions"/>
@@ -307,6 +308,11 @@ padding-left: 2px;
   <action name="actionGlobal_Settings">
    <property name="text">
     <string>Global Settings</string>
+   </property>
+  </action>
+  <action name="actionAdd_Spaces">
+   <property name="text">
+    <string>Add Spaces</string>
    </property>
   </action>
  </widget>

@@ -1,4 +1,4 @@
-import json
+import json, os
 
 class ParserError(Exception):
 	pass
@@ -11,7 +11,8 @@ output_stack = []
 
 #Read parse table
 parse_table = {}
-with open("parse_table.txt", "r") as table:
+path = os.path.join(os.path.dirname(__file__), "parse_table.txt")
+with open(path, "r") as table:
 	parse_table = json.loads(table.readline())
 
 #Returns the current parser state

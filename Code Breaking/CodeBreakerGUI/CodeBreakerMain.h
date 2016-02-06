@@ -31,6 +31,8 @@ private slots:
     void on_cipher_currentIndexChanged(int);
     void on_stackedWidget_currentChanged(int);
 
+    void on_actionAdd_Spaces_triggered();
+
 private:
     Ui::CodeBreakerMain *ui;
     int connected_cipher = -1;

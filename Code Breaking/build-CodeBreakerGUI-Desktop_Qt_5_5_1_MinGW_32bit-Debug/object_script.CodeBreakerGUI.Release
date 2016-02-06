@@ -10,6 +10,7 @@ INPUT(
 ./release\RailFence.o
 ./release\Trifid.o
 ./release\BinaryConvert.o
+./release\Space.o
 ./release\moc_CodeBreakerMain.o
 ./release\moc_Bifid.o
 ./release\moc_GuessCipher.o

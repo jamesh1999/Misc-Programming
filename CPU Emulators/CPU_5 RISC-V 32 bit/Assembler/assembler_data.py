@@ -1,3 +1,5 @@
+import os
+
 #---------------- REGISTER INFORMATION ----------------#
 REGISTER_NAMES = {"ZERO":"X0",
 					"RA":"X1",
@@ -29,7 +31,7 @@ REGISTER_NAMES = {"ZERO":"X0",
 					"S23":"X27",
 					"S24":"X28",
 					"S25":"X29",
-					"S26":"X30",
+					"JMP":"X30",
 					"GP":"X31"}
 
 REGISTER_STATUS = {"X0":"UNSIGNED",
@@ -98,7 +100,7 @@ REGISTER_CONTENTS = {"X0":None,
 					"X30":None,
 					"X31":None}
 
-ASSIGNABLE = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19", "S20", "S21", "S22", "S23", "S24", "S25", "S26"]
+ASSIGNABLE = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19", "S20", "S21", "S22", "S23", "S24", "S25"]
 CUR_REGISTER = -1
 
 
@@ -168,13 +170,13 @@ OPCODES = {"LUI":"0000000",
 			"AMOSWAP":"1100000",
 			"OUT":"1001001",
 			"IN":"1001000",
-			":":"xxxxxxx",
+			":":"xxxxxxx", #Placeholders to prevent errors
 			"ASSEMBLER":"xxxxxxx",
 			"SIGNED":"xxxxxxx",
 			"UNSIGNED":"xxxxxxx"}
 
+#Instructions that can be made unsigned or immediate
 UNSIGNED_TYPE = ["ADD", "SUB", "SHL", "SHR", "MUL", "MULH", "DIV", "REM", "LH", "LB", "ADDI", "SUBI", "SHLI", "SHRI", "MULI", "MULHI", "DIVI", "REMI" "BLT", "BLE"]
-
 IMMEDIATE_TYPE = ["ADD", "ADDU", "SUB", "SUBU", "AND", "OR", "XOR", "NOT", "SHL", "SHLU", "SHR", "SHRU", "MUL", "MULH", "MULU", "MULHU", "DIV", "DIVU", "REM", "REMU"]
 
 
@@ -195,7 +197,7 @@ BASIC_MACROS = {"NOOP":["ADD", "ZERO", "ZERO"], 				#No operation
 				"MOV":["ADDUI", "%1", "%2", "0"],				#Move
 				"CLEAR":["ADD", "%1", "ZERO", "ZERO"]}			#Clear register
 
-OTHER_MACROS = ["PUSH", "POP", "DEL", "CALL", ">", "RET", "SET"]
+OTHER_MACROS = ["PUSH", "POP", "DEL", "CALL", ">", "RET", "SET"] #Expansion defined in assembler_macros.py
 
 
 
@@ -207,6 +209,7 @@ GLOBAL_COUNT = 0
 
 #---------------- ASSEMBLER VARIABLES ----------------#
 LOG_TEXT = ""
+MAX_JUMPS = {"JAL" : 1048575, "BEQ" : 127, "BLT" : 127, "BLE" : 127, "BLTU" : 127, "BLEU" : 127, "BNE" : 127}
 
 
 
@@ -230,9 +233,9 @@ def p(text, e = "\n"):
 
 #Save log
 def saveLog():
-	with open("log.txt", "w") as log_file:
+	path = os.path.join(os.path.dirname(__file__), "log.txt")
+	with open(path, "w") as log_file:
 		log_file.write(LOG_TEXT)
-		log_file.close()
 
 #Get all arbitrary registers assigned in input assembly
 def initArbitraryRegisters(assembly):
@@ -258,15 +261,15 @@ def getNextArbitraryRegisterNum():
 def setUniqueRegisters(assembly):
 	global CUR_REGISTER
 	maximum = -1
-	for i,line in enumerate(assembly):
-		for j,token in enumerate(line):
+	for i, line in enumerate(assembly):
+		for j, token in enumerate(line):
 			if token[0] == "$":
 				try:
 					if int(token[1:]) > maximum:
 						maximum = int(token[1:])
+					assembly[i][j] = "$" + str(int(token[1:]) + CUR_REGISTER + 1)
 				except ValueError:
 					raise AssemblerError("Integer expected after '$'.")
-				assembly[i][j] = "$" + str(int(token[1:]) + CUR_REGISTER + 1)
 
 	CUR_REGISTER += maximum + 1
 	return assembly
@@ -301,8 +304,8 @@ def splitInstruction(instruction):
 	#Find an immediate else 0
 	immediate = "0"
 	for i in range(len(instruction) - 1):
-		if instruction[i+1].isdigit():
-			immediate = instruction[i+1]
+		if instruction[i + 1].isdigit():
+			immediate = instruction[i + 1]
 
 			if instruction[i] == "-":
 				immediate = "-" + immediate
@@ -319,26 +322,3 @@ def splitInstruction(instruction):
 		registers = registers[1:]
 
 	return [op, dest, registers, int(immediate)]
-
-#Find out whether an instruction should be signed/unsigned or immediate/register
-def getInstructionType(instruction):
-	#Check if all registers are unsigned
-	for i in instruction:
-		if (isReg(i) and REGISTER_STATUS[getRegister(i)] == "SIGNED") or (i in GLOBALS.keys() and GLOBALS[i][0] == "SIGNED"):
-			unsigned = False
-			break;
-	else:
-		unsigned = True
-
-	#Check for an immediate
-	for i in instruction:
-		try:
-			i = int(i)
-			immediate = True
-			break;
-		except:
-			pass
-	else:
-		immediate = False
-
-	return unsigned, immediate

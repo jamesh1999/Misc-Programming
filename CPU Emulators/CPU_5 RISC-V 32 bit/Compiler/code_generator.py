@@ -1,5 +1,5 @@
 import os
-from tokeniser import *
+from tokenizer import *
 import copy
 
 CURRENT_REGISTER = 0
@@ -12,6 +12,8 @@ built_in = {}
 
 symbols = []
 entire_tree = []
+
+tokenizer = Tokenizer()
 
 
 
@@ -35,7 +37,7 @@ with open(path, "r") as ifile:
 			for part in rhs:
 				npart = part.strip("<> \t\n")
 				if npart[0] == '"' and npart[-1] == '"':
-					tokens = tokenise(npart[1:-1])
+					tokens = tokenizer.tokenizeString(npart[1:-1])
 					for t in tokens:
 						nrhs.append('"' + t + '"')
 				else:
@@ -51,7 +53,7 @@ with open(path, "r") as ifile:
 	#Separate templates
 	temp = []
 	for line in lines:
-		tokens = tokenise(line)
+		tokens = tokenizer.tokenizeString(line)
 		if len(tokens) > 0 and tokens[0] == "<":
 			temp.append([tokens])
 		elif len(tokens) > 0:
@@ -206,6 +208,45 @@ def handleSymbolQueries(line):
 
 	return line
 
+current_anchors = []
+num_anchors = 0
+#Set jump anchors to unique values
+def setUniqueAnchors(template):
+	global current_anchors
+	global num_anchors
+
+	current_anchors.append([list(current_node), {}])
+
+	#Define anchors in template
+	for line in template:
+		if line[0] == ":":
+			current_anchors[-1][1][line[1]] = "ANCHOR_" + str(num_anchors)
+			num_anchors += 1
+
+	#Substitute anchors
+	for i, line in enumerate(template):
+		for j, token in enumerate(line):
+			if token == ":":
+
+				#Get relevant anchor
+				for x in range(len(current_node)):
+					if x == 0:
+						test_scope = list(current_node)
+					else:
+						test_scope = current_node[:-x]
+
+					for y in current_anchors:
+						if y[0] == test_scope:
+							break;
+					else:
+						continue;
+
+					if line[j + 1] in y[1]:
+						template[i][j + 1] = y[1][line[j + 1]]
+						break;
+
+	return template
+
 #Generate the assembly for a single node in the parse tree
 current_node = []
 def generateNode(parse_tree):
@@ -216,6 +257,7 @@ def generateNode(parse_tree):
 	if symbols.isScoped(parse_tree):
 		CURRENT_SCOPE.append(MAX_AT_LEVEL)
 		symbols.updateScope(CURRENT_SCOPE)
+		MAX_AT_LEVEL = 0
 
 	#Get nodes
 	child_nodes = []
@@ -247,6 +289,8 @@ def generateNode(parse_tree):
 	#Insert post-frame-change assembly
 	if symbols.isScoped(parse_tree):
 		template += copy.deepcopy(templates["SCOPE_END"][0])
+
+	template = setUniqueAnchors(template)
 
 	#Generate template line by line
 	for i, line in enumerate(template):
@@ -309,7 +353,10 @@ def generateNode(parse_tree):
 	if symbols.isScoped(parse_tree):
 		CURRENT_SCOPE = CURRENT_SCOPE[:-1]
 		symbols.updateScope(CURRENT_SCOPE)
-		MAX_AT_LEVEL += 1
+		if len(CURRENT_SCOPE) > 0:
+			MAX_AT_LEVEL = CURRENT_SCOPE[-1] + 1
+		else:
+			MAX_AT_LEVEL = 0
 
 	return template
 

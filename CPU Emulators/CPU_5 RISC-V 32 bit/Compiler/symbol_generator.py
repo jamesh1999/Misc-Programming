@@ -5,6 +5,8 @@ search = []
 blank = ""
 scoped = []
 scope_overhead = 0
+arguments = ""
+type_format = []
 
 size_rules = []
 default_size = 0
@@ -33,6 +35,12 @@ class SymbolTable(object):
 
 		if query[3] == "=":
 			self.custom_symbols[query[2]] = query[4]
+			return None
+		elif query[3] == "+":
+			self.custom_symbols[query[2]] = str(int(self.custom_symbols[query[2]]) + int(query[4]))
+			return None
+		elif query[3] == "-":
+			self.custom_symbols[query[2]] = str(int(self.custom_symbols[query[2]]) - int(query[4]))
 			return None
 
 		#----GET QUERY----#
@@ -85,20 +93,7 @@ class SymbolTable(object):
 			if args[1] == "id":
 				return symbol[self.format.index("STRING")]
 			elif args[1] == "type":
-				t = ""
-				for i, part in enumerate(symbol):
-					if i == self.format.index("STRING"):
-						break;
-					if i == self.format.index("ADDR"):
-						break;
-					if i == self.format.index("SIZE"):
-						break;
-					if i == self.format.index("SCOPE"):
-						break;
-
-					t += part
-
-				return part
+				return symbol[self.format.index("TYPE")]
 
 			elif args[1] == "addr":
 				#Calculate stack offset for differing scopes
@@ -127,6 +122,14 @@ class SymbolTable(object):
 				return str(symbol[self.format.index("SIZE")])
 			elif args[1] == "scope":
 				return str(symbol[self.format.index("SCOPE")])
+			elif args[1][:9] == "arguments_type":
+				index = args.split('[')[:-1]
+				return str(symbol[self.format.index("ARGUMENTS")][int(index)][0])
+			elif args[1][:9] == "arguments_size":
+				index = args.split('[')[:-1]
+				return str(symbol[self.format.index("ARGUMENTS")][int(index)][1])
+			elif args[1] in self.format:
+				return str(symbol[self.format.index(args[1])])
 
 		#Check query
 		elif len(args) == 3:
@@ -195,6 +198,10 @@ with open(path, "r") as ifile:
 				scoped = rhs
 			elif lhs == "SCOPE_OVERHEAD":
 				scope_overhead = int(rhs[0])
+			elif lhs == "ARGUMENTS":
+				arguments = rhs[0]
+			elif lhs == "TYPE":
+				type_format = rhs
 
 			#Type size configuration
 			elif "->" in rhs:
@@ -238,11 +245,18 @@ def addSymbol(node, main = True):
 
 		symbols[-1][format.index("ADDR")] = symbol_offsets[i][1]
 		symbols[-1][format.index("SCOPE")] = list(cur_scope)
+		symbols[-1][format.index("ARGUMENTS")] = []
+
+		symbols[-1][format.index("TYPE")] = [blank] * len(type_format)
 
 	#Get type from parse tree
 	for part in node[1]:
 		#Add info if it isn't already there
-		if part[0] in format:
+		if part[0] in type_format:
+			if symbols[-1][format.index("TYPE")][type_format.index(part[0])] == blank:
+				symbols[-1][format.index("TYPE")][type_format.index(part[0])] = concatTerminals(part)
+
+		elif part[0] in format:
 			if symbols[-1][format.index(part[0])] == blank:
 				symbols[-1][format.index(part[0])] = concatTerminals(part)
 
@@ -253,7 +267,7 @@ def addSymbol(node, main = True):
 	#Work out size and add offset
 	if main:
 		for rule in size_rules:
-			if symbols[-1][format.index(rule[0])] == rule[1]:
+			if symbols[-1][format.index("TYPE")][type_format.index(rule[0])] == rule[1]:
 				s = rule[2]
 				break;
 		else:
@@ -261,6 +275,23 @@ def addSymbol(node, main = True):
 
 		symbols[-1][format.index("SIZE")] = s
 		symbol_offsets[i][1] += s
+		symbols[-1][format.index("TYPE")] = ''.join(symbols[-1][format.index("TYPE")])
+
+#Apply arguments to previous symbol
+def applyArguments(node, index = None):
+	global symbols
+
+	if index == None:
+		index = len(symbols) - 1
+
+	for part in node[1]:
+		if not isinstance(part, str):
+			if part[0] in search:
+
+				addSymbol(part)
+				symbols[index][format.index("ARGUMENTS")].append([symbols[-1][format.index("TYPE")], symbols[-1][format.index("SIZE")]])
+			else:
+				applyArguments(part, index = index)
 
 #Recursively get all symbols in a tree
 cur_scope = [0]
@@ -291,6 +322,10 @@ def getSymbols(parse_tree):
 		#Add symbol
 		elif node[0] in search:
 			addSymbol(node)
+
+		#Add arguments
+		elif node[0] == arguments:
+			applyArguments(node)
 
 		#Search child node
 		else:
