@@ -25,7 +25,9 @@ SOURCES += main.cpp\
     BinaryConvert.cpp \
     Space.cpp \
     FourSquare.cpp \
-    Amsco.cpp
+    Amsco.cpp \
+    ColumnView.cpp \
+    columnartransposition.cpp
 
 HEADERS  += CodeBreakerMain.h \
     Bifid.h \
@@ -45,7 +47,9 @@ HEADERS  += CodeBreakerMain.h \
     hashtable.h \
     linkedlist.h \
     FourSquare.h \
-    Amsco.h
+    Amsco.h \
+    ColumnView.h \
+    columnartransposition.h
 
 FORMS    += CodeBreakerMain.ui \
     GuessCipher.ui \
@@ -57,7 +61,9 @@ FORMS    += CodeBreakerMain.ui \
     Trifid.ui \
     BinaryConvert.ui \
     FourSquare.ui \
-    Amsco.ui
+    Amsco.ui \
+    ColumnView.ui \
+    columnartransposition.ui
 
 CONFIG += c++11 \ console
 QT += sql

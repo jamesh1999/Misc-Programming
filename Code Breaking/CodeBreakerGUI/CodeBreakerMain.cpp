@@ -15,6 +15,8 @@
 #include "Trifid.h"
 #include "BinaryConvert.h"
 #include "FourSquare.h"
+#include "Amsco.h"
+#include "columnartransposition.h"
 #include "space.h"
 
 CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new Ui::CodeBreakerMain)
@@ -23,8 +25,10 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
     initTable();
 
     //Add ciphers
+    ui->stackedWidget->addWidget(new Cipher::Amsco());
     ui->stackedWidget->addWidget(new Cipher::Bifid());
     ui->stackedWidget->addWidget(new Cipher::BinaryConvert());
+    ui->stackedWidget->addWidget(new Cipher::ColumnarTransposition());
     ui->stackedWidget->addWidget(new Cipher::FourSquare());
     ui->stackedWidget->addWidget(new Cipher::RailFence());
     ui->stackedWidget->addWidget(new Cipher::SimpleSubstitution());

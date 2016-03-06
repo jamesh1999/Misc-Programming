@@ -12,6 +12,9 @@ INPUT(
 ./release\BinaryConvert.o
 ./release\Space.o
 ./release\FourSquare.o
+./release\Amsco.o
+./release\ColumnView.o
+./release\columnartransposition.o
 ./release\moc_CodeBreakerMain.o
 ./release\moc_Bifid.o
 ./release\moc_GuessCipher.o
@@ -22,4 +25,7 @@ INPUT(
 ./release\moc_Trifid.o
 ./release\moc_BinaryConvert.o
 ./release\moc_FourSquare.o
+./release\moc_Amsco.o
+./release\moc_ColumnView.o
+./release\moc_columnartransposition.o
 );
