@@ -11,6 +11,7 @@ INPUT(
 ./release\Trifid.o
 ./release\BinaryConvert.o
 ./release\Space.o
+./release\FourSquare.o
 ./release\moc_CodeBreakerMain.o
 ./release\moc_Bifid.o
 ./release\moc_GuessCipher.o
@@ -20,4 +21,5 @@ INPUT(
 ./release\moc_RailFence.o
 ./release\moc_Trifid.o
 ./release\moc_BinaryConvert.o
+./release\moc_FourSquare.o
 );

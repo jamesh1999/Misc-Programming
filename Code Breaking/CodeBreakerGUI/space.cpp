@@ -1,52 +1,71 @@
 #include "space.h"
-#include "smallwords.h"
-#include <QtSql/QtSql>
-#include <iostream>
+#include "hashtable.h"
+#include <fstream>
+#include <cstring>
+#include <vector>
 
-#define MAX_LOOKAHEAD 3
-#define TO_INT(chr) (chr - 'A')
+#define MAX_LOOKAHEAD 4
 
- QSqlDatabase db;
- int sizes[MAX_LOOKAHEAD] = {0};
+Containers::HashTable<char*, bool> table(131072);
 
-void initDb()
+bool comp(char* const& x, char* const& y)
 {
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("words.db");
-    db.open();
+    return std::strcmp(x, y) == 0;
 }
 
-void closeDb()
+unsigned hash(char* const& key)
 {
-    db.close();
+    unsigned index = 0;
+    unsigned total = 0;
+    unsigned buff = 0;
+    while(key[index] != '\0')
+    {
+        buff <<= 4;
+        buff += key[index];
+
+        if(index % 5 == 0)
+        {
+            total += buff;
+            buff = 0;
+        }
+
+        ++index;
+    }
+    return total + buff;
+}
+
+void initTable()
+{
+
+    table.comparisonFunction = comp;
+    table.hashFunction = hash;
+    table.defaultValue = false;
+
+    //Load wordlists
+    std::ifstream stream("words.txt");
+    std::string buff;
+    while(std::getline(stream, buff))
+    {
+        char* word = new char[buff.size() + 1];
+        std::strcpy(word, buff.c_str());
+        table[word] = true;
+    }
+    stream.close();
+}
+
+void closeTable()
+{
+    std::vector<char*> keys = table.GetKeys();
+    for(char* key : keys)
+    {
+        table.RemoveKey(key);
+        delete[] key;
+    }
 }
 
 bool isWord(const char* test)
 {
-    switch(strlen(test))
-    {
-    case 1:
-        return words_one[TO_INT(test[0])];
-    case 2:
-        return words_two[TO_INT(test[0]) * 26 + TO_INT(test[1])];
-    case 3:
-        return words_three[TO_INT(test[0]) * 676 + TO_INT(test[1]) * 26 + TO_INT(test[2])];
-    case 4:
-        return words_four[TO_INT(test[0]) * 17576 + TO_INT(test[1]) * 676 + TO_INT(test[2]) * 26 + TO_INT(test[3])];
-    default:
-    {
-        QString stmnt = "SELECT id FROM ";
-        stmnt += test[0] + 32;
-        stmnt += " WHERE word = '";
-        stmnt += test;
-        stmnt += "'";
-        QSqlQuery query;
-        query.exec(stmnt);
-        while(query.next())
-            return true;
-        return false;
-    }
-    }
+    return table.DoesContain(const_cast<char*>(test));
 }
 
 int getLookaheadCount(const std::string& text, int start, int depth)
@@ -55,9 +74,9 @@ int getLookaheadCount(const std::string& text, int start, int depth)
         return 0;
 
     int max_depth = 0;
-    for(int i = 1; i <= 15; ++i)
+    for (int i = 15; i > 0; --i)
     {
-        if(i + start > text.size()) break;
+        if(i + start > text.size()) continue;
 
         if(isWord(text.substr(start, i).c_str()))
         {
@@ -79,9 +98,9 @@ std::string addSpaces(std::string text)
 	{
 		int max = 0;
 		int word_len = 0;
-        for (int i = 1; i <= 15; ++i)
+        for (int i = 15; i > 0; --i)
 		{
-            if(i + processed > text.size()) break;
+            if(i + processed > text.size()) continue;
             if (isWord(text.substr(processed, i).c_str()))
 			{
                 int lookaheadCount = getLookaheadCount(text, i + processed, 0);
@@ -116,6 +135,5 @@ std::string addSpaces(std::string text)
         processed += word_len;
 	}
     spaced += buffer;
-
 	return spaced;
 }

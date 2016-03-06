@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     RailFence.cpp \
     Trifid.cpp \
     BinaryConvert.cpp \
-    Space.cpp
+    Space.cpp \
+    FourSquare.cpp \
+    Amsco.cpp
 
 HEADERS  += CodeBreakerMain.h \
     Bifid.h \
@@ -40,7 +42,10 @@ HEADERS  += CodeBreakerMain.h \
     Trifid.h \
     BinaryConvert.h \
     Space.h \
-    smallwords.h
+    hashtable.h \
+    linkedlist.h \
+    FourSquare.h \
+    Amsco.h
 
 FORMS    += CodeBreakerMain.ui \
     GuessCipher.ui \
@@ -50,7 +55,9 @@ FORMS    += CodeBreakerMain.ui \
     Bifid.ui \
     RailFence.ui \
     Trifid.ui \
-    BinaryConvert.ui
+    BinaryConvert.ui \
+    FourSquare.ui \
+    Amsco.ui
 
 CONFIG += c++11 \ console
 QT += sql

@@ -195,6 +195,7 @@ Makefile: ../CodeBreakerGUI/CodeBreakerGUI.pro D:/Qt/5.5/mingw492_32/mkspecs/win
 		../CodeBreakerGUI/CodeBreakerGUI.pro \
 		D:/Qt/5.5/mingw492_32/lib/Qt5Widgets.prl \
 		D:/Qt/5.5/mingw492_32/lib/Qt5Gui.prl \
+		D:/Qt/5.5/mingw492_32/lib/Qt5Sql.prl \
 		D:/Qt/5.5/mingw492_32/lib/Qt5Core.prl
 	$(QMAKE) -spec win32-g++ -o Makefile ..\CodeBreakerGUI\CodeBreakerGUI.pro
 D:/Qt/5.5/mingw492_32/mkspecs/features/spec_pre.prf:
@@ -333,6 +334,7 @@ D:/Qt/5.5/mingw492_32/mkspecs/features/lex.prf:
 ../CodeBreakerGUI/CodeBreakerGUI.pro:
 D:/Qt/5.5/mingw492_32/lib/Qt5Widgets.prl:
 D:/Qt/5.5/mingw492_32/lib/Qt5Gui.prl:
+D:/Qt/5.5/mingw492_32/lib/Qt5Sql.prl:
 D:/Qt/5.5/mingw492_32/lib/Qt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec win32-g++ -o Makefile ..\CodeBreakerGUI\CodeBreakerGUI.pro

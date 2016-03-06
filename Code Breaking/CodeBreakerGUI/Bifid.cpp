@@ -140,7 +140,8 @@ QString Bifid::getBaseKey(QString text)
 
     QString key;
     for(char c = 'A'; c <= 'Z'; ++c)
-        key += c;
+        if(c != missing)
+            key += c;
 
     return key;
 }

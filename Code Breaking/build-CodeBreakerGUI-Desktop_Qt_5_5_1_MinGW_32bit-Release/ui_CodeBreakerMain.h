@@ -40,6 +40,7 @@ public:
     QAction *actionClose;
     QAction *actionCipher_2;
     QAction *actionGlobal_Settings;
+    QAction *actionAdd_Spaces;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *settings;
@@ -87,6 +88,8 @@ public:
         actionCipher_2->setObjectName(QStringLiteral("actionCipher_2"));
         actionGlobal_Settings = new QAction(CodeBreakerMain);
         actionGlobal_Settings->setObjectName(QStringLiteral("actionGlobal_Settings"));
+        actionAdd_Spaces = new QAction(CodeBreakerMain);
+        actionAdd_Spaces->setObjectName(QStringLiteral("actionAdd_Spaces"));
         centralWidget = new QWidget(CodeBreakerMain);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         verticalLayout_2 = new QVBoxLayout(centralWidget);
@@ -272,6 +275,7 @@ public:
         menuFile->addAction(actionClose);
         menuOptions->addAction(actionCipher_2);
         menuOptions->addAction(actionGlobal_Settings);
+        menuOptions->addAction(actionAdd_Spaces);
 
         retranslateUi(CodeBreakerMain);
 
@@ -290,6 +294,7 @@ public:
         actionClose->setText(QApplication::translate("CodeBreakerMain", "Close", 0));
         actionCipher_2->setText(QApplication::translate("CodeBreakerMain", "Cipher", 0));
         actionGlobal_Settings->setText(QApplication::translate("CodeBreakerMain", "Global Settings", 0));
+        actionAdd_Spaces->setText(QApplication::translate("CodeBreakerMain", "Add Spaces", 0));
         guess_cipher->setText(QApplication::translate("CodeBreakerMain", "Guess Cipher", 0));
         decrypt->setText(QApplication::translate("CodeBreakerMain", "Decrypt", 0));
         label_2->setText(QApplication::translate("CodeBreakerMain", "Ciphertext:", 0));

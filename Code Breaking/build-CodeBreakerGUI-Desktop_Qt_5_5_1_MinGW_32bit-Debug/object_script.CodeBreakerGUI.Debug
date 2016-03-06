@@ -11,6 +11,7 @@ INPUT(
 ./debug\Trifid.o
 ./debug\BinaryConvert.o
 ./debug\Space.o
+./debug\FourSquare.o
 ./debug\moc_CodeBreakerMain.o
 ./debug\moc_Bifid.o
 ./debug\moc_GuessCipher.o
@@ -20,4 +21,5 @@ INPUT(
 ./debug\moc_RailFence.o
 ./debug\moc_Trifid.o
 ./debug\moc_BinaryConvert.o
+./debug\moc_FourSquare.o
 );

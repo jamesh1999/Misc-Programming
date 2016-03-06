@@ -279,44 +279,23 @@ def Hardware(message, parameter=0):
 
 NUMBERS = [0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39]
 
-#cnt = 0
-string = """What the fuck did you just fucking say about me, you little pony?
- I’ll have you know I graduated top of my class in magic kindergarten,
-  and I’ve been involved in numerous secret raids on Nightmare Moon,
-   and I have over 300 confirmed friendships.
-    I am trained in magic warfare and I’m the top pony in the entire Equestrian armed forces.
-     You are nothing to me but just another friend.
-      I will wipe you the fuck out with friendship the likes of which has never been seen before on Equestria,
-       mark my fucking words.
-        You think you can get away with saying that shit to me over the Ponynet?
-         Think again, fucker.
-          As we speak I am contacting my secret network of pegasi across Equestria and your hoofprints are being traced right now so you better prepare for the storm, maggot.
-           The storm that wipes out the pathetic little thing you call your life.
-            You’re fucking dead, pony. I can be anywhere, anytime, and I can hug you in over seven hundred ways,
-             and that’s just with my bare hooves. Not only am I extensively trained in unarmed friendship,
-              but I have access to the entire arsenal of ponies and I will use it to its full extent to wipe
-               your miserable flank off the face of the continent, you little pony. If only you could have known
-                what magical friendship your little “clever” comment was about to bring down upon you, maybe you
-                 would have held your fucking tongue. But you couldn’t, you didn’t, and now you’re paying the price,
-                  you goddamn pony. I will shit friendship all over you and you will drown in it. You’re fucking dead, pony."""
-nstring = ""
-for char in string:
-    if char.isalnum():
-        nstring += char.upper()
-    elif char == " ":
-        nstring += char
+import itertools
+l = ["DOES", "YOUR", "MUM", "EVEN", "LIFT"]
 
 input("Press enter")
 time.sleep(5)
+# for p in itertools.permutations(l, 5):
+#     nstring = ' '.join(p)
+#     for char in nstring:
+#         SendInput(Keyboard(ord(char)))
+#     SendInput(Keyboard(VK_RETURN))
+#     time.sleep(0.1)
+nstring = "HM"
 while True:
-	#num = str(cnt)
-	#SendInput(Keyboard(KEY_M))
-	#for c in num:
-	#	SendInput(Keyboard(NUMBERS[int(c)]))
-	#SendInput(Keyboard(VK_RETURN))
+    nstring += "M"
     for char in nstring:
         SendInput(Keyboard(ord(char)))
     SendInput(Keyboard(VK_RETURN))
-    time.sleep(0.2)
+    time.sleep(0.1)
 
 	#cnt += 1

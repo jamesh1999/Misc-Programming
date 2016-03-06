@@ -3,8 +3,8 @@
 
 #include <string>
 
-void initDb();
-void closeDb();
+void initTable();
+void closeTable();
 std::string addSpaces(std::string);
 
 #endif
