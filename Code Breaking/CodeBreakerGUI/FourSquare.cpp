@@ -48,14 +48,7 @@ void FourSquareWorker::crack(QString qtext, QString key)
 
             double eval = evaluate(decrypt(alpha, child_key1, child_key2, text));
 
-            //If key is better then always switch
-            if (eval - parent_eval >= 0)
-            {
-                parent_eval = eval;
-                parent_key1 = child_key1;
-                parent_key2 = child_key2;
-            }
-            //Otherwise switch if temperature is high enough
+            //If key is better or if temperature is high enough switch
             if (eval > parent_eval ||
                 (T>0 && exp((eval - parent_eval) / T) > (double)rand() / RAND_MAX))
             {

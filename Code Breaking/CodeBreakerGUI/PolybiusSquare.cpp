@@ -65,13 +65,7 @@ void PolybiusWorker::crack(QString qtext)
 
             double eval = evaluate(decrypt(child_key, text));
 
-            //If key is better then always switch
-            if (eval > parent_eval)
-            {
-                parent_eval = eval;
-                parent_key = child_key;
-            }
-            //Otherwise switch if temperature is high enough
+            //If key is better or if temperature is high enough switch
             if (eval > parent_eval ||
                 (T>0 && exp((eval - parent_eval) / T) > (double)rand() / RAND_MAX))
             {

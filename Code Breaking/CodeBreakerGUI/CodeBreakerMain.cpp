@@ -19,6 +19,7 @@
 #include "columnartransposition.h"
 #include "Playfair.h"
 #include "PolybiusSquare.h"
+#include "Cadenus.h"
 #include "space.h"
 
 CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new Ui::CodeBreakerMain)
@@ -30,6 +31,7 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
     ui->stackedWidget->addWidget(new Cipher::Amsco());
     ui->stackedWidget->addWidget(new Cipher::Bifid());
     ui->stackedWidget->addWidget(new Cipher::BinaryConvert());
+    ui->stackedWidget->addWidget(new Cipher::Cadenus());
     ui->stackedWidget->addWidget(new Cipher::ColumnarTransposition());
     ui->stackedWidget->addWidget(new Cipher::FourSquare());
     ui->stackedWidget->addWidget(new Cipher::Playfair());

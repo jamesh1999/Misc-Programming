@@ -17,6 +17,7 @@ INPUT(
 ./release\columnartransposition.o
 ./release\Playfair.o
 ./release\PolybiusSquare.o
+./release\Cadenus.o
 ./release\moc_CodeBreakerMain.o
 ./release\moc_Bifid.o
 ./release\moc_GuessCipher.o
@@ -32,4 +33,5 @@ INPUT(
 ./release\moc_columnartransposition.o
 ./release\moc_Playfair.o
 ./release\moc_PolybiusSquare.o
+./release\moc_Cadenus.o
 );

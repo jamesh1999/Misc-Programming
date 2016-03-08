@@ -17,6 +17,7 @@ INPUT(
 ./debug\columnartransposition.o
 ./debug\Playfair.o
 ./debug\PolybiusSquare.o
+./debug\Cadenus.o
 ./debug\moc_CodeBreakerMain.o
 ./debug\moc_Bifid.o
 ./debug\moc_GuessCipher.o
@@ -32,4 +33,5 @@ INPUT(
 ./debug\moc_columnartransposition.o
 ./debug\moc_Playfair.o
 ./debug\moc_PolybiusSquare.o
+./debug\moc_Cadenus.o
 );

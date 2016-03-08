@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     ColumnView.cpp \
     columnartransposition.cpp \
     Playfair.cpp \
-    PolybiusSquare.cpp
+    PolybiusSquare.cpp \
+    Cadenus.cpp
 
 HEADERS  += CodeBreakerMain.h \
     Bifid.h \
@@ -53,7 +54,8 @@ HEADERS  += CodeBreakerMain.h \
     ColumnView.h \
     columnartransposition.h \
     Playfair.h \
-    PolybiusSquare.h
+    PolybiusSquare.h \
+    Cadenus.h
 
 FORMS    += CodeBreakerMain.ui \
     GuessCipher.ui \
@@ -69,7 +71,8 @@ FORMS    += CodeBreakerMain.ui \
     ColumnView.ui \
     columnartransposition.ui \
     Playfair.ui \
-    PolybiusSquare.ui
+    PolybiusSquare.ui \
+    Cadenus.ui
 
 CONFIG += c++11 \ console
 QT += sql

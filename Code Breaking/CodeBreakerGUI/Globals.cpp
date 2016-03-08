@@ -14,8 +14,6 @@ unsigned COUNT = 10000;
 int LENGTH = 4;
 unsigned MAX_RAILS = 99;
 
-//{"Cadenus", 26, 63, 74, 95, 40, 41, 10, 49, 657, 134, true},
-
 
 
 //Calculates IC for string text
