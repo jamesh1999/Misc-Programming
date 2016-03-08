@@ -17,6 +17,8 @@
 #include "FourSquare.h"
 #include "Amsco.h"
 #include "columnartransposition.h"
+#include "Playfair.h"
+#include "PolybiusSquare.h"
 #include "space.h"
 
 CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new Ui::CodeBreakerMain)
@@ -30,6 +32,8 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
     ui->stackedWidget->addWidget(new Cipher::BinaryConvert());
     ui->stackedWidget->addWidget(new Cipher::ColumnarTransposition());
     ui->stackedWidget->addWidget(new Cipher::FourSquare());
+    ui->stackedWidget->addWidget(new Cipher::Playfair());
+    ui->stackedWidget->addWidget(new Cipher::Polybius());
     ui->stackedWidget->addWidget(new Cipher::RailFence());
     ui->stackedWidget->addWidget(new Cipher::SimpleSubstitution());
     ui->stackedWidget->addWidget(new Cipher::Trifid());

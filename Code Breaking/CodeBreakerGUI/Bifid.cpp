@@ -10,7 +10,8 @@ using namespace Cipher;
 
 std::string BifidWorker::decrypt(int period, const std::string& key, const std::string& text)
 {
-    std::string result = text;
+    std::string result;
+    result.resize(text.size());
 
     for (unsigned i = 0; i < text.length(); i += period)
     {
@@ -60,7 +61,7 @@ void BifidWorker::crack(int period, QString qtext, QString key)
             //If key is better then always switch
             //Otherwise switch if temperature is high enough
             if (eval > parent_eval ||
-                T>0 && exp((eval - parent_eval) / T) > 1.0*rand() / (double)RAND_MAX)
+                (T>0 && exp((eval - parent_eval) / T) > (double)rand() / RAND_MAX))
             {
                 parent_eval = eval;
                 parent_key = child_key;

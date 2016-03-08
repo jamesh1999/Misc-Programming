@@ -109,7 +109,7 @@ void GuessCipher::guessCipher()
         for(int j = 0; j < i; ++j)
         {
             std::string nstring = "";
-            for(int k = 0; k < (text.size() - j) / i; ++k)
+            for(unsigned k = 0; k < (text.size() - j) / i; ++k)
                 nstring.push_back(text[k * i + j]);
 
             current += indexCoincidence(nstring) / i;
@@ -124,7 +124,7 @@ void GuessCipher::guessCipher()
     {
         double current = 0;
 
-        for(int j = 0; j < text.size() - i; ++j)
+        for(unsigned j = 0; j < text.size() - i; ++j)
             if(text[j] == text[j + i])
                 current += 1;
 
@@ -142,7 +142,7 @@ void GuessCipher::guessCipher()
 
         int cnt = 0;
         int cnt_even = 0;
-        for(int j = 0; j < text.size() - 1; ++j)
+        for(unsigned j = 0; j < text.size() - 1; ++j)
         {
             if(text[j] == c0 && text[j + 1] == c1)
             {

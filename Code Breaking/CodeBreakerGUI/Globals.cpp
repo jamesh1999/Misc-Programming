@@ -14,19 +14,7 @@ unsigned COUNT = 10000;
 int LENGTH = 4;
 unsigned MAX_RAILS = 99;
 
-/*CipherData CIPHERS[MAX_CIPHER] = {{"Amsco", 26, 63, 72, 94, 44, 43, 11, 50, 688, 188, false},
-                                  {"Bifid", 25, 47, 58, 77, 24, 23, 7, 49, 517, 118, false},
-                                  {"Binary Conversion", 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, false},
-                                  {"Cadenus", 26, 63, 74, 95, 40, 41, 10, 49, 657, 134, true},
-                                  {"Columnar Transposition", 26, 63, 73, 96, 41, 41, 11, 50, 653, 128, true},
-                                  {"Foursquare", 26, 48, 58, 76, 36, 72, 11, 28, 507, 114, false},
-                                  {"Hill", 26, 63, 72, 94, 44, 43, 11, 50, 688, 188, false}, //
-                                  {"Playfair", 25, 50, 60, 79, 38, 72, 12, 32, 491, 118, false},
-                                  {"Polybius Square", 25, 63, 72, 94, 44, 43, 11, 50, 688, 188, false}, //
-                                  {"Rail Fence", 26, 63, 72, 94, 44, 43, 11, 50, 688, 188, true}, //
-                                  {"Simple Substitution", 26, 63, 73, 95, 72, 73, 22, 50, 450, 120, false},
-                                  {"Trifid", 27, 42, 53, 68, 18, 18, 6, 51, 462, 112, false},
-                                  {"Vigenere", 26, 42, 65, 74, 22, 26, 8, 42, 438, 106, false}};*/
+//{"Cadenus", 26, 63, 74, 95, 40, 41, 10, 49, 657, 134, true},
 
 
 

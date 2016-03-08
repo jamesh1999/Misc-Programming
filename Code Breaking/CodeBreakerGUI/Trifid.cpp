@@ -63,7 +63,7 @@ void TrifidWorker::crack(int period, QString qtext)
             //If key is better then always switch
             //Otherwise switch if temperature is high enough
             if (eval > parent_eval ||
-                T>0 && exp((eval - parent_eval) / T) > 1.0*rand() / (double)RAND_MAX)
+                (T>0 && exp((eval - parent_eval) / T) > (double)rand() / RAND_MAX))
             {
                 parent_eval = eval;
                 parent_key = child_key;
@@ -142,7 +142,7 @@ void Cipher::Trifid::on_key_editingFinished()
         if('a' <= c && c <= 'z')
             c -= 32;
 
-        if(('A' <= c && c <= 'Z' || c == '#') &&
+        if((('A' <= c && c <= 'Z') || c == '#') &&
             std::find(text.begin(), text.end(), c) == text.end())
             text += c;
     }

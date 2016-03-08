@@ -68,13 +68,13 @@ bool isWord(const char* test)
     return table.DoesContain(const_cast<char*>(test));
 }
 
-int getLookaheadCount(const std::string& text, int start, int depth)
+int getLookaheadCount(const std::string& text, unsigned start, int depth)
 {
     if(depth == MAX_LOOKAHEAD)
         return 0;
 
     int max_depth = 0;
-    for (int i = 15; i > 0; --i)
+    for (unsigned i = 15; i > 0; --i)
     {
         if(i + start > text.size()) continue;
 
@@ -93,12 +93,12 @@ std::string addSpaces(std::string text)
 {
 	std::string spaced = "";
 	std::string buffer = "";
-    int processed = 0;
+    unsigned processed = 0;
     while (processed < text.size())
 	{
 		int max = 0;
 		int word_len = 0;
-        for (int i = 15; i > 0; --i)
+        for (unsigned i = 15; i > 0; --i)
 		{
             if(i + processed > text.size()) continue;
             if (isWord(text.substr(processed, i).c_str()))

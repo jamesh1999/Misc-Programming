@@ -56,7 +56,8 @@ void FourSquareWorker::crack(QString qtext, QString key)
                 parent_key2 = child_key2;
             }
             //Otherwise switch if temperature is high enough
-            else if (T > 0 && exp((eval - parent_eval) / T) > 1.0 * rand() / (double)RAND_MAX)
+            if (eval > parent_eval ||
+                (T>0 && exp((eval - parent_eval) / T) > (double)rand() / RAND_MAX))
             {
                 parent_eval = eval;
                 parent_key1 = child_key1;
