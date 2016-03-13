@@ -14,7 +14,7 @@ Branch $0 == ZERO :PRINTD_DONE
 Out $0
 Goto :PRINTD_DIGITS
 :PRINTD_DONE
-Add $0 ZERO 10
+Set $0 '\n'
 Out $0
 Ret
 
@@ -30,7 +30,7 @@ Out $3
 Add $4 4
 Goto :PRINTSTR_AGAIN
 :PRINTSTR_END
-Add $3 ZERO 10
+Set $3 '\n'
 Out $3
 Ret
 

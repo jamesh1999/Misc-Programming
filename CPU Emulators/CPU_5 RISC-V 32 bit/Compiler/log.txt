@@ -1,0 +1,196 @@
+Compiling test.cm into test.cpu...
+Tokenizing...
+Token stream:
+['int', 'fact', '(', 'int', 'n', ')', '{', 'int', 'r', '=', '1', ';', 'for', '(', 'int', 'i', '=', 'n', ';', 'i', '>', '1', ';', 'i', '-', '=', '1', ')', 'r', '*', '=', 'i', ';', 'return', 'r', ';', '}', 'int', 'main', '(', ')', '{', 'return', 'fact', '(', '3', ')', '+', '6', ';', '}']
+
+
+Parsing...
+Generated parse tree:
+- PROGRAM
+|- START
+|- ebnf_0
+||...- stmnt_func
+||   |- definition
+||   || ... type_base
+||   || STRING
+||   |- func_scope
+||   ||...- definition
+||   ||   | ... type_base
+||   ||   | STRING
+||   ||- block
+||   |||- ebnf_1
+||   ||||- ebnf_1
+||   |||||...- statement
+||   |||||   |- stmnt_init
+||   |||||   ||- definition
+||   |||||   ||| ... type_base
+||   |||||   ||| STRING
+||   |||||   || ... INT
+||   |||||...- stmnt_flow_for
+||   |||||   |- stmnt_init
+||   |||||   ||- definition
+||   |||||   ||| ... type_base
+||   |||||   ||| STRING
+||   |||||   || ... STRING
+||   |||||   |...- expr_conditional
+||   |||||   |   | ... STRING
+||   |||||   |   | op_conditional
+||   |||||   |   | ... INT
+||   |||||   |...- expr_assign
+||   |||||   |   | STRING
+||   |||||   |   |- op_assign
+||   |||||   |   | ... INT
+||   |||||   |- statement
+||   |||||   ||...- expr_assign
+||   |||||   ||   | STRING
+||   |||||   ||   |- op_assign
+||   |||||   ||   | ... STRING
+||   ||||...- stmnt_flow_return
+||   ||||   | ... STRING
+||...- stmnt_func
+||   |- definition
+||   || ... type_base
+||   || STRING
+||   |- func_scope
+||   ||- block
+||   |||...- stmnt_flow_return
+||   |||   |...- expr_add
+||   |||   |   |...- stmnt_call
+||   |||   |   |   | STRING
+||   |||   |   |   | ... INT
+||   |||   |   | op_add
+||   |||   |   | ... INT
+|- END
+
+
+
+Locating symbols...
+Symbol table:
+    STRING |       TYPE |       ADDR |       SIZE |      SCOPE |  ARGUMENTS
+---------------------------------------------------------------------------
+      fact |        int |          0 |          4 |        [0] | [['int', 4]]
+         n |        int |          0 |          4 |     [0, 0] |         []
+         r |        int |          4 |          4 |     [0, 0] |         []
+         i |        int |          8 |          4 |     [0, 0] |         []
+      main |        int |          4 |          4 |        [0] |         []
+
+
+Generating code...
+Constructed high level assembly:
+0    : import setup
+1    : import print
+2    : Add SP 8
+3    : Goto : ANCHOR_0
+4    : > fact
+5    : Add SP 12
+6    : Add $1 ZERO 1
+7    : Mov $0 $1
+8    : Sw $0 FP + 4
+9    : Lw $2 FP + 0
+10   : Mov $4 $2
+11   : Mov $3 $4
+12   : Sw $3 FP + 8
+13   : : ANCHOR_1
+14   : Lw $5 FP + 8
+15   : Mov $6 $5
+16   : Add $7 ZERO 1
+17   : Branch ( $6 > $7 ): ANCHOR_3
+18   : Mov $13 ZERO
+19   : Goto : ANCHOR_4
+20   : : ANCHOR_3
+21   : Not $13 ZERO
+22   : : ANCHOR_4
+23   : Branch ( $13 == ZERO ): ANCHOR_2
+24   : Lw $8 FP + 8
+25   : Mov $10 $8
+26   : Lw $9 FP + 4
+27   : Mul $9 $10
+28   : Sw $9 FP + 4
+29   : Add $12 ZERO 1
+30   : Lw $11 FP + 8
+31   : Sub $11 $12
+32   : Sw $11 FP + 8
+33   : Goto : ANCHOR_1
+34   : : ANCHOR_2
+35   : Lw $14 FP + 4
+36   : Mov $15 $14
+37   : Sub SP 12
+38   : Sw $15 FP + 0
+39   : Ret
+40   : Sub SP 12
+41   : : ANCHOR_0
+42   : Goto : ANCHOR_5
+43   : > main
+44   : Add SP 12
+45   : Mov $17 SP
+46   : Add SP 8
+47   : Add $16 ZERO 3
+48   : Push $16
+49   : Mov SP $17
+50   : Call : fact
+51   : Lw $18 SP + 12
+52   : Add $19 ZERO 6
+53   : Add $20 $18 $19
+54   : Sub SP 12
+55   : Sw $20 FP + 0
+56   : Ret
+57   : Sub SP 12
+58   : : ANCHOR_5
+59   : Call : main
+60   : Lw $21 SP + 12
+61   : Mov $22 SP
+62   : Add $22 4
+63   : Set $23 77
+64   : Push $23
+65   : Set $23 97
+66   : Push $23
+67   : Set $23 105
+68   : Push $23
+69   : Set $23 110
+70   : Push $23
+71   : Set $23 32
+72   : Push $23
+73   : Set $23 101
+74   : Push $23
+75   : Set $23 120
+76   : Push $23
+77   : Set $23 105
+78   : Push $23
+79   : Set $23 116
+80   : Push $23
+81   : Set $23 101
+82   : Push $23
+83   : Set $23 100
+84   : Push $23
+85   : Set $23 32
+86   : Push $23
+87   : Set $23 119
+88   : Push $23
+89   : Set $23 105
+90   : Push $23
+91   : Set $23 116
+92   : Push $23
+93   : Set $23 104
+94   : Push $23
+95   : Set $23 32
+96   : Push $23
+97   : Set $23 99
+98   : Push $23
+99   : Set $23 111
+100  : Push $23
+101  : Set $23 100
+102  : Push $23
+103  : Set $23 101
+104  : Push $23
+105  : Set $23 58
+106  : Push $23
+107  : Set $23 32
+108  : Push $23 , ZERO , $22
+109  : Call : print_str
+110  : Push $21
+111  : Call : print_d
+112  : Sub SP 8
+113  : Halt
+
+Saving to test.al...
+Saved

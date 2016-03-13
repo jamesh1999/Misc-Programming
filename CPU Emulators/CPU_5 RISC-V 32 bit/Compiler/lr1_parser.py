@@ -1,12 +1,141 @@
 import json, os
 
+
+
+#Errors for parser and ParseTree class
 class ParserError(Exception):
 	pass
+class ParseTreeError(Exception):
+	pass
+
+
 
 SPECIAL_TOKENS = ["$", "INT", "STRING"]
 
 working_stack = []
 output_stack = []
+
+
+
+#Iterator for ParseTree()
+class TreeIterator(object):
+	def __init__(self, tree):
+		self.parse_tree = tree
+		self.__current = -1
+
+	def __next__(self):
+		self.__current += 1
+
+		if self.__current < len(self.parse_tree):
+			return self.parse_tree.getNode(self.__current)
+
+		raise StopIteration
+
+
+
+#Container for parse tree
+class ParseTree(object):
+	def __init__(self, tree):
+		self.__parse_tree = tree
+		self.__buff = "" #Buffer for getTerminals()
+
+	#Get a node by index
+	def getNode(self, index):
+		if index >= len(self.__parse_tree[1]):
+			raise ParseTreeError("Parse tree index is out of range")
+
+		#Return string on terminal
+		if isinstance(self.__parse_tree[1][index], str):
+			return self.__parse_tree[1][index]
+
+		return ParseTree(self.__parse_tree[1][index])
+
+	#Get the type of the root node
+	def getType(self):
+		return self.__parse_tree[0]
+
+	#Gets a string representing all terminals in this node
+	def getTerminals(self):
+		self.__buff = ""
+		self.__getTerminalsRecursive(self)
+		return self.__buff
+
+	def __getTerminalsRecursive(self, node):
+		for part in node:
+			#If terminal add to buffer
+			if isinstance(part, str):
+				self.__buff += part
+			else:
+				self.__getTerminalsRecursive(part)
+
+	#Gets first node of type
+	def getFirstOf(self, search):
+		return self.__getFirstOfRecursive(self, search)
+
+	def __getFirstOfRecursive(self, tree, search):
+		#Search children
+		for node in tree:
+			#Skip string literals
+			if isinstance(node, str):
+				continue;
+
+			if node.getType() == search:
+				return node
+
+			#See if desired node is in this node
+			x = self.__getFirstOfRecursive(node, search)
+			if not x == None:
+				return x
+
+		#Node could not be found
+		return None
+
+	#Print the tree
+	def __str__(self):
+		return self.__strRecursive(self)
+
+	def __strRecursive(self, node, indent = "", skipped = False):
+		#List all child nodes
+		if indent == "" or (not len(node) == 1 and not isinstance(node, str)):
+			ret = indent
+			if skipped:
+				ret += "..."
+			ret += "- " + node.getType() + "\n"
+
+			#Calculate indent for branch
+			nindent = indent
+			if skipped:
+				nindent += "   "
+			nindent += "|"
+
+			#Print branch
+			for i in node:
+				if not isinstance(i, str):
+					ret += self.__strRecursive(i, indent = nindent)
+
+			return ret
+
+		#Skip long chains of 1 child nodes
+		elif len(node) == 1 and not isinstance(node.getNode(0), str):
+			return self.__strRecursive(node.getNode(0), indent = indent, skipped = True)
+
+		#Print leaf nodes
+		else:
+			ret = indent + " "
+
+			if skipped:
+				ret += "... "
+
+			ret += node.getType() + "\n"
+			return ret
+
+	#Make tree iterable
+	def __iter__(self):
+		return TreeIterator(self)
+
+	#Allow len(ParseTree())
+	def __len__(self):
+		return len(self.__parse_tree[1])
 
 
 #Read parse table
@@ -99,4 +228,5 @@ def parse(tokens):
 		parseStep('"' + token + '"')
 	parseStep("$") #Add EOS token
 
-	return ["PROGRAM", output_stack]
+	#Return tree with special nodes added
+	return ParseTree(["PROGRAM", [["START", []]] + output_stack + [["END", []]]])

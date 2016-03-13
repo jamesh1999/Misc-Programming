@@ -2,6 +2,8 @@ import os
 from tokenizer import *
 import copy
 
+
+
 CURRENT_REGISTER = 0
 CURRENT_SCOPE = []
 MAX_AT_LEVEL = 0
@@ -11,7 +13,6 @@ templates = {}
 built_in = {}
 
 symbols = []
-entire_tree = []
 
 tokenizer = Tokenizer()
 
@@ -76,43 +77,17 @@ with open(path, "r") as ifile:
 
 		templates[node[2]][num] = template[1:]
 
-#Read built-in functions
-path = os.path.join(os.path.dirname(__file__), "Configuration/Built-in Functions")
-for filename in next(os.walk(path))[2]:
-	file_path = os.path.join(path, filename)
 
-	with open(file_path, "r") as ifile:
-		lines = ifile.readlines()
-		built_in[filename.split('.')[0]] = lines
-
-
-
-#Get the first instance of a node in a parse tree
-def getFirstInstanceOf(tree, search):
-	#Search children
-	for node in tree[1]:
-		#Skip string literals
-		if isinstance(node, str):
-			continue;
-
-		if node[0] == search:
-			return node
-
-		x = getFirstInstanceOf(node, search)
-		if not x == None:
-			return x
-
-	return None
 
 #Check if the tree is equivalent to the definition
 def isDefinitionMatch(tree, definition, pos = 0, root = True):
 	#Does definition apply to this node
-	if root and definition[0] != tree[0]:
+	if root and definition[0] != tree.getType():
 		return False
 
 	#Does definition match
 	check = definition[2]
-	for node in tree[1]:
+	for node in tree:
 
 		#Check that string matches
 		if isinstance(node, str):
@@ -122,7 +97,7 @@ def isDefinitionMatch(tree, definition, pos = 0, root = True):
 				break;
 
 		#Check that node matches
-		elif check[pos] == node[0]:
+		elif check[pos] == node.getType():
 			pos += 1
 		else:
 			b, pos = isDefinitionMatch(node, definition, pos = pos, root = False)
@@ -254,28 +229,25 @@ def generateNode(parse_tree):
 	global MAX_AT_LEVEL
 	global current_node
 
-	if symbols.isScoped(parse_tree):
-		CURRENT_SCOPE.append(MAX_AT_LEVEL)
-		symbols.updateScope(CURRENT_SCOPE)
-		MAX_AT_LEVEL = 0
+	symbols.updateScope(parse_tree)
 
 	#Get nodes
 	child_nodes = []
 	child_templates = []
-	for node in parse_tree[1]:
+	for node in parse_tree:
 		if not isinstance(node, str):
-			child_nodes.append(node[0])
+			child_nodes.append(node.getType())
 	child_templates = [[]] * len(child_nodes)
 
 	#Get the correct template
 	template = []
-	if parse_tree[0] in templates:
+	if parse_tree.getType() in templates:
 		for definition in definitions:
 			if isDefinitionMatch(parse_tree, definition):
-				template = copy.deepcopy(templates[parse_tree[0]][definition[1]])
+				template = copy.deepcopy(templates[parse_tree.getType()][definition[1]])
 				break;
 		else:
-			template = copy.deepcopy(templates[parse_tree[0]][0])
+			template = copy.deepcopy(templates[parse_tree.getType()][0])
 
 	#Add child template insertion marks
 	for node in reversed(child_nodes):
@@ -297,14 +269,16 @@ def generateNode(parse_tree):
 		#Substitute STRING and INT placeholders
 		while "INT" in line:
 			x = line.index("INT")
-			template[i][x] = getFirstInstanceOf(parse_tree, "INT")[1][0]
+			template[i][x] = parse_tree.getFirstOf("INT").getNode(0)
 		while "STRING" in line:
 			x = line.index("STRING")
-			template[i][x] = getFirstInstanceOf(parse_tree, "STRING")[1][0]
+			template[i][x] = parse_tree.getFirstOf("STRING").getNode(0)
 
 		#Set custom symbols
-		if line[0] == "?" and line[3] == "=":
-			template[i] = handleSymbolQueries(line)
+		if line[0] == "?" and line[3] in ["=", "+", "-"]:
+			handleSymbolQueries(line)
+			template[i] = []
+			continue;
 
 		#Substitute custom symbols
 		template[i] = symbols.replaceSymbols(line)
@@ -316,8 +290,8 @@ def generateNode(parse_tree):
 		if len(line) == 5 and line[0] == "[" and line[4] == "]":
 
 			#Find respective node
-			for j, node in enumerate(parse_tree[1]):
-				if not isinstance(node, str) and node[0] == line[2]:
+			for j, node in enumerate(parse_tree):
+				if not isinstance(node, str) and node.getType() == line[2]:
 					break;
 			else:
 				#Node not present: move to next line
@@ -350,13 +324,7 @@ def generateNode(parse_tree):
 		else:
 			break;
 
-	if symbols.isScoped(parse_tree):
-		CURRENT_SCOPE = CURRENT_SCOPE[:-1]
-		symbols.updateScope(CURRENT_SCOPE)
-		if len(CURRENT_SCOPE) > 0:
-			MAX_AT_LEVEL = CURRENT_SCOPE[-1] + 1
-		else:
-			MAX_AT_LEVEL = 0
+	symbols.endUpdateScope(parse_tree)
 
 	return template
 
@@ -365,12 +333,6 @@ def generateNode(parse_tree):
 #Run the code generator on the entire parse tree
 def generateCode(parse_tree, symbols_in):
 	global symbols
-	global entire_tree
-
-	#Add START and END nodes
-	parse_tree[1] = [["START", []]] + parse_tree[1] + [["END", []]]
-
 	symbols = symbols_in
-	entire_tree = parse_tree
 
 	return copy.deepcopy(templates["SETUP"][0]) + generateNode(parse_tree) + copy.deepcopy(templates["FINISH"][0])

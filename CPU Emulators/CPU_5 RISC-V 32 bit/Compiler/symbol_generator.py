@@ -1,9 +1,20 @@
 import os
 
+
+
+#Errors for parser and ParseTree class
+class SymbolGeneratorError(Exception):
+	pass
+class SymbolTableError(Exception):
+	pass
+
+
+
 format = []
 search = []
 blank = ""
 scoped = []
+no_overhead = []
 scope_overhead = 0
 arguments = ""
 type_format = []
@@ -18,39 +29,58 @@ symbols = []
 
 #Container for data to return
 class SymbolTable(object):
-	def __init__(self):
+	def __init__(self, symbols):
 		self.format = []
 		self.scoped = []
+		self.no_overhead = []
 
-		self.symbols = []
-		self.custom_symbols = {}
+		self.__symbols = symbols
+		self.__custom_symbols = {}
 
 		self.scope_offsets = []
 		self.cur_scope = []
+		self.max_at_level = 0
 		self.scope_overhead = 0
+
+	#Sets/Adds a custom symbol
+	def setCustom(self, name, value):
+		self.__custom_symbols[name] = value
+
+	#Gets a custom symbol
+	def getCustom(self, name):
+		try:
+			return self.__custom_symbols[name]
+		except KeyError:
+			raise SymbolTableError("Symbol " + name + " does not exist.")
 
 	#Returns information from the symbol table
 	def symbolQuery(self, query):
 		#----SET QUERY----#
 
-		if query[3] == "=":
-			self.custom_symbols[query[2]] = query[4]
-			return None
-		elif query[3] == "+":
-			self.custom_symbols[query[2]] = str(int(self.custom_symbols[query[2]]) + int(query[4]))
-			return None
-		elif query[3] == "-":
-			self.custom_symbols[query[2]] = str(int(self.custom_symbols[query[2]]) - int(query[4]))
-			return None
+		try:
+			if query[3] == "=":
+				self.setCustom(query[2], query[4])
+				return None
+			elif query[3] == "+":
+				self.setCustom(query[2], str(int(self.getCustom(query[2])) + int(query[4])))
+				return None
+			elif query[3] == "-":
+				self.setCustom(query[2], str(int(self.getCustom(query[2])) - int(query[4])))
+				return None
+		except ValueError:
+			raise SymbolTableError(query[4] + " and the value of " + query[2] + " must be ints.")
 
 		#----GET QUERY----#
 
 		#Get arguments
-		query = query[query.index('(') + 1: query.index(')')]
-		args = []
-		for token in query:
-			if not token == ',':
-				args.append(token)
+		try:
+			query = query[query.index('(') + 1: query.index(')')]
+			args = []
+			for token in query:
+				if not token == ',':
+					args.append(token)
+		except ValueError:
+			raise SymbolTableError("Badly formatted query: " + str(query))
 
 		#Special queries
 		if len(args) == 1:
@@ -59,6 +89,9 @@ class SymbolTable(object):
 				for offset in self.scope_offsets:
 					if offset[0] == self.cur_scope:
 						return str(offset[1])
+				return "0"
+			else:
+				raise SymbolTableError(args[0] + " is not a special query.")
 
 		#Symbol table query
 		elif len(args) == 2:
@@ -66,7 +99,7 @@ class SymbolTable(object):
 			#Get corresponding symbol (if any)
 			highest = -1
 			symbol = []
-			for s in self.symbols:
+			for s in self.__symbols:
 
 				#Check whether symbol is in scope
 				test_scope = s[self.format.index("SCOPE")]
@@ -99,11 +132,16 @@ class SymbolTable(object):
 				#Calculate stack offset for differing scopes
 				offset = 0
 				symbol_scope = symbol[self.format.index("SCOPE")]
-				offset += (len(self.cur_scope) - len(symbol_scope)) * self.scope_overhead
+				#Count levels with offsets
+				cnt = 0
+				for level in self.cur_scope[len(symbol_scope):]:
+					if not isinstance(level, str):
+						cnt += 1
+				offset += cnt * self.scope_overhead
 
 				#Factor in scope sizes
-				for i in range(len(symbol_scope), len(self.cur_scope)):
-					working_scope = self.cur_scope[:i]
+				for i in range(len(self.getRealScope(symbol_scope)), len(self.getRealScope(self.cur_scope))):
+					working_scope = self.getRealScope(self.cur_scope)[:i]
 					for x in self.scope_offsets:
 						if x[0] == working_scope:
 							offset += x[1]
@@ -130,25 +168,44 @@ class SymbolTable(object):
 				return str(symbol[self.format.index("ARGUMENTS")][int(index)][1])
 			elif args[1] in self.format:
 				return str(symbol[self.format.index(args[1])])
+			else:
+				raise SymbolTableError(str(query) + " is not a valid query.")
 
 		#Check query
 		elif len(args) == 3:
 			nquery = ["?", "(", args[0], ",", args[1], ")"]
 			return str(self.symbolQuery(nquery) == args[2])
 
+		else:
+			raise SymbolTableError("Badly formatted query: " + str(query))
+
 	#Check whether a node is scoped (for code generator)
 	def isScoped(self, node):
-		return node[0] in self.scoped
+		return node.getType() in self.scoped
 
-	#Set the current scope for queries
-	def updateScope(self, scope):
-		self.cur_scope = scope
+	#Handles scope changes at start of node
+	def updateScope(self, node):
+		if self.isScoped(node):
+			if node.getType() in no_overhead:
+				self.cur_scope.append(str(self.max_at_level))
+			else:
+				self.cur_scope.append(self.max_at_level)
+		self.max_at_level = 0
+
+	#Handles scope changes at end of node
+	def endUpdateScope(self, node):
+		if self.isScoped(node):
+			self.cur_scope = self.cur_scope[:-1]
+			if len(self.cur_scope) > 0:
+				self.max_at_level = int(self.cur_scope[-1]) + 1
+			else:
+				self.max_at_level = 0
 
 	#Replace any custom defined symbols
 	def replaceSymbols(self, line):
 		for i, token in enumerate(line):
-			if token in self.custom_symbols:
-				line[i] = self.custom_symbols[token]
+			if token in self.__custom_symbols:
+				line[i] = self.__custom_symbols[token]
 
 		return line
 
@@ -160,12 +217,20 @@ class SymbolTable(object):
 		ret = ret[:-3]
 		ret += "\n" + "-" * len(ret)
 
-		for symbol in self.symbols:
+		for symbol in self.__symbols:
 			ret += "\n"
 			for i,val in enumerate(symbol):
 					ret += max(10 - len(str(val)), 0) * " " + str(val) + " | "
 			ret = ret[:-3]
 
+		return ret
+
+	#Gets the stack scope
+	def getRealScope(self, scope):
+		ret = []
+		for val in scope:
+			if not isinstance(val, str):
+				ret.append(val)
 		return ret
 
 
@@ -196,6 +261,8 @@ with open(path, "r") as ifile:
 				blank = rhs[0].strip("\"'")
 			elif lhs == "SCOPED":
 				scoped = rhs
+			elif lhs == "NO_OVERHEAD":
+				no_overhead = rhs
 			elif lhs == "SCOPE_OVERHEAD":
 				scope_overhead = int(rhs[0])
 			elif lhs == "ARGUMENTS":
@@ -210,28 +277,9 @@ with open(path, "r") as ifile:
 			elif lhs == "DEFAULT_SIZE":
 				default_size = int(rhs[0])
 
-
-
-#Concatenate all terminals
-buff = ""
-def concatTerminals(node, reset = True):
-	global buff
-
-	if reset:
-		buff = ""
-
-	for part in node[1]:
-		if isinstance(part, str):
-			buff += part
-		else:
-			concatTerminals(part, reset = False)
-
-	return buff
-
 #Add a symbol to the list
 def addSymbol(node, main = True):
 	global symbols
-	global cur_scope
 	global symbol_offsets
 
 	#Create symbol
@@ -240,7 +288,7 @@ def addSymbol(node, main = True):
 
 		#Get offset
 		for i, offset in enumerate(symbol_offsets):
-			if offset[0] == cur_scope:
+			if offset[0] == cur_real_scope:
 				break;
 
 		symbols[-1][format.index("ADDR")] = symbol_offsets[i][1]
@@ -250,19 +298,21 @@ def addSymbol(node, main = True):
 		symbols[-1][format.index("TYPE")] = [blank] * len(type_format)
 
 	#Get type from parse tree
-	for part in node[1]:
+	for part in node:
+		if isinstance(part, str):
+			continue;
+
 		#Add info if it isn't already there
-		if part[0] in type_format:
-			if symbols[-1][format.index("TYPE")][type_format.index(part[0])] == blank:
-				symbols[-1][format.index("TYPE")][type_format.index(part[0])] = concatTerminals(part)
+		if part.getType() in type_format:
+			if symbols[-1][format.index("TYPE")][type_format.index(part.getType())] == blank:
+				symbols[-1][format.index("TYPE")][type_format.index(part.getType())] = part.getTerminals()
 
-		elif part[0] in format:
-			if symbols[-1][format.index(part[0])] == blank:
-				symbols[-1][format.index(part[0])] = concatTerminals(part)
+		elif part.getType() in format:
+			if symbols[-1][format.index(part.getType())] == blank:
+				symbols[-1][format.index(part.getType())] = part.getTerminals()
 
-		elif not isinstance(part, str):
-			#Search symbol for other parts
-			addSymbol(part, main = False)
+		#Search symbol for other parts
+		addSymbol(part, main = False)
 
 	#Work out size and add offset
 	if main:
@@ -284,9 +334,9 @@ def applyArguments(node, index = None):
 	if index == None:
 		index = len(symbols) - 1
 
-	for part in node[1]:
+	for part in node:
 		if not isinstance(part, str):
-			if part[0] in search:
+			if part.getType() in search:
 
 				addSymbol(part)
 				symbols[index][format.index("ARGUMENTS")].append([symbols[-1][format.index("TYPE")], symbols[-1][format.index("SIZE")]])
@@ -294,37 +344,45 @@ def applyArguments(node, index = None):
 				applyArguments(part, index = index)
 
 #Recursively get all symbols in a tree
-cur_scope = [0]
+cur_scope = [0] 	 #Stack scope
+cur_real_scope = [0] #Visibility scope
 max_at_level = 0
 def getSymbols(parse_tree):
 	global cur_scope
+	global cur_real_scope
 	global max_at_level
 	global symbol_offsets
 
-	for node in parse_tree[1]:
+	for node in parse_tree:
 		#Ignore terminals
 		if isinstance(node, str):
 			continue;
 
 		#Set scope for next symbols & search new scope
-		if node[0] in scoped:
-
-			cur_scope.append(max_at_level)
-			symbol_offsets.append([list(cur_scope), 0])
+		if node.getType() in scoped:
+			if node.getType() in no_overhead:
+				cur_scope.append(str(max_at_level)) #Mark for no overhead
+			else:
+				cur_scope.append(max_at_level)
+				cur_real_scope.append(max_at_level)
+				symbol_offsets.append([list(cur_real_scope), 0])
 			tmp = max_at_level + 1
 			max_at_level = 0
 
+			#Add symbols in scope
 			getSymbols(node)
 
 			max_at_level = tmp
 			cur_scope = cur_scope[:-1]
+			if not node.getType() in no_overhead:
+				cur_real_scope = cur_real_scope[:-1]
 
 		#Add symbol
-		elif node[0] in search:
+		elif node.getType() in search:
 			addSymbol(node)
 
 		#Add arguments
-		elif node[0] == arguments:
+		elif node.getType() == arguments:
 			applyArguments(node)
 
 		#Search child node
@@ -336,11 +394,11 @@ def generateSymbolTable(parse_tree):
 	getSymbols(parse_tree)
 
 	#Package data
-	to_return = SymbolTable()
-	to_return.symbols = symbols
+	to_return = SymbolTable(symbols)
 	to_return.scope_offsets = symbol_offsets
 	to_return.format = format
 	to_return.scoped = scoped
+	to_return.no_overhead = no_overhead
 	to_return.scope_overhead = scope_overhead
 
 	return to_return

@@ -3,89 +3,112 @@ import print
 Add SP 8
 Goto : ANCHOR_0
 > fact
-Add SP 4
-Lw $0 FP + 0
-Mov $1 $0
-Sub SP 4
-Sw $1 FP - 16
-Ret
-Sub SP 4
-: ANCHOR_0
-Goto : ANCHOR_1
-> main
-Add SP 4
-Mov $3 SP
-Add SP 8
-Add $2 ZERO 3
-Push $2
-Mov SP $3
-Call : fact
-Lw $5 FP - 16
-Mov $4 $5
-Sw $4 FP + 0
-Lw $6 FP + 0
-Mov $7 $6
-Sub SP 4
-Sw $7 FP - 12
-Ret
-Sub SP 4
+Add SP 12
+Add $1 ZERO 1
+Mov $0 $1
+Sw $0 FP + 4
+Lw $2 FP + 0
+Mov $4 $2
+Mov $3 $4
+Sw $3 FP + 8
 : ANCHOR_1
+Lw $5 FP + 8
+Mov $6 $5
+Add $7 ZERO 1
+Branch ( $6 > $7 ): ANCHOR_3
+Mov $13 ZERO
+Goto : ANCHOR_4
+: ANCHOR_3
+Not $13 ZERO
+: ANCHOR_4
+Branch ( $13 == ZERO ): ANCHOR_2
+Add SP 0
+Lw $8 FP + 8
+Mov $10 $8
+Lw $9 FP + 4
+Mul $9 $10
+Sw $9 FP + 4
+Sub SP 0
+Add $12 ZERO 1
+Lw $11 FP + 8
+Sub $11 $12
+Sw $11 FP + 8
+Goto : ANCHOR_1
+: ANCHOR_2
+Lw $14 FP + 4
+Mov $15 $14
+Sub SP 12
+Sw $15 FP + 0
+Ret
+Sub SP 12
+: ANCHOR_0
+Goto : ANCHOR_5
+> main
+Add SP 12
+Mov $17 SP
+Add SP 8
+Add $16 ZERO 3
+Push $16
+Mov SP $17
+Call : fact
+Lw $18 SP + 12
+Sub SP 12
+Sw $18 FP + 0
+Ret
+Sub SP 12
+: ANCHOR_5
 Call : main
-Push SP
-Call :print_d
-Push FP
-Call :print_d
-Mov $8 SP
-Add $8 4
-Set $9 77
-Push $9
-Set $9 97
-Push $9
-Set $9 105
-Push $9
-Set $9 110
-Push $9
-Set $9 32
-Push $9
-Set $9 101
-Push $9
-Set $9 120
-Push $9
-Set $9 105
-Push $9
-Set $9 116
-Push $9
-Set $9 101
-Push $9
-Set $9 100
-Push $9
-Set $9 32
-Push $9
-Set $9 119
-Push $9
-Set $9 105
-Push $9
-Set $9 116
-Push $9
-Set $9 104
-Push $9
-Set $9 32
-Push $9
-Set $9 99
-Push $9
-Set $9 111
-Push $9
-Set $9 100
-Push $9
-Set $9 101
-Push $9
-Set $9 58
-Push $9
-Set $9 32
-Push $9 , ZERO , $8
+Lw $19 SP + 12
+Mov $20 SP
+Add $20 4
+Set $21 77
+Push $21
+Set $21 97
+Push $21
+Set $21 105
+Push $21
+Set $21 110
+Push $21
+Set $21 32
+Push $21
+Set $21 101
+Push $21
+Set $21 120
+Push $21
+Set $21 105
+Push $21
+Set $21 116
+Push $21
+Set $21 101
+Push $21
+Set $21 100
+Push $21
+Set $21 32
+Push $21
+Set $21 119
+Push $21
+Set $21 105
+Push $21
+Set $21 116
+Push $21
+Set $21 104
+Push $21
+Set $21 32
+Push $21
+Set $21 99
+Push $21
+Set $21 111
+Push $21
+Set $21 100
+Push $21
+Set $21 101
+Push $21
+Set $21 58
+Push $21
+Set $21 32
+Push $21 , ZERO , $20
 Call : print_str
-Lw $10 FP + 4
-Push $10
+Push $19
 Call : print_d
 Sub SP 8
 Halt

@@ -7,6 +7,7 @@ import print
 
 <<END>>
 Call :main
+Lw $1 SP + 12
 Mov $0 SP
 Add $0 4
 Set $2 'M'
@@ -56,7 +57,6 @@ Push $2
 Set $2 ' '
 Push $2, ZERO, $0
 Call :print_str
-Lw $1 FP ?(main, addr)
 Push $1
 Call :print_d
 
@@ -93,7 +93,7 @@ Add SP 8
 [<parameters>]
 Mov SP $0
 Call :?(STRING, id)
-Lw @ FP ?(STRING, addr)
+Lw @ SP + 12
 
 <<stmnt_flow_while>>
 :LOOP
@@ -129,7 +129,7 @@ Ret
 
 <<stmnt_flow_return>[1]>
 Sub SP ?(SCOPE_OFFSET)
-Sw @<expr> FP ?(FUNCTION, addr)
+Sw @<expr> FP + 0
 Ret
 
 <<parameters>>
@@ -303,12 +303,3 @@ Add @ ZERO 0
 <<term>[3]>
 Lw $1 FP ?(STRING, addr)
 Mov @ $1
-
-<<scoped_block>>
-Add SP 8
-Mov $0 FP
-Sub FP SP ?(SCOPE_OFFSET)
-Add FP 4
-[<block>]
-Mov FP $0
-Sub SP 8

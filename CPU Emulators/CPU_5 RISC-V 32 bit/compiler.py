@@ -1,5 +1,6 @@
-import sys
+import sys,time
 
+from Compiler.preprocessor import *
 from tokenizer import *
 from Compiler.lr1_parser import *
 from Compiler.symbol_generator import *
@@ -7,25 +8,58 @@ from Compiler.code_generator import *
 from assembler import *
 
 
+
+COMPILER_LOG = ""
+
+def printLog(text, e = "\n"):
+	global COMPILER_LOG
+	print(text, end = e)
+	COMPILER_LOG += str(text) + e
+
+def saveLogFile():
+	path = os.path.join(os.path.dirname(__file__), "Compiler/log.txt")
+	with open(path, "w") as log_file:
+		log_file.write(COMPILER_LOG)
+
+
+
 def compile_file(ifilename, ofilename):
+	start = time.clock()
 	with open(ifilename) as inputf:
+		printLog("Compiling " + ifilename + " into " + ofilename + "...")
 
+		#Preprocess file
+		printLog("Preprocessing...")
+		preprocessed = preprocess(inputf.readlines())
+		printLog("Done\n")
+
+		#Split into tokens
+		printLog("Tokenizing...")
 		tokenizer = Tokenizer()
-		tokens = tokenizer.tokenizeFile(inputf)
+		tokens = tokenizer.tokenizeString('\n'.join(preprocessed))
 
-		print(tokens)
-		print("\n\n\n")
+		printLog("Token stream:")
+		printLog(tokens)
+		printLog("\n")
 
+		#Create parse tree
+		printLog("Parsing...")
 		tree = parse(tokens)
 
-		print(tree)
-		print("\n\n\n")
+		printLog("Generated parse tree:")
+		printLog(tree)
+		printLog("\n")
 
+		#Generate symbol table
+		printLog("Locating symbols...")
 		symbols = generateSymbolTable(tree)
 
-		print(symbols)
-		print("\n\n\n")
+		printLog("Symbol table:")
+		printLog(symbols)
+		printLog("\n")
 
+		#Generate code
+		printLog("Generating code...")
 		assembly_list = generateCode(tree, symbols)
 
 		#Stringify assembly
@@ -39,13 +73,30 @@ def compile_file(ifilename, ofilename):
 				else:
 					string += " " + token
 			assembly += string[1:] + "\n"
-		print(assembly)
 
+		printLog("Constructed high level assembly:")
+		for i,line in enumerate(assembly.split('\n')):
+			if line == "":
+				continue;
+			printLog(str(i) + max(5 - len(str(i)), 0) * " " + ": " + line)
+
+		#Save to output file
 		root_name = ifilename.split('.')[0]
+		printLog("\nSaving to " + root_name + ".al...")
 		with open(root_name + ".al", 'w') as outputf:
 			outputf.write(assembly)
+		printLog("Saved")
 
+		#Save log
+		print("Saving log...")
+		saveLogFile()
+		print("Done!")
+
+		#Run assembler
+		print("Switching to assembler...")
 		assemble(root_name + ".al", ofilename, True, True)
+		print("Done assembling!")
+		print("Finished compiling in " + str(time.clock() - start) + "s")
 		
 
 
