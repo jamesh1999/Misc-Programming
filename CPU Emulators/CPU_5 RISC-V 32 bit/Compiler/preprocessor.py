@@ -1,3 +1,5 @@
+import os
+
 class PreprocessorError(Exception):
 	pass
 
@@ -47,16 +49,17 @@ def removeStrings(lines):
 
 	return lines
 
+macros = {}
 #Removes all preprocessor statements (#s)
 def removePreprocessorStatements(lines):
-	macros = {}
+	global macros
 	if_values = []
 
 	for i, line in enumerate(lines):
 		#Ignore errors if line too short
 		try:
-			if line[:8] == "#include":
-				#Include file
+			if line[:6] == "#endif":
+				if_values.pop()
 				lines[i] = ""
 				continue;
 
@@ -78,9 +81,19 @@ def removePreprocessorStatements(lines):
 				lines[i] = ""
 				continue;
 
-			if line[:6] == "#endif":
-				if_values.pop()
+			#Ignore line if if failed
+			if False in if_values:
 				lines[i] = ""
+				continue;
+
+			#Include other .cm files
+			if line[:8] == "#include":
+				try:
+					splitted = line.split()
+					stdlib = splitted[1][0] == "<" and splitted[1][-1] == ">"
+					lines[i] = preprocess(splitted[1].strip('"<>'), stdlib = stdlib)
+				except IndexError:
+					raise PreprocessorError(line + " is an invalid preprocessor statement.")
 				continue;
 
 			if line[:] == "#undefine":
@@ -92,6 +105,11 @@ def removePreprocessorStatements(lines):
 
 		except IndexError:
 			pass
+
+		#Redo in case try failed
+		if False in if_values:
+			lines[i] = ""
+			continue;
 
 		#Remove macros
 		for macro in macros:
@@ -119,15 +137,29 @@ def removePreprocessorStatements(lines):
 			pass
 
 		#Add line
-		if len(if_values) == 0 or not False in if_values:
-			lines[i] = line
-		else:
-			lines[i] = ""
+		lines[i] = line
+
+	#Expand all includes
+	done = False
+	while not done:
+		done = True
+
+		for i, line in enumerate(lines):
+			if not isinstance(line, str):
+				done = False
+
+				lines = lines[:i] + lines[i] + lines[i + 1:]
+				break;
 
 	return lines
 
-def preprocess(lines):
-	lines = removeStrings(lines)
-	lines = removePreprocessorStatements(lines)
+def preprocess(filename, stdlib = False):
+	lines = []
+
+	#Use default folder for stdlib
+	path = os.path.join(os.path.dirname(__file__), "../C - Code/" + filename)
+	with open(path if stdlib else filename) as inputf:
+		lines = removePreprocessorStatements(inputf.readlines())
+		lines = removeStrings(lines)
 
 	return lines

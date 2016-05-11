@@ -3,7 +3,7 @@
 
 #include <vector>
 
-const int AMNT = 4096; //Amount of RAM to use in bytes
+const int AMNT = 131072; //Amount of RAM to use in bytes
 
 
 

@@ -1,6 +1,6 @@
-import os
+import os, copy
 from tokenizer import *
-import copy
+import Compiler.Configuration.compiler_scripts as scripts
 
 
 
@@ -55,7 +55,7 @@ with open(path, "r") as ifile:
 	temp = []
 	for line in lines:
 		tokens = tokenizer.tokenizeString(line)
-		if len(tokens) > 0 and tokens[0] == "<":
+		if len(tokens) > 0 and tokens[0] == "<" and tokens[-1] == ">":
 			temp.append([tokens])
 		elif len(tokens) > 0:
 			temp[-1].append(tokens)
@@ -64,19 +64,38 @@ with open(path, "r") as ifile:
 	for template in temp:
 		node = template[0]
 
-		if not node[2] in templates:
-			templates[node[2]] = []
+		#Node type
+		node_type = node[node[1:].index("<") + 2]
+		if not node_type in templates:
+			templates[node_type] = []
 
-		if len(node) == 8:
-			num = int(node[5]) + 1
-		else:
+		node = node[node.index(">") + 1:]
+
+		#Node definition
+		if not "[" in node:
 			num = 0
+		else:
+			num = int(node[node.index("[") + 1]) + 1
 
-		while len(templates[node[2]]) <= num:
-			templates[node[2]].append([])
+			node = node[node.index("]") + 1:]
 
-		templates[node[2]][num] = template[1:]
+		while len(templates[node_type]) <= num:
+			templates[node_type].append([[], None, []])
 
+		#Node conditions
+		if "{" in node:
+			conditions = node[node.index("{") + 1 : node.index("}")].split('?')
+			for condition in conditions[1:]:
+				templates[node_type][num][0].append(("?" + condition).strip())
+
+			node = node[node.index("}") + 1:]
+
+		#Node delegate function
+		if "=" in node:
+			templates[node_type][num][1] = node[node.index("=") + 1]
+
+		#Add template code
+		templates[node_type][num][2] = template[1:]
 
 
 #Check if the tree is equivalent to the definition
@@ -237,17 +256,37 @@ def generateNode(parse_tree):
 	for node in parse_tree:
 		if not isinstance(node, str):
 			child_nodes.append(node.getType())
+
 	child_templates = [[]] * len(child_nodes)
+	child_types = [""] * len(child_nodes)
+
+	#Generate all child nodes
+	for i,node in enumerate(parse_tree):
+		if isinstance(node, str):
+			continue;
+
+		current_node.append(i)
+		result = generateNode(node)
+		print(result)
+		child_templates[i] = result[0]
+		child_types[i] = result[1]
+		current_node.pop()
 
 	#Get the correct template
 	template = []
+	delegate_function = None
 	if parse_tree.getType() in templates:
 		for definition in definitions:
 			if isDefinitionMatch(parse_tree, definition):
-				template = copy.deepcopy(templates[parse_tree.getType()][definition[1]])
-				break;
+				for condition in templates[parse_tree.getType()][definition[1]][0]:
+					if not symbols.symbolQuery(condition):
+						break;
+				else:
+					template = copy.deepcopy(templates[parse_tree.getType()][definition[1]][2])
+					delegate_function = templates[parse_tree.getType()][definition[1]][1]
+					break;
 		else:
-			template = copy.deepcopy(templates[parse_tree.getType()][0])
+			template = copy.deepcopy(templates[parse_tree.getType()][0][2])
 
 	#Add child template insertion marks
 	for node in reversed(child_nodes):
@@ -256,11 +295,11 @@ def generateNode(parse_tree):
 
 	#Insert pre-frame-change assembly
 	if symbols.isScoped(parse_tree):
-		template = copy.deepcopy(templates["SCOPE_START"][0]) + template
+		template = copy.deepcopy(templates["SCOPE_START"][0][2]) + template
 
 	#Insert post-frame-change assembly
 	if symbols.isScoped(parse_tree):
-		template += copy.deepcopy(templates["SCOPE_END"][0])
+		template += copy.deepcopy(templates["SCOPE_END"][0][2])
 
 	template = setUniqueAnchors(template)
 
@@ -280,9 +319,6 @@ def generateNode(parse_tree):
 			template[i] = []
 			continue;
 
-		#Substitute custom symbols
-		template[i] = symbols.replaceSymbols(line)
-
 		#Handle any other symbol queries
 		template[i] = handleSymbolQueries(line)
 
@@ -296,12 +332,6 @@ def generateNode(parse_tree):
 			else:
 				#Node not present: move to next line
 				template[i] = []
-				continue;
-
-			#Generate node & change scope
-			current_node.append(j)
-			child_templates[child_nodes.index(line[2])] = generateNode(node)
-			current_node.pop()
 
 	corrected = setUniqueRegisters(template, child_nodes, child_templates)
 	template = corrected[0]
@@ -324,9 +354,15 @@ def generateNode(parse_tree):
 		else:
 			break;
 
+	#Pass control to delegate function if specified
+	if not delegate_function == None:
+		scripts.BASE_TEMPLATE = copy.deepcopy(template)
+		scripts.PARSE_TREE = parse_tree
+		template = getattr(scripts, delegate_function)()
+	
 	symbols.endUpdateScope(parse_tree)
 
-	return template
+	return [template, None]
 
 
 
@@ -334,5 +370,6 @@ def generateNode(parse_tree):
 def generateCode(parse_tree, symbols_in):
 	global symbols
 	symbols = symbols_in
+	scripts.SYMBOL_TABLE = symbols
 
-	return copy.deepcopy(templates["SETUP"][0]) + generateNode(parse_tree) + copy.deepcopy(templates["FINISH"][0])
+	return copy.deepcopy(templates["SETUP"][0][2]) + generateNode(parse_tree) + copy.deepcopy(templates["FINISH"][0][2])

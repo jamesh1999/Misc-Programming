@@ -1,4 +1,4 @@
 //Setup stack for program
-Set FP 1024       //Stack begins at 0x3E800
-Set SP 1020
-Set GP 2048         //Initialise the global pointer
+Set FP 122880       //Stack begins at 0x1E000
+Set SP 122876
+Set GP 126976       //Initialise the global pointer at 0x1F000

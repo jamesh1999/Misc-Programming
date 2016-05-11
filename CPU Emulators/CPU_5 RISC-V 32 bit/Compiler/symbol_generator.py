@@ -35,40 +35,14 @@ class SymbolTable(object):
 		self.no_overhead = []
 
 		self.__symbols = symbols
-		self.__custom_symbols = {}
 
 		self.scope_offsets = []
 		self.cur_scope = []
 		self.max_at_level = 0
 		self.scope_overhead = 0
 
-	#Sets/Adds a custom symbol
-	def setCustom(self, name, value):
-		self.__custom_symbols[name] = value
-
-	#Gets a custom symbol
-	def getCustom(self, name):
-		try:
-			return self.__custom_symbols[name]
-		except KeyError:
-			raise SymbolTableError("Symbol " + name + " does not exist.")
-
 	#Returns information from the symbol table
 	def symbolQuery(self, query):
-		#----SET QUERY----#
-
-		try:
-			if query[3] == "=":
-				self.setCustom(query[2], query[4])
-				return None
-			elif query[3] == "+":
-				self.setCustom(query[2], str(int(self.getCustom(query[2])) + int(query[4])))
-				return None
-			elif query[3] == "-":
-				self.setCustom(query[2], str(int(self.getCustom(query[2])) - int(query[4])))
-				return None
-		except ValueError:
-			raise SymbolTableError(query[4] + " and the value of " + query[2] + " must be ints.")
 
 		#----GET QUERY----#
 
@@ -200,14 +174,6 @@ class SymbolTable(object):
 				self.max_at_level = int(self.cur_scope[-1]) + 1
 			else:
 				self.max_at_level = 0
-
-	#Replace any custom defined symbols
-	def replaceSymbols(self, line):
-		for i, token in enumerate(line):
-			if token in self.__custom_symbols:
-				line[i] = self.__custom_symbols[token]
-
-		return line
 
 	#Print the table
 	def __str__(self):

@@ -2447,6 +2447,7 @@ debug/CodeBreakerMain.o: ../CodeBreakerGUI/CodeBreakerMain.cpp ../CodeBreakerGUI
 		../CodeBreakerGUI/columnartransposition.h \
 		../CodeBreakerGUI/Playfair.h \
 		../CodeBreakerGUI/PolybiusSquare.h \
+		../CodeBreakerGUI/Cadenus.h \
 		../CodeBreakerGUI/space.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\CodeBreakerMain.o ..\CodeBreakerGUI\CodeBreakerMain.cpp
 
@@ -4940,12 +4941,53 @@ debug/Cadenus.o: ../CodeBreakerGUI/Cadenus.cpp ../CodeBreakerGUI/Cadenus.h \
 		D:/Qt/5.5/mingw492_32/include/QtCore/qjsonobject.h \
 		D:/Qt/5.5/mingw492_32/include/QtCore/qjsonvalue.h \
 		ui_Cadenus.h \
+		D:/Qt/5.5/mingw492_32/include/QtCore/QVariant \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/QAction \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qaction.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qicon.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qactiongroup.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/QApplication \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qapplication.h \
+		D:/Qt/5.5/mingw492_32/include/QtCore/qcoreapplication.h \
+		D:/Qt/5.5/mingw492_32/include/QtCore/qeventloop.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qdesktopwidget.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qguiapplication.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qinputmethod.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/QButtonGroup \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qbuttongroup.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/QCheckBox \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qcheckbox.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qabstractbutton.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/QHeaderView \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qheaderview.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qabstractitemview.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qabstractscrollarea.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qframe.h \
+		D:/Qt/5.5/mingw492_32/include/QtCore/qabstractitemmodel.h \
+		D:/Qt/5.5/mingw492_32/include/QtCore/qitemselectionmodel.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qabstractitemdelegate.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qstyleoption.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qabstractspinbox.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qvalidator.h \
+		D:/Qt/5.5/mingw492_32/include/QtCore/qregularexpression.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qslider.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qabstractslider.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qstyle.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qtabbar.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qtabwidget.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qrubberband.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/QLabel \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qlabel.h \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/QLineEdit \
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qlineedit.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qtextcursor.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qtextformat.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qpen.h \
+		D:/Qt/5.5/mingw492_32/include/QtGui/qtextoption.h \
 		../CodeBreakerGUI/Globals.h \
 		../CodeBreakerGUI/CodeBreakerMain.h \
 		D:/Qt/5.5/mingw492_32/include/QtWidgets/QMainWindow \
-		D:/Qt/5.5/mingw492_32/include/QtWidgets/qmainwindow.h \
-		D:/Qt/5.5/mingw492_32/include/QtWidgets/qtabwidget.h \
-		D:/Qt/5.5/mingw492_32/include/QtGui/qicon.h
+		D:/Qt/5.5/mingw492_32/include/QtWidgets/qmainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Cadenus.o ..\CodeBreakerGUI\Cadenus.cpp
 
 debug/moc_CodeBreakerMain.o: debug/moc_CodeBreakerMain.cpp 

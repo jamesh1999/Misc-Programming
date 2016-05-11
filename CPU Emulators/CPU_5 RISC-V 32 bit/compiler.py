@@ -25,78 +25,78 @@ def saveLogFile():
 
 def compile_file(ifilename, ofilename):
 	start = time.clock()
-	with open(ifilename) as inputf:
-		printLog("Compiling " + ifilename + " into " + ofilename + "...")
 
-		#Preprocess file
-		printLog("Preprocessing...")
-		preprocessed = preprocess(inputf.readlines())
-		printLog("Done\n")
+	printLog("Compiling " + ifilename + " into " + ofilename + "...")
 
-		#Split into tokens
-		printLog("Tokenizing...")
-		tokenizer = Tokenizer()
-		tokens = tokenizer.tokenizeString('\n'.join(preprocessed))
+	#Preprocess file & Handle includes/strings
+	printLog("Preprocessing...")
+	preprocessed = preprocess(ifilename)
+	printLog("Done\n")
 
-		printLog("Token stream:")
-		printLog(tokens)
-		printLog("\n")
+	#Split into tokens
+	printLog("Tokenizing...")
+	tokenizer = Tokenizer()
+	tokens = tokenizer.tokenizeString('\n'.join(preprocessed))
 
-		#Create parse tree
-		printLog("Parsing...")
-		tree = parse(tokens)
+	printLog("Token stream:")
+	printLog(tokens)
+	printLog("\n")
 
-		printLog("Generated parse tree:")
-		printLog(tree)
-		printLog("\n")
+	#Create parse tree
+	printLog("Parsing...")
+	tree = parse(tokens)
 
-		#Generate symbol table
-		printLog("Locating symbols...")
-		symbols = generateSymbolTable(tree)
+	printLog("Generated parse tree:")
+	printLog(tree)
+	printLog("\n")
 
-		printLog("Symbol table:")
-		printLog(symbols)
-		printLog("\n")
+	#Generate symbol table
+	printLog("Locating symbols...")
+	symbols = generateSymbolTable(tree)
 
-		#Generate code
-		printLog("Generating code...")
-		assembly_list = generateCode(tree, symbols)
+	printLog("Symbol table:")
+	printLog(symbols)
+	printLog("\n")
 
-		#Stringify assembly
-		assembly = ""
-		for line in assembly_list:
-			string = ""
-			#Concatenate punctuation tokens
-			for token in line:
-				if len(string) and len(token) == 1 and not token.isalnum() and not string[-1].isalnum():
-					string += token
-				else:
-					string += " " + token
-			assembly += string[1:] + "\n"
+	#Generate code
+	printLog("Generating code...")
+	assembly_list = generateCode(tree, symbols)
 
-		printLog("Constructed high level assembly:")
-		for i,line in enumerate(assembly.split('\n')):
-			if line == "":
-				continue;
-			printLog(str(i) + max(5 - len(str(i)), 0) * " " + ": " + line)
+	#Stringify assembly
+	assembly = ""
+	for line in assembly_list:
+		string = ""
+		#Concatenate punctuation tokens
+		for token in line:
+			if len(string) and len(token) == 1 and not token.isalnum() and not string[-1].isalnum():
+				string += token
+			else:
+				string += " " + token
+		assembly += string[1:] + "\n"
 
-		#Save to output file
-		root_name = ifilename.split('.')[0]
-		printLog("\nSaving to " + root_name + ".al...")
-		with open(root_name + ".al", 'w') as outputf:
-			outputf.write(assembly)
-		printLog("Saved")
+	printLog("Constructed high level assembly:")
+	for i,line in enumerate(assembly.split('\n')):
+		if line == "":
+			continue;
+		printLog(str(i) + max(5 - len(str(i)), 0) * " " + ": " + line)
 
-		#Save log
-		print("Saving log...")
-		saveLogFile()
-		print("Done!")
+	#Save to output file
+	root_name = ifilename.split('.')[0]
+	printLog("\nSaving to " + root_name + ".al...")
+	with open(root_name + ".al", 'w') as outputf:
+		outputf.write(assembly)
+	printLog("Saved")
 
-		#Run assembler
-		print("Switching to assembler...")
-		assemble(root_name + ".al", ofilename, True, True)
-		print("Done assembling!")
-		print("Finished compiling in " + str(time.clock() - start) + "s")
+	#Save log
+	print("Saving log...")
+	saveLogFile()
+	print("Done!")
+
+	#Run assembler
+	print("Switching to assembler...")
+	assemble(root_name + ".al", ofilename, True, True)
+	print("Done assembling!")
+	print("Finished compiling in " + str(time.clock() - start) + "s")
 		
 
 

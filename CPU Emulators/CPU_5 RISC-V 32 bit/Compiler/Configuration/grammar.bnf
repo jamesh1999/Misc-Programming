@@ -12,7 +12,7 @@
 <stmnt_init>	        ::= <definition> | <definition> "=" <expr> | <definition> "=" <array>
 <stmnt_func>			::= <definition> <func_scope>
 <stmnt_flow>			::= <stmnt_flow_while> | <stmnt_flow_for> | <stmnt_flow_if> | <stmnt_flow_break> | <stmnt_flow_continue> | <stmnt_flow_return>
-<stmnt_call>			::= STRING "(" [<parameters>] ")"
+<stmnt_call>			::= STRING "(" [<parameters>] ")" | <macro> "(" <term> ")"
 <stmnt_null>			::= ";"
 
 <func_scope>			::= "(" [<arguments>] ")" <block>
@@ -30,6 +30,7 @@
 <arguments>				::= <argument_list>
 <argument_list>			::= <definition> | <argument_list> "," <definition>
 <parameters>			::= <expr> | <parameters> "," <expr>
+<macro>					::= "printi" | "printf"
 
 <array>					::= "{" <parameters> "}"
 

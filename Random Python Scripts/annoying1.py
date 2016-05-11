@@ -290,12 +290,12 @@ time.sleep(5)
 #         SendInput(Keyboard(ord(char)))
 #     SendInput(Keyboard(VK_RETURN))
 #     time.sleep(0.1)
-nstring = "HM"
+nstring = "SPAM"
 while True:
-    nstring += "M"
     for char in nstring:
         SendInput(Keyboard(ord(char)))
+        time.sleep(0.04)
     SendInput(Keyboard(VK_RETURN))
-    time.sleep(0.1)
+    
 
 	#cnt += 1

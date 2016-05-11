@@ -8,8 +8,7 @@ import print
 <<END>>
 Call :main
 Lw $1 SP + 12
-Mov $0 SP
-Add $0 4
+Add $0 SP 4
 Set $2 'M'
 Push $2
 Set $2 'a'
@@ -57,6 +56,7 @@ Push $2
 Set $2 ' '
 Push $2, ZERO, $0
 Call :print_str
+Sub SP $0 4
 Push $1
 Call :print_d
 
@@ -69,8 +69,6 @@ Add SP ?(SCOPE_OFFSET)
 <<SCOPE_END>>
 Sub SP ?(SCOPE_OFFSET)
 
-<<MACRO>>
-
 <<stmnt_init>[0]>
 Mov $1 @<expr>
 Sw $1 FP ?(STRING, addr)
@@ -80,20 +78,22 @@ Sw $1 FP ?(STRING, addr)
 
 <<stmnt_func>>
 Goto :SKIP
-?(FUNCTION = STRING)
 > ?(STRING, id)
 [<func_scope>]
-?(FUNCTION = NULL)
 :SKIP
 
 <<stmnt_call>>
-?(PARAMS = 0)
 Mov $0 SP
 Add SP 8
 [<parameters>]
 Mov SP $0
 Call :?(STRING, id)
 Lw @ SP + 12
+
+<<stmnt_call>[0] = printiMacro>
+Push @<term>
+
+<<stmnt_call>[1] = printfMacro>
 
 <<stmnt_flow_while>>
 :LOOP
@@ -134,7 +134,6 @@ Ret
 
 <<parameters>>
 Push @<expr>
-?(PARAMS + 1)
 
 <<expr_assign>[0]>
 Mov $1 @<expr>
