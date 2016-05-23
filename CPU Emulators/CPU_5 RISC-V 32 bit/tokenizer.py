@@ -60,6 +60,7 @@ class Tokenizer(object):
 
 	def tokenizeString(self, input_string):
 		input_string = self.removeSpecials(input_string)
+		if input_string == "": return []
 
 		tokens = []
 

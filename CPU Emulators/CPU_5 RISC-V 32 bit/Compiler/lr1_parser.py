@@ -37,6 +37,14 @@ class TreeIterator(object):
 class ParseTree(object):
 	def __init__(self, tree):
 		self.__parse_tree = tree
+
+		#Convert nodes to ParseTree()s
+		for i, node in enumerate(self.__parse_tree[1]):
+			if isinstance(node, str):
+				continue;
+
+			self.__parse_tree[1][i] = ParseTree(node)
+
 		self.__buff = "" #Buffer for getTerminals()
 
 	#Get a node by index
@@ -48,7 +56,7 @@ class ParseTree(object):
 		if isinstance(self.__parse_tree[1][index], str):
 			return self.__parse_tree[1][index]
 
-		return ParseTree(self.__parse_tree[1][index])
+		return self.__parse_tree[1][index]
 
 	#Get the type of the root node
 	def getType(self):

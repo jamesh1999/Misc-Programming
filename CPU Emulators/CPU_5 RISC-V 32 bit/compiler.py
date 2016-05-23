@@ -6,6 +6,7 @@ from Compiler.lr1_parser import *
 from Compiler.symbol_generator import *
 from Compiler.code_generator import *
 from assembler import *
+from optimizer import *
 
 
 
@@ -60,24 +61,10 @@ def compile_file(ifilename, ofilename):
 
 	#Generate code
 	printLog("Generating code...")
-	assembly_list = generateCode(tree, symbols)
-
-	#Stringify assembly
-	assembly = ""
-	for line in assembly_list:
-		string = ""
-		#Concatenate punctuation tokens
-		for token in line:
-			if len(string) and len(token) == 1 and not token.isalnum() and not string[-1].isalnum():
-				string += token
-			else:
-				string += " " + token
-		assembly += string[1:] + "\n"
+	assembly = generateCode(tree, symbols)
 
 	printLog("Constructed high level assembly:")
 	for i,line in enumerate(assembly.split('\n')):
-		if line == "":
-			continue;
 		printLog(str(i) + max(5 - len(str(i)), 0) * " " + ": " + line)
 
 	#Save to output file
@@ -91,6 +78,10 @@ def compile_file(ifilename, ofilename):
 	print("Saving log...")
 	saveLogFile()
 	print("Done!")
+
+	#Optimize code
+	print("Switching to optimizer...")
+	optimize(root_name + ".al", OPTIMIZATION_FULL, PRIORITY_BALANCED)
 
 	#Run assembler
 	print("Switching to assembler...")

@@ -11,7 +11,7 @@ int main()
 {
 	for(int i = 0; i < 3; i += 1)
 		printi(i);
-	return fact(3) +6;
+	return fact(3) + 6;
 }
 #endif
 #endif

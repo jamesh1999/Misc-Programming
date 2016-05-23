@@ -1,122 +1,120 @@
-import os, copy
+import os, copy, yaml
 from tokenizer import *
-import Compiler.Configuration.compiler_scripts as scripts
-
 
 
 CURRENT_REGISTER = 0
-CURRENT_SCOPE = []
+CURRENT_NODE = []
 MAX_AT_LEVEL = 0
 
-definitions = []
 templates = {}
-built_in = {}
+python_snippets = []
+snippet_globals = {}
+snippet_locals = {}
 
 symbols = []
 
 tokenizer = Tokenizer()
 
-
-
-#Read code generator config
-path = os.path.join(os.path.dirname(__file__), "Configuration/code_generator.conf")
-with open(path, "r") as ifile:
-	lines = ifile.readlines()
-
-	for line in lines:
-		parts = line.split("::=")
-
-		if len(parts) == 2:
-			lhs = parts[0].strip()
-			rhs = parts[1].split()
-
-			lhs = lhs.split("[")
-			num = int(lhs[1].strip(" \t\n[]"))
-			lhs = lhs[0].strip("<> \t\n")
-
-			nrhs = []
-			for part in rhs:
-				npart = part.strip("<> \t\n")
-				if npart[0] == '"' and npart[-1] == '"':
-					tokens = tokenizer.tokenizeString(npart[1:-1])
-					for t in tokens:
-						nrhs.append('"' + t + '"')
-				else:
-					nrhs.append(npart)
-
-			definitions.append([lhs, num + 1, nrhs]) #Increment num 0 is default case
-
 #Read templates
-path = os.path.join(os.path.dirname(__file__), "Configuration/templates.al")
+path = os.path.join(os.path.dirname(__file__), "Configuration/templates.yml")
 with open(path, "r") as ifile:
-	lines = ifile.readlines()
 
-	#Separate templates
-	temp = []
-	for line in lines:
-		tokens = tokenizer.tokenizeString(line)
-		if len(tokens) > 0 and tokens[0] == "<" and tokens[-1] == ">":
-			temp.append([tokens])
-		elif len(tokens) > 0:
-			temp[-1].append(tokens)
+	#Parse YAML
+	tree = yaml.load(ifile)
 
-	#Combine definitions and templates into dictionary
-	for template in temp:
-		node = template[0]
+	#Get data from YAML
+	for node in tree:
+		name, data = list(node.items())[0]
 
-		#Node type
-		node_type = node[node[1:].index("<") + 2]
-		if not node_type in templates:
-			templates[node_type] = []
+		definitions = []
+		for definition in data:
 
-		node = node[node.index(">") + 1:]
+			if "template" in definition:
+				template = definition["template"]
+			else:
+				template = ""
 
-		#Node definition
-		if not "[" in node:
-			num = 0
-		else:
-			num = int(node[node.index("[") + 1]) + 1
+			#Compile all python snippets
+			finished = False
+			while not finished:
+				finished = True
 
-			node = node[node.index("]") + 1:]
+				for i in range(len(template) - 1):
+					if template[i:i + 2] == "{{":
+						section = template[i + 2:]
+						section = section[:section.index("}}")]
 
-		while len(templates[node_type]) <= num:
-			templates[node_type].append([[], None, []])
+						#Skip if symbol query
+						if len(section.split(':')) == 2 and section.split(':')[0].isalnum() and section.split(':')[1].isalnum():
+							continue;
+						#Skip if child node
+						if section[0] == '<' and section[-1] == '>':
+							continue;
+						#Skip if already compiled
+						if section.isdigit():
+							continue;
 
-		#Node conditions
-		if "{" in node:
-			conditions = node[node.index("{") + 1 : node.index("}")].split('?')
-			for condition in conditions[1:]:
-				templates[node_type][num][0].append(("?" + condition).strip())
+						finished = False
 
-			node = node[node.index("}") + 1:]
+						#Compile
+						code_obj = compile(section, "snippets", "exec")
+						template = template[:i + 2] + str(len(python_snippets)) + template[i + len(section) + 2:]
+						python_snippets.append(code_obj)
 
-		#Node delegate function
-		if "=" in node:
-			templates[node_type][num][1] = node[node.index("=") + 1]
+			if "default" in definition:
+				default = definition["default"]
+			else:
+				default = False
 
-		#Add template code
-		templates[node_type][num][2] = template[1:]
+			d = []
+			if "definition" in definition:
+				parts = definition["definition"].split()
 
+				for part in parts:
+					part = part.strip("<> \t\n")
+
+					if len(part) > 1 and part[0] == '"' and part[-1] == '"':
+						tokens = tokenizer.tokenizeString(part[1:-1])
+						for token in tokens:
+							d.append('"' + token + '"')
+					else:
+						d.append(part)
+
+			if "conditions" in definition:
+				conditions = definition["conditions"]
+			else:
+				conditions = ""
+
+			definitions.append([default, d, conditions, template])
+
+		templates[name] = definitions
+				
+
+
+#Assign output registers to all nodes
+def assignOutputRegisters(node):
+	global CURRENT_REGISTER
+	node.output = CURRENT_REGISTER
+	CURRENT_REGISTER += 1
+
+	for child in node:
+		if not isinstance(child, str):
+			assignOutputRegisters(child)
 
 #Check if the tree is equivalent to the definition
 def isDefinitionMatch(tree, definition, pos = 0, root = True):
-	#Does definition apply to this node
-	if root and definition[0] != tree.getType():
-		return False
-
 	#Does definition match
-	check = definition[2]
 	for node in tree:
 
 		#Check that string matches
 		if isinstance(node, str):
-			if len(check[pos]) > 2 and check[pos][1:-1] == node:
+			if len(definition[pos]) > 2 and definition[pos][1:-1] == node:
 				pos += 1
 			else:
 				break;
 
 		#Check that node matches
-		elif check[pos] == node.getType():
+		elif definition[pos] == node.getType():
 			pos += 1
 		else:
 			b, pos = isDefinitionMatch(node, definition, pos = pos, root = False)
@@ -125,7 +123,7 @@ def isDefinitionMatch(tree, definition, pos = 0, root = True):
 	else:
 		#Matches (so far)
 		if root:
-			return True if pos == len(check) else False #Return true if at end of definition
+			return True if pos == len(definition) else False #Return true if at end of definition
 		else:
 			return True, pos
 
@@ -136,98 +134,102 @@ def isDefinitionMatch(tree, definition, pos = 0, root = True):
 		return False, 0
 
 #Set all arbitrary registers to unique values
-def setUniqueRegisters(template, child_nodes, child_templates):
+def setInternalRegisters(template):
 	global CURRENT_REGISTER
 
 	#Assign registers used only by template
 	assigned = {}
-	for i,line in enumerate(template):
-		for j,token in enumerate(line):
-			if token[0] == '$':
-				if not token[1:] in assigned:
-					assigned[token[1:]] = "$" + str(CURRENT_REGISTER)
-					CURRENT_REGISTER += 1
+	section = 0
+	while '$' in template[section:]:
+		i = section + template[section:].index('$')
 
-				line[j] = assigned[token[1:]]
-		template[i] = line
+		val = ""
+		index = i + 1
+		while index < len(template) and template[index].isdigit():
+			val += template[index]
+			index += 1
+
+		if not val in assigned:
+			assigned[val] = '$' + str(CURRENT_REGISTER)
+			CURRENT_REGISTER += 1
+
+		template = template[:i] + assigned[val] + template[index:]
+
+		section = index
+
+	return template
+
+#Set IO registers to their unique values
+def setIORegisters(template, parse_tree):
 
 	#Assign i/o registers
-	assigned = [None] * len(child_nodes)
-	for i in range(len(template)):
+	while '@' in template:
+		i = template.index('@')
 
-		#Continue until finished
-		while True:
-			line = template[i]
-			for j in range(len(line)):
-				if line[j] == '@' and line[j + 1] == '<' and line[j + 3] == '>':
+		#Output from child
+		if i + 1 < len(template) and template[i + 1] == '<':
+			section = template[i + 2:]
+			name = section[:section.index('>')]
 
-					#Not assigned
-					if assigned[child_nodes.index(line[j + 2])] == None:
-						assigned[child_nodes.index(line[j + 2])] = '$' + str(CURRENT_REGISTER)
+			for node in parse_tree:
+				if isinstance(node, str):
+					continue;
+				if node.getType() == name:
+					template = template[:i] + '$' + str(node.output) + section[len(name) + 1:]
 
-						#Update child template
-						for k, child_line in enumerate(child_templates[child_nodes.index(line[j + 2])]):
+		#Output from this node
+		else:
+			template = template[:i] + '$' + str(parse_tree.output) + template[i + 1:]
 
-							while '@' in child_line:
-								y = child_line.index('@')
-								child_line = child_line[:y] + ['$' + str(CURRENT_REGISTER)] + child_line[y + 1:]
-
-							child_templates[child_nodes.index(line[j + 2])][k] = child_line
-
-						#Move to new register
-						CURRENT_REGISTER += 1
-						
-					#Update assembly
-					template[i] = line[:j] + [assigned[child_nodes.index(line[j + 2])]] + line[j + 4:]
-					break;
-			else:
-				break;
-
-	return [template, child_templates]
-
-#Handle all symbol queries on a line
-def handleSymbolQueries(line):
-	while "?" in line:
-		segment = line[line.index("?"):]
-		query = segment[:segment.index(")") + 1]
-		result = symbols.symbolQuery(query)
-		if result == None:
-			line = line[:line.index("?")] + segment[len(query):]
-			continue;
-
-		if isinstance(result, str):
-			result = [result]
-
-		line = line[:line.index("?")] + result + segment[len(query):]
-
-	return line
+	return template
 
 current_anchors = []
 num_anchors = 0
-#Set jump anchors to unique values
-def setUniqueAnchors(template):
+#Assign unique values to jump anchors
+def assignUniqueAnchors(template):
 	global current_anchors
 	global num_anchors
 
-	current_anchors.append([list(current_node), {}])
+	current_anchors.append([list(CURRENT_NODE), {}])
 
 	#Define anchors in template
-	for line in template:
-		if line[0] == ":":
-			current_anchors[-1][1][line[1]] = "ANCHOR_" + str(num_anchors)
+	for line in template.split('\n'):
+		if len(line.strip()) and line.strip()[0] == ':':
+
+			name = ""
+			index = line.index(':') + 1
+			while index < len(line) and (line[index].isalnum() or line[index] == '_'):
+				name += line[index]
+				index += 1
+
+			current_anchors[-1][1][name] = "ANCHOR_" + str(num_anchors)
 			num_anchors += 1
 
-	#Substitute anchors
-	for i, line in enumerate(template):
-		for j, token in enumerate(line):
-			if token == ":":
+#Replace jump anchors with unique values
+def replaceUniqueAnchors(template):
+	global current_anchors
+
+	start = 0
+	finished = False
+	while not finished:
+		finished = True
+
+		#Substitute anchors
+		for i in range(start, len(template)):
+			if template[i] == ":":
+
+				name = ""
+				index = i + 1
+				while (template[index].isalnum() or template[index] == '_'):
+					name += template[index]
+					index += 1
 
 				#Get relevant anchor
-				for x in range(len(current_node)):
+				for x in range(len(CURRENT_NODE)):
 					if x == 0:
-						test_scope = list(current_node)
+						test_scope = list(CURRENT_NODE)
 					else:
-						test_scope = current_node[:-x]
+						test_scope = CURRENT_NODE[:-x]
 
 					for y in current_anchors:
 						if y[0] == test_scope:
@@ -235,20 +237,45 @@ def setUniqueAnchors(template):
 					else:
 						continue;
 
-					if line[j + 1] in y[1]:
-						template[i][j + 1] = y[1][line[j + 1]]
+					if name in y[1]:
+						name = y[1][name]
 						break;
+
+				#Substitute and update working section
+				template = template[:i + 1] + name + template[index:]
+				start = index
+				finished = False
+				break;
 
 	return template
 
 #Generate the assembly for a single node in the parse tree
-current_node = []
 def generateNode(parse_tree):
-	global CURRENT_SCOPE
+	global CURRENT_NODE
 	global MAX_AT_LEVEL
-	global current_node
+	global python_snippets
+	global snippet_globals
+	global snippet_locals
 
 	symbols.updateScope(parse_tree)
+
+	#Get the correct template
+	template = ""
+	if parse_tree.getType() in templates:
+		for definition in templates[parse_tree.getType()]:
+			if definition[1] != [] and isDefinitionMatch(parse_tree, definition[1]):
+				for condition in definition[2]:
+					break;
+				else:
+					template = definition[3]
+					break;
+		else:
+			for definition in templates[parse_tree.getType()]:
+				if definition[0]:
+					template = definition[3]
+					break;
+
+	assignUniqueAnchors(template)
 
 	#Get nodes
 	child_nodes = []
@@ -260,106 +287,89 @@ def generateNode(parse_tree):
 	child_templates = [[]] * len(child_nodes)
 	child_types = [""] * len(child_nodes)
 
+	index = 0
 	#Generate all child nodes
 	for i,node in enumerate(parse_tree):
 		if isinstance(node, str):
 			continue;
 
-		current_node.append(i)
+		CURRENT_NODE.append(i)
 		result = generateNode(node)
-		print(result)
-		child_templates[i] = result[0]
-		child_types[i] = result[1]
-		current_node.pop()
+		child_templates[index] = result[0]
+		child_types[index] = result[1]
+		CURRENT_NODE.pop()
+		index += 1
 
-	#Get the correct template
-	template = []
-	delegate_function = None
-	if parse_tree.getType() in templates:
-		for definition in definitions:
-			if isDefinitionMatch(parse_tree, definition):
-				for condition in templates[parse_tree.getType()][definition[1]][0]:
-					if not symbols.symbolQuery(condition):
-						break;
-				else:
-					template = copy.deepcopy(templates[parse_tree.getType()][definition[1]][2])
-					delegate_function = templates[parse_tree.getType()][definition[1]][1]
-					break;
-		else:
-			template = copy.deepcopy(templates[parse_tree.getType()][0][2])
+	#Pass first child output through if no template
+	if template == "":
+		for i, node in enumerate(child_nodes):
+			tree_node = None
+			for child in parse_tree:
+				if isinstance(child, str):
+					continue;
+				if child.getType() == node:
+					tree_node = child
+
+			output = "$" + str(tree_node.output)
+			if output in child_templates[i]:
+				template = "Mov @ @<" + tree_node.getType() + ">\n"
+				break;
+
+	#Substitute STRING and INT placeholders
+	while "INT" in template:
+		x = template.index("INT")
+		template = template[:x] + parse_tree.getFirstOf("INT").getNode(0) + template[x + 3:]
+	while "STRING" in template:
+		x = template.index("STRING")
+		template = template[:x] + parse_tree.getFirstOf("STRING").getNode(0) + template[x + 6:]
 
 	#Add child template insertion marks
 	for node in reversed(child_nodes):
-		if not ["[", "<", node, ">", "]"] in template:
-			template = [["[", "<", node, ">", "]"]] + template
+		if not "{{<" + node + ">}}" in template:
+			template = "{{<" + node + ">}}\n" + template
 
 	#Insert pre-frame-change assembly
 	if symbols.isScoped(parse_tree):
-		template = copy.deepcopy(templates["SCOPE_START"][0][2]) + template
+		template = templates["SCOPE_START"][0][3] + template
 
 	#Insert post-frame-change assembly
 	if symbols.isScoped(parse_tree):
-		template += copy.deepcopy(templates["SCOPE_END"][0][2])
+		template += templates["SCOPE_END"][0][3]
 
-	template = setUniqueAnchors(template)
+	template = setInternalRegisters(template)
 
-	#Generate template line by line
-	for i, line in enumerate(template):
-		#Substitute STRING and INT placeholders
-		while "INT" in line:
-			x = line.index("INT")
-			template[i][x] = parse_tree.getFirstOf("INT").getNode(0)
-		while "STRING" in line:
-			x = line.index("STRING")
-			template[i][x] = parse_tree.getFirstOf("STRING").getNode(0)
+	#Substitute special placeholders
+	while "SCOPE_OFFSET" in template:
+		x = template.index("SCOPE_OFFSET")
+		template = template[:x] + symbols.query(["SCOPE_OFFSET"]) + template[x + 12:]
 
-		#Set custom symbols
-		if line[0] == "?" and line[3] in ["=", "+", "-"]:
-			handleSymbolQueries(line)
-			template[i] = []
-			continue;
+	#Handle embedded code/symbol queries/child nodes
+	while "{{" in template:
+		section = template[template.index("{{") + 2:template.index("}}")]
 
-		#Handle any other symbol queries
-		template[i] = handleSymbolQueries(line)
-
-		#Generate child nodes
-		if len(line) == 5 and line[0] == "[" and line[4] == "]":
-
-			#Find respective node
-			for j, node in enumerate(parse_tree):
-				if not isinstance(node, str) and node.getType() == line[2]:
-					break;
+		#Child node
+		if section[0] == '<' and section[-1] == '>':
+			if section[1:-1] in child_nodes:
+				insert = child_templates[child_nodes.index(section[1:-1])]
 			else:
-				#Node not present: move to next line
-				template[i] = []
+				insert = ""
+			template = template[:template.index("{{")] + insert + template[template.index("}}") + 2:]
 
-	corrected = setUniqueRegisters(template, child_nodes, child_templates)
-	template = corrected[0]
-	child_templates = corrected[1]
+		#Symbol query
+		elif len(section.split(':')) == 2 and section.split(':')[0].isalnum() and section.split(':')[1].isalnum():
+			splitted = section.split(':')
+			template = template[:template.index("{{")] + symbols.query(splitted) + template[template.index("}}") + 2:]
 
-	#Remove empty lines
-	while [] in template:
-		template.remove([])
-
-	#Insert the assembly for child nodes in the middle
-	while True:
-		for i,line in enumerate(template):
-			if len(line) >= 3 and line[0] == "[" and line[4] == "]":
-
-				insert = list(child_templates[child_nodes.index(line[2])])
-				child_templates[child_nodes.index(line[2])] = []
-				template = template[:i] + insert + template[i + 1:]
-
-				break;
+		#Embedded code
 		else:
-			break;
+			snippet_locals["SYMBOLS"] = symbols
+			snippet_locals["NODE"] = parse_tree
+			snippet_locals["RET"] = ""
+			exec(python_snippets[int(section)], snippet_globals, snippet_locals)
+			template = template[:template.index("{{")] + snippet_locals["RET"] + template[template.index("}}") + 2:]
 
-	#Pass control to delegate function if specified
-	if not delegate_function == None:
-		scripts.BASE_TEMPLATE = copy.deepcopy(template)
-		scripts.PARSE_TREE = parse_tree
-		template = getattr(scripts, delegate_function)()
-	
+	template = replaceUniqueAnchors(template)
+	template = setIORegisters(template, parse_tree)
 	symbols.endUpdateScope(parse_tree)
 
 	return [template, None]
@@ -370,6 +380,13 @@ def generateNode(parse_tree):
 def generateCode(parse_tree, symbols_in):
 	global symbols
 	symbols = symbols_in
-	scripts.SYMBOL_TABLE = symbols
 
-	return copy.deepcopy(templates["SETUP"][0][2]) + generateNode(parse_tree) + copy.deepcopy(templates["FINISH"][0][2])
+	assignOutputRegisters(parse_tree)
+	assembly = templates["SETUP"][0][3] + generateNode(parse_tree)[0] + templates["FINISH"][0][3]
+
+	n_assembly = ""
+	for line in assembly.split('\n'):
+		if line != "":
+			n_assembly += line + '\n'
+
+	return n_assembly

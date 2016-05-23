@@ -42,19 +42,7 @@ class SymbolTable(object):
 		self.scope_overhead = 0
 
 	#Returns information from the symbol table
-	def symbolQuery(self, query):
-
-		#----GET QUERY----#
-
-		#Get arguments
-		try:
-			query = query[query.index('(') + 1: query.index(')')]
-			args = []
-			for token in query:
-				if not token == ',':
-					args.append(token)
-		except ValueError:
-			raise SymbolTableError("Badly formatted query: " + str(query))
+	def query(self, args):
 
 		#Special queries
 		if len(args) == 1:
@@ -129,7 +117,7 @@ class SymbolTable(object):
 					ret.append("+")
 				ret.append(str(relative_addr))
 
-				return ret
+				return ' '.join(ret)
 			elif args[1] == "size":
 				return str(symbol[self.format.index("SIZE")])
 			elif args[1] == "scope":
@@ -145,13 +133,13 @@ class SymbolTable(object):
 			else:
 				raise SymbolTableError(str(query) + " is not a valid query.")
 
-		#Check query
-		elif len(args) == 3:
-			nquery = ["?", "(", args[0], ",", args[1], ")"]
-			return str(self.symbolQuery(nquery) == args[2])
+		# #Check query
+		# elif len(args) == 3:
+		# 	nquery = ["?", "(", args[0], ",", args[1], ")"]
+		# 	return str(self.que(nquery) == args[2])
 
 		else:
-			raise SymbolTableError("Badly formatted query: " + str(query))
+			raise SymbolTableError("Badly formatted query: " + ' '.join(args))
 
 	#Check whether a node is scoped (for code generator)
 	def isScoped(self, node):

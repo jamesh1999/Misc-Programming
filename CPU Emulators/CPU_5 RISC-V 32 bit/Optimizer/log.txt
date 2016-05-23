@@ -1,105 +1,9 @@
-Compiling test.cm into test.cpu...
-Preprocessing...
-Done
+Optimizer starting...
 
-Tokenizing...
-Token stream:
-['int', 'fact', '(', 'int', 'n', ')', '{', 'int', 'r', '=', '1', ';', 'for', '(', 'int', 'i', '=', 'n', ';', 'i', '>', '1', ';', 'i', '-', '=', '1', ')', 'r', '*', '=', 'i', ';', 'return', 'r', ';', '}', 'int', 'main', '(', ')', '{', 'for', '(', 'int', 'i', '=', '0', ';', 'i', '<', '3', ';', 'i', '+', '=', '1', ')', 'printi', '(', 'i', ')', ';', 'return', 'fact', '(', '3', ')', '+', '6', ';', '}']
+Opening test.al
+Opened
 
-
-Parsing...
-Generated parse tree:
-- PROGRAM
-|- START
-|- ebnf_0
-||...- stmnt_func
-||   |- definition
-||   || ... type_base
-||   || STRING
-||   |- func_scope
-||   ||...- definition
-||   ||   | ... type_base
-||   ||   | STRING
-||   ||- block
-||   |||- ebnf_1
-||   ||||- ebnf_1
-||   |||||...- statement
-||   |||||   |- stmnt_init
-||   |||||   ||- definition
-||   |||||   ||| ... type_base
-||   |||||   ||| STRING
-||   |||||   || ... INT
-||   |||||...- stmnt_flow_for
-||   |||||   |- stmnt_init
-||   |||||   ||- definition
-||   |||||   ||| ... type_base
-||   |||||   ||| STRING
-||   |||||   || ... STRING
-||   |||||   |...- expr_conditional
-||   |||||   |   | ... STRING
-||   |||||   |   | op_conditional
-||   |||||   |   | ... INT
-||   |||||   |...- expr_assign
-||   |||||   |   | STRING
-||   |||||   |   |- op_assign
-||   |||||   |   | ... INT
-||   |||||   |- statement
-||   |||||   ||...- expr_assign
-||   |||||   ||   | STRING
-||   |||||   ||   |- op_assign
-||   |||||   ||   | ... STRING
-||   ||||...- stmnt_flow_return
-||   ||||   | ... STRING
-||...- stmnt_func
-||   |- definition
-||   || ... type_base
-||   || STRING
-||   |- func_scope
-||   ||- block
-||   |||- ebnf_1
-||   ||||...- stmnt_flow_for
-||   ||||   |- stmnt_init
-||   ||||   ||- definition
-||   ||||   ||| ... type_base
-||   ||||   ||| STRING
-||   ||||   || ... INT
-||   ||||   |...- expr_conditional
-||   ||||   |   | ... STRING
-||   ||||   |   | op_conditional
-||   ||||   |   | ... INT
-||   ||||   |...- expr_assign
-||   ||||   |   | STRING
-||   ||||   |   |- op_assign
-||   ||||   |   | ... INT
-||   ||||   |- statement
-||   ||||   ||- stmnt_call
-||   ||||   ||| macro
-||   ||||   ||| ... STRING
-||   ||||...- stmnt_flow_return
-||   ||||   |...- expr_add
-||   ||||   |   |...- stmnt_call
-||   ||||   |   |   | STRING
-||   ||||   |   |   | ... INT
-||   ||||   |   | op_add
-||   ||||   |   | ... INT
-|- END
-
-
-
-Locating symbols...
-Symbol table:
-    STRING |       TYPE |       ADDR |       SIZE |      SCOPE |  ARGUMENTS
----------------------------------------------------------------------------
-      fact |        int |          0 |          4 |        [0] | [['int', 4]]
-         n |        int |          0 |          4 |     [0, 0] |         []
-         r |        int |          4 |          4 |     [0, 0] |         []
-         i |        int |          8 |          4 |     [0, 0] |         []
-      main |        int |          4 |          4 |        [0] |         []
-         i |        int |          0 |          4 |     [0, 1] |         []
-
-
-Generating code...
-Constructed high level assembly:
+Reading file:
 0    : //Setup assembly
 1    : import setup
 2    : import print
@@ -397,6 +301,154 @@ Constructed high level assembly:
 294  : Sub SP 8
 295  : Halt
 296  : 
+Read
 
-Saving to test.al...
+Beginning optimizations...
+
+Starting basic optimizations...
+Removing redundant MOV instructions...
+	Removed 161 MOV instructions
+Done
+
+Removing unused instructions...
+	Removed 2 instructions
+Done
+
+Finished
+
+Finished optimizing:
+0    : import setup
+1    : import print
+2    : Add SP 8
+3    : Goto : ANCHOR_0
+4    : > fact
+5    : Add SP 12
+6    : Add $39 ZERO 1
+7    : Sw $39 FP + 4
+8    : Lw $264 FP + 0
+9    : Sw $264 FP + 8
+10   : : ANCHOR_1
+11   : Lw $266 FP + 8
+12   : Add $85 ZERO 1
+13   : Branch $266 > $85 : ANCHOR_3
+14   : Mov $68 ZERO
+15   : Goto : ANCHOR_4
+16   : : ANCHOR_3
+17   : Not $68 ZERO
+18   : : ANCHOR_4
+19   : Branch $68 == ZERO : ANCHOR_2
+20   : Lw $268 FP + 8
+21   : Lw $269 FP + 4
+22   : Mul $269 $268
+23   : Sw $269 FP + 4
+24   : Add $103 ZERO 1
+25   : Lw $267 FP + 8
+26   : Sub $267 $103
+27   : Sw $267 FP + 8
+28   : Goto : ANCHOR_1
+29   : : ANCHOR_2
+30   : Lw $270 FP + 4
+31   : Sub SP 12
+32   : Sw $270 FP + 0
+33   : Ret
+34   : Sub SP 12
+35   : : ANCHOR_0
+36   : Goto : ANCHOR_5
+37   : > main
+38   : Add SP 12
+39   : Add $171 ZERO 0
+40   : Sw $171 FP + 8
+41   : : ANCHOR_6
+42   : Lw $272 FP + 8
+43   : Add $195 ZERO 3
+44   : Branch $272 < $195 : ANCHOR_8
+45   : Mov $178 ZERO
+46   : Goto : ANCHOR_9
+47   : : ANCHOR_8
+48   : Not $178 ZERO
+49   : : ANCHOR_9
+50   : Branch $178 == ZERO : ANCHOR_7
+51   : Lw $274 FP + 8
+52   : Push $274
+53   : Call : print_d
+54   : Add $213 ZERO 1
+55   : Lw $273 FP + 8
+56   : Add $273 $213
+57   : Sw $273 FP + 8
+58   : Goto : ANCHOR_6
+59   : : ANCHOR_7
+60   : Mov $275 SP
+61   : Add SP 8
+62   : Add $251 ZERO 3
+63   : Push $251
+64   : Mov SP $275
+65   : Call : fact
+66   : Lw $236 SP + 12
+67   : Add $258 ZERO 6
+68   : Add $230 $236 $258
+69   : Sub SP 12
+70   : Sw $230 FP + 0
+71   : Ret
+72   : Sub SP 12
+73   : : ANCHOR_5
+74   : Call : main
+75   : Lw $276 SP + 12
+76   : Add $277 SP 4
+77   : Set $278 77
+78   : Push $278
+79   : Set $278 97
+80   : Push $278
+81   : Set $278 105
+82   : Push $278
+83   : Set $278 110
+84   : Push $278
+85   : Set $278 32
+86   : Push $278
+87   : Set $278 101
+88   : Push $278
+89   : Set $278 120
+90   : Push $278
+91   : Set $278 105
+92   : Push $278
+93   : Set $278 116
+94   : Push $278
+95   : Set $278 101
+96   : Push $278
+97   : Set $278 100
+98   : Push $278
+99   : Set $278 32
+100  : Push $278
+101  : Set $278 119
+102  : Push $278
+103  : Set $278 105
+104  : Push $278
+105  : Set $278 116
+106  : Push $278
+107  : Set $278 104
+108  : Push $278
+109  : Set $278 32
+110  : Push $278
+111  : Set $278 99
+112  : Push $278
+113  : Set $278 111
+114  : Push $278
+115  : Set $278 100
+116  : Push $278
+117  : Set $278 101
+118  : Push $278
+119  : Set $278 58
+120  : Push $278
+121  : Set $278 32
+122  : Push $278 ZERO $277
+123  : Call : print_str
+124  : Sub SP $277 4
+125  : Push $276
+126  : Call : print_d
+127  : Sub SP 8
+128  : Halt
+
+Reduced assembly by 168 instructions (56.56%)
+
+Saving test.al
 Saved
+
