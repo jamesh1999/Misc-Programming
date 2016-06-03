@@ -11,6 +11,24 @@ python_snippets = []
 snippet_globals = {}
 snippet_locals = {}
 
+#Functions accessible in snippets
+def topLevelType(symbol):
+	if isinstance(symbol, str):
+		return symbols.query([symbol, "type"])[-1][1]
+	else:
+		#Node in tree
+		return symbol.output_type[-1][1]
+
+def bottomLevelType(symbol):
+	if isinstance(symbol, str):
+		return symbols.query([symbol, "type"])[0][1]
+	else:
+		#Node in tree
+		return symbol.output_type[0][1]
+
+snippet_locals["topLevelType"] = topLevelType
+snippet_locals["bottomLevelType"] = bottomLevelType
+
 symbols = []
 
 tokenizer = Tokenizer()
@@ -81,25 +99,22 @@ with open(path, "r") as ifile:
 						d.append(part)
 
 			if "conditions" in definition:
-				conditions = definition["conditions"]
+				#Compile conditions
+				conditions = compile(definition["conditions"], "conditions", "eval")
 			else:
-				conditions = ""
+				conditions = compile("True", "conditions", "eval")
 
-			definitions.append([default, d, conditions, template])
+			if "output" in definition:
+				#Compile output
+				output = compile(definition["output"], "output", "eval")
+			else:
+				output = compile("None", "output", "eval")
+
+			definitions.append([default, d, conditions, template, output])
 
 		templates[name] = definitions
 				
 
-
-#Assign output registers to all nodes
-def assignOutputRegisters(node):
-	global CURRENT_REGISTER
-	node.output = CURRENT_REGISTER
-	CURRENT_REGISTER += 1
-
-	for child in node:
-		if not isinstance(child, str):
-			assignOutputRegisters(child)
 
 #Check if the tree is equivalent to the definition
 def isDefinitionMatch(tree, definition, pos = 0, root = True):
@@ -132,6 +147,59 @@ def isDefinitionMatch(tree, definition, pos = 0, root = True):
 		return False
 	else:
 		return False, 0
+
+#Assigns a template to the node and its children
+def setTemplate(tree):
+	#Set children
+	for child in tree:
+		if not isinstance(child, str):
+			setTemplate(child)
+
+	#Get the correct template
+	template = ""
+	out = None
+	if tree.getType() in templates:
+		for definition in templates[tree.getType()]:
+			if definition[1] != [] and isDefinitionMatch(tree, definition[1]):
+				
+				snippet_locals["SYMBOLS"] = symbols
+				snippet_locals["NODE"] = tree
+				if eval(definition[2], snippet_locals, snippet_globals):
+					template = definition[3]
+					out = definition[4]
+					break;
+		else:
+			for definition in templates[tree.getType()]:
+				if definition[0]:
+					template = definition[3]
+					out = definition[4]
+					break;
+	tree.template = template
+
+	#Set output type
+	if template != "":
+		snippet_locals["SYMBOLS"] = symbols
+		snippet_locals["NODE"] = tree
+		tree.output_type = eval(out, snippet_locals, snippet_globals)
+
+	#Pass through child output if none
+	else:
+		for node in tree:
+			if not isinstance(node, str) and node.output_type != None:
+				tree.output_type = node.output_type
+				break;
+		else:
+			tree.output_type = None
+
+#Assign output registers to all nodes
+def assignOutputRegisters(node):
+	global CURRENT_REGISTER
+	node.output = CURRENT_REGISTER
+	CURRENT_REGISTER += 1
+
+	for child in node:
+		if not isinstance(child, str):
+			assignOutputRegisters(child)
 
 #Set all arbitrary registers to unique values
 def setInternalRegisters(template):
@@ -249,7 +317,7 @@ def replaceUniqueAnchors(template):
 
 	return template
 
-#Generate the assembly for a single node in the parse tree
+#Generate the assembly for a single node in the parse tree from the template
 def generateNode(parse_tree):
 	global CURRENT_NODE
 	global MAX_AT_LEVEL
@@ -259,22 +327,8 @@ def generateNode(parse_tree):
 
 	symbols.updateScope(parse_tree)
 
-	#Get the correct template
-	template = ""
-	if parse_tree.getType() in templates:
-		for definition in templates[parse_tree.getType()]:
-			if definition[1] != [] and isDefinitionMatch(parse_tree, definition[1]):
-				for condition in definition[2]:
-					break;
-				else:
-					template = definition[3]
-					break;
-		else:
-			for definition in templates[parse_tree.getType()]:
-				if definition[0]:
-					template = definition[3]
-					break;
-
+	template = parse_tree.template
+	print(template)
 	assignUniqueAnchors(template)
 
 	#Get nodes
@@ -285,7 +339,6 @@ def generateNode(parse_tree):
 			child_nodes.append(node.getType())
 
 	child_templates = [[]] * len(child_nodes)
-	child_types = [""] * len(child_nodes)
 
 	index = 0
 	#Generate all child nodes
@@ -294,9 +347,7 @@ def generateNode(parse_tree):
 			continue;
 
 		CURRENT_NODE.append(i)
-		result = generateNode(node)
-		child_templates[index] = result[0]
-		child_types[index] = result[1]
+		child_templates[index] = generateNode(node)
 		CURRENT_NODE.pop()
 		index += 1
 
@@ -372,7 +423,7 @@ def generateNode(parse_tree):
 	template = setIORegisters(template, parse_tree)
 	symbols.endUpdateScope(parse_tree)
 
-	return [template, None]
+	return template
 
 
 
@@ -382,7 +433,8 @@ def generateCode(parse_tree, symbols_in):
 	symbols = symbols_in
 
 	assignOutputRegisters(parse_tree)
-	assembly = templates["SETUP"][0][3] + generateNode(parse_tree)[0] + templates["FINISH"][0][3]
+	setTemplate(parse_tree)
+	assembly = templates["SETUP"][0][3] + generateNode(parse_tree) + templates["FINISH"][0][3]
 
 	n_assembly = ""
 	for line in assembly.split('\n'):

@@ -47,6 +47,12 @@ class ParseTree(object):
 
 		self.__buff = "" #Buffer for getTerminals()
 
+	#Returns the child node with a given type
+	def getNodeByType(self, t):
+		for node in self.__parse_tree[1]:
+			if node.getType() == t:
+				return node
+
 	#Get a node by index
 	def getNode(self, index):
 		if index >= len(self.__parse_tree[1]):
@@ -97,6 +103,10 @@ class ParseTree(object):
 
 		#Node could not be found
 		return None
+
+	#Returns the number of child nodes
+	def __len__(self):
+		return len(self.__parse_tree[1])
 
 	#Print the tree
 	def __str__(self):
