@@ -37,9 +37,28 @@ def removeAnchors(assembly):
 
 					#Difference too great
 					if line[0] in MAX_JUMPS and (diff > MAX_JUMPS[line[0]] or diff < -MAX_JUMPS[line[0]] - 1):
+						if line[0] == "JAL":
+							inverted = ["JAL"]
+						#Invert the branch condition
+						elif line[0] == "BEQ":
+							inverted = line[:line.index(':')]
+							inverted[0] = "BNE"
+						elif line[0] == "BNE":
+							inverted = line[:line.index(':')]
+							inverted[0] = "BEQ"
+						elif line[0] == "BLT":
+							inverted = ["BLE", line[2], line[1]]
+						elif line[0] == "BLE":
+							inverted = ["BLT", line[2], line[1]]
+						elif line[0] == "BLTU":
+							inverted = ["BLEU", line[2], line[1]]
+						elif line[0] == "BLEU":
+							inverted = ["BLTU", line[2], line[1]]
+
+
 						#Substitute in JAL instruction
 						if -MAX_JUMPS["JAL"] - 1 <= diff <= MAX_JUMPS["JAL"]:
-							insert = [["JAL", ":", "INSERTED_" + str(inserted)],
+							insert = [inverted + [":", "INSERTED_" + str(inserted)],
 									  ["JAL", ":", line[line.index(":") + 1]],
 									  [":", "INSERTED_" + str(inserted)]]
 							inserted += 1
@@ -49,7 +68,7 @@ def removeAnchors(assembly):
 
 						#Substitute a JALR instruction
 						else:
-							insert = [["JAL", ":", "INSERTED_" + str(inserted)],
+							insert = [inverted + [":", "INSERTED_" + str(inserted)],
 									  ["ADDUI", "ZERO", "ZERO"],
 									  ["ADDUI", "ZERO", "ZERO"],
 									  ["JALR", "ZERO", "JMP", line[line.index(":") + 1]],
@@ -114,24 +133,16 @@ def createGlobals(assembly):
 		try:
 
 			if line[0] == "VAR":
-				GLOBALS[line[2]] = [line[1], 0]
+				GLOBALS[line[1]] = 0
 
 				if "=" in line:
-					GLOBALS[line[2]][1] = line[line.index("=") + 1]
-					p("\tAssigned " + line[2] + " = " + line[line.index("=") + 1])
+					GLOBALS[line[1]] = line[line.index("=") + 1]
+					p("\tAssigned " + line[1] + " = " + line[line.index("=") + 1])
 				else:
-					p("\tAssigned " + line[2] + " = NULL")
+					p("\tAssigned " + line[1] + " = NULL")
 
-				assignment = []
-				if line[1] == "UNSIGNED":
-					assignment.append(["ADDUI", line[2], "ZERO", GLOBALS[line[2]][1]])
-				elif line[1] == "SIGNED":
-					assignment.append(["ADDI", line[2], "ZERO", GLOBALS[line[2]][1]])
-				else:
-					raise AssemblerError("Expected unsigned/signed instead of " + line[1] + ".")
-
-				new_assembly += assignment
-				GLOBALS[line[2]][1] = GLOBAL_COUNT * 4
+				new_assembly.append(["ADDUI", line[1], "ZERO", GLOBALS[line[1]]])
+				GLOBALS[line[1]] = GLOBAL_COUNT * 4
 				GLOBAL_COUNT += 1
 
 			else:
@@ -154,9 +165,9 @@ def removeGlobalReferences(assembly):
 			register_out = getNextArbitraryRegister()
 
 			if not splitted[0] == "SW":
-				append_extra = ["SW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]][1])]
+				append_extra = ["SW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]])]
 			else:
-				new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]][1])])
+				new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[splitted[1]])])
 
 			line = line[:line.index(splitted[1])] + register_out + line[line.index(splitted[1]) + 1:]
 
@@ -165,10 +176,10 @@ def removeGlobalReferences(assembly):
 			if r in GLOBALS.keys():
 
 				if not r in line:
-					new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[r][1])])
+					new_assembly.append(["LW"] + register_out + ["GP", "+", str(GLOBALS[r])])
 				else:
 					register = getNextArbitraryRegister()
-					new_assembly.append(["LW"] + register + ["GP", "+", str(GLOBALS[r][1])])
+					new_assembly.append(["LW"] + register + ["GP", "+", str(GLOBALS[r])])
 					while r in line:
 						line = line[:line.index(r)] + register + line[line.index(r) + 1:]
 
@@ -182,8 +193,17 @@ def removeArbitraryRegisters(assembly):
 	global REGISTER_CONTENTS
 	last_used = ASSIGNABLE[:]
 
+	cnt = 0
+	used = []
 	new_assembly = []
 	for line in assembly:
+		#Save before jump so contents not lost
+		if line[0] in MAX_JUMPS or line[0] == "JALR" or line[0] == ':':
+			for register in REGISTER_CONTENTS:
+				if not REGISTER_CONTENTS[register] == None:
+					new_assembly.append(["SW", register, "GP", "-", str(int(REGISTER_CONTENTS[getRegister(register)]) * 4 + 4)])
+					REGISTER_CONTENTS[register] = None
+
 		for token in line:
 			if token[0] == "$":
 				for r in REGISTER_CONTENTS:
@@ -196,14 +216,25 @@ def removeArbitraryRegisters(assembly):
 						new_assembly.append(["SW", register, "GP", "-", str(int(REGISTER_CONTENTS[getRegister(register)]) * 4 + 4)])
 					new_assembly.append(["LW", register, "GP", "-", str(int(token[1:]) * 4 + 4)])
 
+					#Update performance variables
+					if not token in used:
+						used.append(token)
+						cnt += 1
+
 				#Move register to end of queue
-				last_used.remove(register)
-				last_used.append(getRegister(register))
-				REGISTER_CONTENTS[getRegister(register)] = token[1:]
+				if register in last_used:
+					last_used.remove(register)
+					last_used.append(register)
+				REGISTER_CONTENTS[register] = token[1:]
 
 				line[line.index(token)] = register
 
 		new_assembly.append(line)
+
+	if cnt > 0:
+		p("\tArbitrary registers substituted with " + str(len(used)/cnt * 100)[:5] + "% efficiency")
+	else:
+		p("\tNo arbitrary registers.")
 
 	return new_assembly
 

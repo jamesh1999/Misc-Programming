@@ -34,39 +34,6 @@ REGISTER_NAMES = {"ZERO":"X0",
 					"JMP":"X30",
 					"GP":"X31"}
 
-REGISTER_STATUS = {"X0":"UNSIGNED",
-					"X1":"UNSIGNED",
-					"X2":"UNSIGNED",
-					"X3":"SIGNED",
-					"X4":"SIGNED",
-					"X5":"SIGNED",
-					"X6":"SIGNED",
-					"X7":"SIGNED",
-					"X8":"SIGNED",
-					"X9":"SIGNED",
-					"X10":"SIGNED",
-					"X11":"SIGNED",
-					"X12":"SIGNED",
-					"X13":"SIGNED",
-					"X14":"UNSIGNED",
-					"X15":"UNSIGNED",
-					"X16":"SIGNED",
-					"X17":"SIGNED",
-					"X18":"SIGNED",
-					"X19":"SIGNED",
-					"X20":"SIGNED",
-					"X21":"SIGNED",
-					"X22":"SIGNED",
-					"X23":"SIGNED",
-					"X24":"SIGNED",
-					"X25":"SIGNED",
-					"X26":"ASSEMBLER",
-					"X27":"ASSEMBLER",
-					"X28":"ASSEMBLER",
-					"X29":"ASSEMBLER",
-					"X30":"ASSEMBLER",
-					"X31":"UNSIGNED"}
-
 REGISTER_CONTENTS = {"X0":None,
 					"X1":None,
 					"X2":None,
@@ -100,7 +67,7 @@ REGISTER_CONTENTS = {"X0":None,
 					"X30":None,
 					"X31":None}
 
-ASSIGNABLE = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19", "S20", "S21", "S22", "S23", "S24", "S25"]
+ASSIGNABLE = ["X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X16", "X17", "X18", "X19", "X20", "X21", "X22", "X23", "X24", "X25", "X26", "X27", "X28", "X29"]
 CUR_REGISTER = -1
 
 
@@ -175,8 +142,7 @@ OPCODES = {"LUI":"0000000",
 			"SIGNED":"xxxxxxx",
 			"UNSIGNED":"xxxxxxx"}
 
-#Instructions that can be made unsigned or immediate
-UNSIGNED_TYPE = ["ADD", "SUB", "SHL", "SHR", "MUL", "MULH", "DIV", "REM", "LH", "LB", "ADDI", "SUBI", "SHLI", "SHRI", "MULI", "MULHI", "DIVI", "REMI" "BLT", "BLE"]
+#Instructions that can be made immediate
 IMMEDIATE_TYPE = ["ADD", "ADDU", "SUB", "SUBU", "AND", "OR", "XOR", "NOT", "SHL", "SHLU", "SHR", "SHRU", "MUL", "MULH", "MULU", "MULHU", "DIV", "DIVU", "REM", "REMU"]
 
 
@@ -288,6 +254,9 @@ def isReg(reg):
 #Separate an instruction into opcode, destination register, input registers, immediate
 def splitInstruction(instruction):
 	op = instruction[0]
+
+	if op.isdigit():
+		return ["","",[],0]
 
 	#Get destination
 	if len(instruction) > 1 and (isReg(instruction[1]) or instruction[1] in GLOBALS):

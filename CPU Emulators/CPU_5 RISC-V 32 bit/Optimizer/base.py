@@ -16,18 +16,14 @@ def saveLogFile():
 	with open(path, "w") as log_file:
 		log_file.write(OPTIMIZER_LOG)
 
-def getOp(line):
-	tokens = tokenizer.tokenizeString(line)
-
+def getOp(tokens):
 	if len(tokens):
 		return tokens[0].upper()
 
-def getDest(line):
+def getDest(tokens):
 	#Instructions with no real destination
-	if getOp(line) in ["SW", "SH", "SB", "OUT", "BRANCH", "BNE", "BEQ", "BLT", "BLTU", "BLE", "BLEU", "BGT", "BGTU", "BGE", "BGEU", "JAL", "JALR", "GOTO", "PUSH", "POP", "DEL", "TOP", "CALL", "RET", "IMPORT"]:
+	if getOp(tokens) in ["SW", "SH", "SB", "OUT", "BRANCH", "BNE", "BEQ", "BLT", "BLTU", "BLE", "BLEU", "BGT", "BGTU", "BGE", "BGEU", "JAL", "JALR", "GOTO", "PUSH", "POP", "DEL", "TOP", "CALL", "RET", "IMPORT"]:
 		return None
-
-	tokens = tokenizer.tokenizeString(line)
 
 	if len(tokens) > 1:
 		return tokens[1].upper()

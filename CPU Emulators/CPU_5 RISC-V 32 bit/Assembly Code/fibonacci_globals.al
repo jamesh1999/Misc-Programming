@@ -2,9 +2,9 @@
 import setup
 import print
 
-Var unsigned a = 1
-Var unsigned b = 1
-Var unsigned temp = 0
+Var a = 1
+Var b = 1
+Var temp = 0
 
 Lui $0 1000
 
@@ -13,7 +13,7 @@ Call :print_d
 
 :LOOP
 Mov temp a
-Add a b
+Addu a b
 Mov b temp
 Push a
 Call :print_d

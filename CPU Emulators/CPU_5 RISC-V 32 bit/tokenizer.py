@@ -3,6 +3,7 @@ class Tokenizer(object):
 		self.__SPLIT_ON = [" ", "\t", "\n","{", "}", "(", ")", "[", "]", "<", ">", ",", ".", "/", ";", "~", "!", "?", "'", "%", "^", "&", "*", "-", "+", "=", "|", ":"]
 		self.__REMOVE = [" ", "\t", "\n"]
 		self.__COMBINE = False
+		self.__cache = {}
 
 	#Configure the tokenizer
 	def configure(self, split = None, remove = None, combine = False):
@@ -11,6 +12,9 @@ class Tokenizer(object):
 		if not remove == None:
 			self.__REMOVE = remove
 		self.__COMBINE = combine
+
+		#Clear cache
+		self.__cache = {}
 
 	#Override for custom special rules
 	#Default: 'x' denotes a character and should be converted to an int
@@ -30,13 +34,10 @@ class Tokenizer(object):
 				nstring += string[i]
 
 		#Substitute chars
-		done = False
-		while not done:
-			done = True
+		while True:
 
 			for i,char in enumerate(nstring):
 				if char == "'":
-					done = False
 					#Special chars
 					if nstring[i + 1] == "\\":
 						val = 0
@@ -56,9 +57,15 @@ class Tokenizer(object):
 
 					break;
 
+			else:
+				break;
+
 		return nstring
 
 	def tokenizeString(self, input_string):
+		if input_string in self.__cache: 
+			return self.__cache[input_string][:]
+
 		input_string = self.removeSpecials(input_string)
 		if input_string == "": return []
 
@@ -90,6 +97,8 @@ class Tokenizer(object):
 
 		if len(buff):
 			tokens.append(buff)
+
+		self.__cache[input_string] = tokens[:]
 
 		return tokens
 

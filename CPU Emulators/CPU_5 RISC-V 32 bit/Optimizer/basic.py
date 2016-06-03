@@ -20,7 +20,7 @@ def redundantMov(assembly):
 			#Update assembly with replaced instruction
 			assembly_lines[section + i] = ' '.join(tokens)
 
-			if getOp(line) == "MOV":
+			if getOp(tokens) == "MOV":
 
 				#Get registers used
 				splitted = tokens[1:3]
@@ -55,7 +55,8 @@ def redundantInstruction(assembly):
 
 	cnt = 0
 	for i, line in enumerate(assembly_lines):
-		dest = getDest(line)
+		tokens = tokenizer.tokenizeString(line)
+		dest = getDest(tokens)
 		if dest == None or dest[0] != '$': 
 			continue;
 

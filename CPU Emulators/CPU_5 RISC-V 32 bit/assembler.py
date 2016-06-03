@@ -62,18 +62,26 @@ if __name__ == "__main__":
 	args = sys.argv
 
 	if len(args) == 1:
-		args = [None] + input("<input filename> <output filename> -flags\n\n-H   - Treat input as high-level assembly\n-L   - Output binary\n\n>>> ").split()
+		args = [None] + input("Usage: <input filename> [flags]\n\n-O<output filename>   - Specify an alternative output filename\n-H   - Treat input as high-level assembly\n-L   - Output low level assembly\n\n>>> ").split()
 
 	#Switches
-	if "-H" in args[3:]:
+	ofilename = args[1][:args[1].index('.')] + ".cpu"
+	for arg in args[2:]:
+		if arg[:2] == "-O":
+			ofilename = arg[2:]
+			break;
+
+	if "-H" in args[2:]:
 		high = True
 	else:
 		high = False
 
-	if "-L" in args[3:]:
-		low = True
-	else:
+	if "-L" in args[2:]:
 		low = False
+	else:
+		low = True
+
+	p("Running: assembler.py " + ' '.join(args[1:]))
 
 	#Assemble
-	assemble(args[1], args[2], high, low)
+	assemble(args[1], ofilename, high, low)

@@ -1,7 +1,7 @@
 //Echo input
 import setup
 import print
-
+1
 Add $1 SP 4
 
 :JUMP_BACK

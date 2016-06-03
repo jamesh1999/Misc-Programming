@@ -36,9 +36,11 @@
 
 //Type definitions
 <definition>			::=	<type> STRING
-<type>		            ::= [<type_pre>] <type_base> [<type_post>]
+<type>		            ::= <type> <type_post_modified> | <type_base_modified>
+<type_modifier>		    ::= "const"
+<type_base_modified>	::= <type_modifier> <type_base_modified> | <type_base>
 <type_base>			    ::= "int" | "char" | "bool" | "void"
-<type_pre>		        ::= "const"
+<type_post_modified>	::= <type_modifier> <type_post_modified> | <type_post>
 <type_post>	            ::= "[" INT "]" | "*" | "&"
 
 //Handle order of operations

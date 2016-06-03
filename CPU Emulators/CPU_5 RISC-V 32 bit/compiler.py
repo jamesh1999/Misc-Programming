@@ -5,8 +5,8 @@ from tokenizer import *
 from Compiler.lr1_parser import *
 from Compiler.symbol_generator import *
 from Compiler.code_generator import *
-from assembler import *
-from optimizer import *
+import assembler
+import optimizer
 
 
 
@@ -81,11 +81,11 @@ def compile_file(ifilename, ofilename):
 
 	#Optimize code
 	print("Switching to optimizer...")
-	optimize(root_name + ".al", OPTIMIZATION_FULL, PRIORITY_BALANCED)
+	optimizer.optimize(root_name + ".al", optimizer.OPTIMIZATION_FULL, optimizer.PRIORITY_BALANCED)
 
 	#Run assembler
 	print("Switching to assembler...")
-	assemble(root_name + ".al", ofilename, True, True)
+	assembler.assemble(root_name + ".al", ofilename, True, True)
 	print("Done assembling!")
 	print("Finished compiling in " + str(time.clock() - start) + "s")
 		

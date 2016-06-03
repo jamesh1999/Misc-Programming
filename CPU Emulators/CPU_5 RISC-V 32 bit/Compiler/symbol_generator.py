@@ -1,4 +1,4 @@
-import os
+import os, yaml
 
 
 
@@ -16,8 +16,12 @@ blank = ""
 scoped = []
 no_overhead = []
 scope_overhead = 0
-arguments = ""
-type_format = []
+arguments = []
+
+type_search = []
+modifier_types = []
+base_types = []
+other_types = []
 
 size_rules = []
 default_size = 0
@@ -167,14 +171,26 @@ class SymbolTable(object):
 	def __str__(self):
 		ret = ""
 		for col in self.format:
-			ret += max(10 - len(str(col)), 0) * " " + str(col) + " | "
+			ret += max(16 - len(str(col)), 0) * ' ' + str(col) + " | "
 		ret = ret[:-3]
-		ret += "\n" + "-" * len(ret)
+		ret += '\n' + '-' * len(ret)
+
+		type_index = self.format.index("TYPE")
 
 		for symbol in self.__symbols:
 			ret += "\n"
-			for i,val in enumerate(symbol):
-					ret += max(10 - len(str(val)), 0) * " " + str(val) + " | "
+
+			for i, val in enumerate(symbol):
+				if i == type_index:
+					add = ' '
+					for level in val:
+						add += ' '.join(level[0]) + ' ' + level[1] + ' '
+					add = add[:-1] #Remove trailing space
+
+				else:
+					add = str(val)
+				ret += max(16 - len(add), 0) * ' ' + add + " | "
+
 			ret = ret[:-3]
 
 		return ret
@@ -190,49 +206,59 @@ class SymbolTable(object):
 
 
 #Read config
-path = os.path.join(os.path.dirname(__file__), "Configuration/symbol_generator.conf")
+path = os.path.join(os.path.dirname(__file__), "Configuration/symbol_generator.yml")
 with open(path, "r") as ifile:
-	lines = ifile.readlines()
+	
+	#Parse YAML
+	data = yaml.load(ifile)
 
-	#Parse lines
-	for line in lines:
-		parts = line.split("::=")
+	#Split all BNF definitions
+	for key in ["FORMAT", "DEFINITION", "SCOPED", "NO_OVERHEAD", "ARGUMENTS", "TYPE", "TYPE_MODIFIERS", "TYPE_BASE", "TYPE_OTHER"]:
+		if not key in data:
+			continue;
 
-		if len(parts) == 2:
-			lhs = parts[0].strip("<>\t\n ")
-			rhs = parts[1].split()
+		parts = data[key].split()
 
-			for i, part in enumerate(rhs):
-				if not part == "->":
-					rhs[i] = part.strip("<>\t\n ")
+		for i, part in enumerate(parts):
+			parts[i] = part.strip("<>\t\n ")
 
-			#Symbol table configuration
-			if lhs == "FORMAT":
-				format = rhs
-			elif lhs == "DEFINITION":
-				search = rhs
-			elif lhs == "DEFAULT":
-				blank = rhs[0].strip("\"'")
-			elif lhs == "SCOPED":
-				scoped = rhs
-			elif lhs == "NO_OVERHEAD":
-				no_overhead = rhs
-			elif lhs == "SCOPE_OVERHEAD":
-				scope_overhead = int(rhs[0])
-			elif lhs == "ARGUMENTS":
-				arguments = rhs[0]
-			elif lhs == "TYPE":
-				type_format = rhs
+		data[key] = parts
 
-			#Type size configuration
-			elif "->" in rhs:
-				x = rhs.index("->")
-				size_rules.append([lhs, rhs[:x], int(rhs[-1])])
-			elif lhs == "DEFAULT_SIZE":
-				default_size = int(rhs[0])
+	#Extract data for symbol table
+	format = data["FORMAT"]
+	search = data["DEFINITION"]
+	blank = data["DEFAULT"]
+	scoped = data["SCOPED"]
+	no_overhead = data["NO_OVERHEAD"]
+	scope_overhead = int(data["SCOPE_OVERHEAD"])
+	arguments = data["ARGUMENTS"]
+	type_search = data["TYPE"]
+	modifier_types = data["TYPE_MODIFIERS"]
+	other_types = data["TYPE_OTHER"]
+	base_types = data["TYPE_BASE"]
+
+	#Get type size rules
+	default_size = int(data["DEFAULT_SIZE"])
+	for rule in data["SIZES"]:
+		top_level = None
+		bottom_level = None
+		top_level_modifiers = None
+		bottom_level_modifiers = None
+
+		if "top_level" in rule["conditions"]:
+			top_level = rule["conditions"]["top_level"]
+		if "bottom_level" in rule["conditions"]:
+			bottom_level = rule["conditions"]["bottom_level"]
+		if "top_level_modifiers" in rule["conditions"]:
+			top_level_modifiers = rule["conditions"]["top_level_modifiers"]
+		if "bottom_level_modifiers" in rule["conditions"]:
+			bottom_level_modifiers = rule["conditions"]["bottom_level_modifiers"]
+
+		d = [top_level, bottom_level, top_level_modifiers, bottom_level_modifiers, int(rule["size"])]
+		size_rules.append(d)
 
 #Add a symbol to the list
-def addSymbol(node, main = True):
+def addSymbol(node, main = True, index = -1):
 	global symbols
 	global symbol_offsets
 
@@ -249,37 +275,53 @@ def addSymbol(node, main = True):
 		symbols[-1][format.index("SCOPE")] = list(cur_scope)
 		symbols[-1][format.index("ARGUMENTS")] = []
 
-		symbols[-1][format.index("TYPE")] = [blank] * len(type_format)
+		symbols[-1][format.index("TYPE")] = []
 
 	#Get type from parse tree
 	for part in node:
 		if isinstance(part, str):
 			continue;
 
-		#Add info if it isn't already there
-		if part.getType() in type_format:
-			if symbols[-1][format.index("TYPE")][type_format.index(part.getType())] == blank:
-				symbols[-1][format.index("TYPE")][type_format.index(part.getType())] = part.getTerminals()
+		#Add new type level and switch level for child calls
+		if part.getType() in type_search:
+			symbols[-1][format.index("TYPE")].append([[], ""])
+			addSymbol(part, main = False, index = index + 1)
 
+		#Add modifier/base/other types to current level
+		elif part.getType() in modifier_types:
+			symbols[-1][format.index("TYPE")][index][0].append(part.getTerminals())
+		elif part.getType() in base_types or part.getType() in other_types:
+			symbols[-1][format.index("TYPE")][index][1] = part.getTerminals()
+
+		#Add other format data
 		elif part.getType() in format:
 			if symbols[-1][format.index(part.getType())] == blank:
-				symbols[-1][format.index(part.getType())] = part.getTerminals()
+				symbols[-1][format.index(part.getType())] = ''.join(part.getTerminals())
 
 		#Search symbol for other parts
-		addSymbol(part, main = False)
+		else:
+			addSymbol(part, main = False, index = index)
 
 	#Work out size and add offset
 	if main:
 		for rule in size_rules:
-			if symbols[-1][format.index("TYPE")][type_format.index(rule[0])] == rule[1]:
-				s = rule[2]
-				break;
+			if rule[0] != symbols[-1][format.index("TYPE")][-1][1]:
+				continue;
+			if rule[1] != symbols[-1][format.index("TYPE")][0][1]:
+				continue;
+			if rule[2] != symbols[-1][format.index("TYPE")][-1][0]:
+				continue;
+			if rule[3] != symbols[-1][format.index("TYPE")][0][0]:
+				continue;
+
+			#Rule applies
+			s = rule[4]
+			break;
 		else:
 			s = default_size
 
 		symbols[-1][format.index("SIZE")] = s
 		symbol_offsets[i][1] += s
-		symbols[-1][format.index("TYPE")] = ''.join(symbols[-1][format.index("TYPE")])
 
 #Apply arguments to previous symbol
 def applyArguments(node, index = None):
@@ -287,7 +329,6 @@ def applyArguments(node, index = None):
 
 	if index == None:
 		index = len(symbols) - 1
-
 	for part in node:
 		if not isinstance(part, str):
 			if part.getType() in search:
@@ -336,7 +377,7 @@ def getSymbols(parse_tree):
 			addSymbol(node)
 
 		#Add arguments
-		elif node.getType() == arguments:
+		elif node.getType() in arguments:
 			applyArguments(node)
 
 		#Search child node

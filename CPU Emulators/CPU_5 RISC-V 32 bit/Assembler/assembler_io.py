@@ -85,4 +85,7 @@ def writeBinary(ofilename, binary):
 			bytes = [str(int(line[:8], 2)), str(int(line[8:16], 2)), str(int(line[16:24], 2)), str(int(line[24:], 2))]
 			b = ' '.join(bytes)
 			ofile.write(b + "\n")
-			p("\t" + line + "  =>  " + b)
+			p("\t" + line + "  =>  ", e="")
+			for val in bytes:
+				p(' ' * (4 - len(val)) + val, e="")
+			p("")
