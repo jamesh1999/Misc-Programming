@@ -1,0 +1,31 @@
+FORMAT: "STRING <TYPE> <ADDR> <SIZE> <SCOPE> <ARGUMENTS>"
+DEFINITION: "<definition>"
+DEFAULT: ""
+SCOPED: "<scoped_block> <PROGRAM> <func_scope>"
+NO_OVERHEAD: "<scoped_block>"
+SCOPE_OVERHEAD: 8
+ARGUMENTS: "<arguments>"
+TYPE: "<type>"
+TYPE_MODIFIERS: "<type_modifier>"
+TYPE_BASE: "<type_base>"
+TYPE_OTHER: "<type_post>"
+
+DEFAULT_SIZE: 4
+SIZES:
+  -
+    conditions:
+      top_level: "*"
+    size: 4
+
+  -
+    conditions:
+      top_level: "int"
+    size: 4
+  -
+    conditions:
+      top_level: "char"
+    size: 1
+  -
+    conditions:
+      top_level: "bool"
+    size: 1

@@ -1,0 +1,17 @@
+#ifdef N
+ioareg[]'#fg[]e'
+#endif
+#define X A
+
+#include <test1.cm>
+
+#ifdef X
+#ifndef N
+int main()
+{
+	for(int i = 0; i < 3; i += 1)
+		printi(i);
+	return fact(3) + 6;
+}
+#endif
+#endif

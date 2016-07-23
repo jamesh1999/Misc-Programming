@@ -1,0 +1,68 @@
+<PROGRAM> 				::= {<statement>}
+
+
+
+//Generic structures
+<statement>				::= <stmnt_assign> ";" | <stmnt_init> ";" | <stmnt_func> | <stmnt_flow> | <stmnt_call> ";" | <stmnt_null> | <scoped_block>
+<scoped_block>			::= <block>
+<block>					::= "{" [{<statement>}] "}"
+
+//Statement types
+<stmnt_assign>			::= <expr_assign>
+<stmnt_init>	        ::= <definition> | <definition> "=" <expr> | <definition> "=" <array>
+<stmnt_func>			::= <definition> <func_scope>
+<stmnt_flow>			::= <stmnt_flow_while> | <stmnt_flow_for> | <stmnt_flow_if> | <stmnt_flow_break> | <stmnt_flow_continue> | <stmnt_flow_return>
+<stmnt_call>			::= STRING "(" [<parameters>] ")" | <macro> "(" <term> ")"
+<stmnt_null>			::= ";"
+
+<func_scope>			::= "(" [<arguments>] ")" <block>
+
+//Main control flow
+<stmnt_flow_while>		::= "while(" <expr> ")" <statement>
+<stmnt_flow_for>		::= "for(" [<stmnt_init>] ";" <expr> ";" [<stmnt_assign>] ")" <statement>
+<stmnt_flow_if>			::= "if(" <expr> ")" <statement>
+
+//Extra control flow
+<stmnt_flow_break>		::= "break;"
+<stmnt_flow_continue>	::= "continue;"
+<stmnt_flow_return>		::= "return;" | "return" <expr> ";"
+
+<arguments>				::= <argument_list>
+<argument_list>			::= <definition> | <argument_list> "," <definition>
+<parameters>			::= <expr> | <parameters> "," <expr>
+<macro>					::= "printi" | "printf"
+
+<array>					::= "{" <parameters> "}"
+
+//Type definitions
+<definition>			::=	<type> STRING
+<type>		            ::= <type> <type_post_modified> | <type_base_modified>
+<type_modifier>		    ::= "const"
+<type_base_modified>	::= <type_modifier> <type_base_modified> | <type_base>
+<type_base>			    ::= "int" | "char" | "bool" | "void"
+<type_post_modified>	::= <type_modifier> <type_post_modified> | <type_post>
+<type_post>	            ::= "[" INT "]" | "*" | "&"
+
+//Handle order of operations
+<expr_assign>			::= STRING <op_assign> <expr>
+<op_assign>				::= "=" | "+=" | "-=" | "*=" | "/=" | "%=" | "<<=" | ">>=" | "&=" | "^=" | "|="
+<expr>					::= <expr_logical_or>
+<expr_logical_or>		::= <expr_logical_or> "||" <expr_logical_and> | <expr_logical_and>
+<expr_logical_and>		::= <expr_logical_and> "&&" <expr_bitwise_or> | <expr_bitwise_or>
+<expr_bitwise_or>		::= <expr_bitwise_or> "|" <expr_bitwise_and> | <expr_bitwise_and>
+<expr_bitwise_and>		::= <expr_bitwise_and> "&" <expr_conditional> | <expr_conditional>
+<expr_conditional>		::= <expr_conditional> <op_conditional> <expr_shift> | <expr_shift>
+<op_conditional>		::= "==" | "!=" | ">" | "<" | ">=" | "<="
+<expr_shift>			::= <expr_shift> <op_shift> <expr_add> | <expr_add>
+<op_shift>				::= ">>" | "<<"
+<expr_add>				::= <expr_add> <op_add> <expr_mul> | <expr_mul>
+<op_add>				::= "+" | "-"
+<expr_mul>				::= <expr_mul> <op_mul> <expr_unary> | <expr_unary>
+<op_mul>				::= "*" | "/" | "%"
+<expr_unary>			::= <op_unary> <expr_unary> | <expr_unary2>
+<op_unary>				::= "&" | "*" | "!" | "~" | "-" | "(" <type> ")"
+<expr_unary2>			::= "[" INT "]" <expr_unary2> | <expr_term>
+<expr_term>				::= <term> | <stmnt_call> | "(" <expr> ")"
+
+<term>					::= INT | <bool> | STRING
+<bool>					::= "true" | "false"

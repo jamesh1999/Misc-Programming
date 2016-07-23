@@ -1,0 +1,113 @@
+
+
+Registers:
+
+x0  - Hardwired zero (ZERO)
+x1  - Return address (RA)
+x2  - Frame pointer (FP)
+x3  - General purpose (S1)
+x4  - General purpose (S2)
+x5  - General purpose (S3)
+x6  - General purpose (S4)
+x7  - General purpose (S5)
+x8  - General purpose (S6)
+x9  - General purpose (S7)
+x10 - General purpose (S8)
+x11 - General purpose (S9)
+x12 - General purpose (S10)
+x13 - General purpose (S11)
+x14 - Stack pointer (SP)
+x15 - Thread pointer (TP)
+x16 - General purpose (S12)
+x17 - General purpose (S13)
+x18 - General purpose (S14)
+x19 - General purpose (S15)
+x20 - General purpose (S16)
+x21 - General purpose (S17)
+x22 - General purpose (S18)
+x23 - General purpose (S19)
+x24 - General purpose (S20)
+x25 - General purpose (S21)
+x26 - General purpose (S22)
+x27 - General purpose (S23)
+x28 - General purpose (S24)
+x29 - General purpose (S25)
+x30 - General purpose (S26)
+x31 - Global pointer (GP)
+
+
+Instruction Types:
+
+L - Type:
+opcode|rdest|immediate...
+I - Type:
+opcode|rdest|funct3|rega|immediate
+R - Type:
+opcode|rdest|funct3|rega|regb|funct7
+IR - Type:
+opcode|rdest|immediate[0:3]|rega|regb|immediate[3:]
+
+Instructions:
+
+Root mode only:
+HALT
+OUTD - Debug output
+IND - Debug input
+RCPY - Compies value of rega to register whose id is in regb (allows cross-core/safe-mode registers)
+
+Control flow:
+JAL
+JALR
+BEQ
+BNE
+BLT
+BLE
+BLTU
+BLEU
+
+Context switches/interrupts:
+SWI - Software interrupt
+HALT - Software halt
+SAFE - Switch to safe mode
+
+ALU Operations (Each has a corresponding immediate instruction except NOT):
+NOT
+AND
+OR
+XOR
+ADD
+SUB
+MUL
+MULU
+DIV
+DIVU
+REM
+REMU
+SHL
+SHLU
+SHR
+SHRU
+
+Data Operations:
+LW
+LH
+LS
+LB
+SW
+SH
+SS
+SB
+LUI
+
+Floating Point Operations:
+LFS
+LFD
+SFS
+SFD
+FADD
+FSUB
+FMUL
+FDIV
+FSQRT
+FSGN
+FCMP
