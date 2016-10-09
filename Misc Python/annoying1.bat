@@ -1,2 +1,2 @@
-python annoying1.py
+python3 annoying1.py
 pause

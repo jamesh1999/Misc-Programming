@@ -3,6 +3,8 @@
 #include "Cipher.h"
 #include "CodeBreakerMain.h"
 
+#define TO_INT(chr) (chr - 'A')
+
 //Global functions
 double indexCoincidence(const std::string&);
 double evaluate(const std::string&);

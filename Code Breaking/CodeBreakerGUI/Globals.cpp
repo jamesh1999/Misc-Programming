@@ -4,8 +4,6 @@
 #include "Trigrams.h"
 #include "Quadgrams.h"
 
-#define TO_INT(chr) (chr - 'A')
-
 float ENGLISH_IC = 0.067f;
 float ENGLISH_IC_DIFFERENCE = 0.005f;
 float TEMP = 20.0f;

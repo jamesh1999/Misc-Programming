@@ -280,22 +280,18 @@ def Hardware(message, parameter=0):
 NUMBERS = [0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39]
 
 import itertools
-l = ["DOES", "YOUR", "MUM", "EVEN", "LIFT"]
+l = ["MAGIC"]
 
 input("Press enter")
 time.sleep(5)
-# for p in itertools.permutations(l, 5):
-#     nstring = ' '.join(p)
-#     for char in nstring:
-#         SendInput(Keyboard(ord(char)))
-#     SendInput(Keyboard(VK_RETURN))
-#     time.sleep(0.1)
-nstring = "SPAM"
 while True:
-    for char in nstring:
-        SendInput(Keyboard(ord(char)))
-        time.sleep(0.04)
-    SendInput(Keyboard(VK_RETURN))
-    
+    for p in itertools.permutations(l, 1):
+        nstring = ' '.join(p)
+        for char in nstring:
+            SendInput(Keyboard(ord(char)))
+        SendInput(Keyboard(VK_RETURN))
+        time.sleep(0.1)
+        SendInput(Keyboard(VK_RETURN))
+        
 
-	#cnt += 1
+    	#cnt += 1

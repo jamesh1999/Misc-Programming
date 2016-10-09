@@ -1,2 +1,2 @@
-python fractals.py
+python3 fractals.py
 pause
