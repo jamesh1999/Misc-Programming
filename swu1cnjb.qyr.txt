@@ -1,0 +1,806 @@
+﻿Recent work
+
+-Fixed python renderer (why not)
+-Added recent directx work
+-Game for noobsie c:
+-Some F# tests
+-C++ IO speed test
+-BMC work
+-Codebreaking: fixed bifid & added Eigen based Hill decrypter
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Fri Jan 6 17:57:21 2017 +0000
+#
+# On branch master
+# Your branch is ahead of 'origin/master' by 1 commit.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   3D Renderer (Python)/PyGame 3D v3/run.bat
+#	deleted:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/Py3D.py
+#	deleted:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/__pycache__/trig.cpython-35.pyc
+#	deleted:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/py3d.bat
+#	deleted:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/trig.py
+#	deleted:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/trig_lookup.txt
+#	deleted:    3D Renderer (Python)/PyGame 3D v4 (Broken)/run.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Compiled Files/Py3D.pyc -> 3D Renderer (Python)/PyGame 3D v4/Compiled Files/Py3D.pyc
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Compiled Files/Py3D.pyo -> 3D Renderer (Python)/PyGame 3D v4/Compiled Files/Py3D.pyo
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/Functions.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/Functions.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/Maths.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/Maths.py
+#	new file:   3D Renderer (Python)/PyGame 3D v4/Python Code/Py3D.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/Template.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/Template.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/__pycache__/Maths.cpython-32.pyc -> 3D Renderer (Python)/PyGame 3D v4/Python Code/__pycache__/Maths.cpython-32.pyc
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/__pycache__/Maths.cpython-35.pyc -> 3D Renderer (Python)/PyGame 3D v4/Python Code/__pycache__/Maths.cpython-35.pyc
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/__pycache__/Py3D.cpython-32.pyc -> 3D Renderer (Python)/PyGame 3D v4/Python Code/__pycache__/Py3D.cpython-32.pyc
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/__pycache__/Py3D.cpython-32.pyo -> 3D Renderer (Python)/PyGame 3D v4/Python Code/__pycache__/Py3D.cpython-32.pyo
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/__pycache__/Py3D.cpython-35.pyc -> 3D Renderer (Python)/PyGame 3D v4/Python Code/__pycache__/Py3D.cpython-35.pyc
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/__pycache__/trig.cpython-32.pyc -> 3D Renderer (Python)/PyGame 3D v4/Python Code/__pycache__/trig.cpython-32.pyc
+#	new file:   3D Renderer (Python)/PyGame 3D v4/Python Code/__pycache__/trig.cpython-35.pyc
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/disco.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/disco.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/disco.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/disco.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/game1.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/game1.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/game2.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/game2.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/game3.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/game3.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/model maker.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/model maker.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/modelmaker.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/modelmaker.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/monster3d.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/monster3d.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/monster3d.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/monster3d.py
+#	new file:   3D Renderer (Python)/PyGame 3D v4/Python Code/py3d.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test1.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test1.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test1.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test1.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test2.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test2.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test2.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test2.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test3.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test3.bat
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/test3.py -> 3D Renderer (Python)/PyGame 3D v4/Python Code/test3.py
+#	renamed:    3D Renderer (Python)/PyGame 3D v4 (Broken)/Python Code/trig.bat -> 3D Renderer (Python)/PyGame 3D v4/Python Code/trig.bat
+#	new file:   3D Renderer (Python)/PyGame 3D v4/Python Code/trig.py
+#	new file:   3D Renderer (Python)/PyGame 3D v4/Python Code/trig_lookup.txt
+#	new file:   3D Renderer (Python)/PyGame 3D v4/run.bat
+#	new file:   AreaTest/AreaTest.sln
+#	new file:   AreaTest/AreaTest/App.config
+#	new file:   AreaTest/AreaTest/AreaTest.fsproj
+#	new file:   AreaTest/AreaTest/AssemblyInfo.fs
+#	new file:   AreaTest/AreaTest/Program.fs
+#	new file:   AreaTest/AreaTest/bin/Debug/AreaTest.XML
+#	new file:   AreaTest/AreaTest/bin/Debug/AreaTest.exe
+#	new file:   AreaTest/AreaTest/bin/Debug/AreaTest.exe.config
+#	new file:   AreaTest/AreaTest/bin/Debug/AreaTest.pdb
+#	new file:   AreaTest/AreaTest/bin/Debug/FSharp.Core.dll
+#	new file:   AreaTest/AreaTest/bin/Debug/FSharp.Core.xml
+#	new file:   BMC/BMC.VC.VC.opendb
+#	new file:   BMC/BMC.VC.db
+#	new file:   BMC/BMC.sln
+#	new file:   BMC/BMC/BMC.cpp
+#	new file:   BMC/BMC/BMC.h
+#	new file:   BMC/BMC/BMC.ico
+#	new file:   BMC/BMC/BMC.rc
+#	new file:   BMC/BMC/BMC.vcxproj
+#	new file:   BMC/BMC/BMC.vcxproj.filters
+#	new file:   BMC/BMC/Camera.cpp
+#	new file:   BMC/BMC/Camera.h
+#	new file:   BMC/BMC/Component.h
+#	new file:   BMC/BMC/CompositeObject.cpp
+#	new file:   BMC/BMC/CompositeObject.h
+#	new file:   BMC/BMC/Config.cpp
+#	new file:   BMC/BMC/Config.h
+#	new file:   BMC/BMC/Debug/BMC.res
+#	new file:   BMC/BMC/Debug/BMC.tlog/BMC.lastbuildstate
+#	new file:   BMC/BMC/Debug/BMC.tlog/CL.command.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/CL.read.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/CL.write.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/link.command.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/link.read.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/link.write.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/rc.command.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/rc.read.1.tlog
+#	new file:   BMC/BMC/Debug/BMC.tlog/rc.write.1.tlog
+#	new file:   BMC/BMC/Debug/vc140.idb
+#	new file:   BMC/BMC/Debug/vc140.pdb
+#	new file:   BMC/BMC/GraphicsController.cpp
+#	new file:   BMC/BMC/GraphicsController.h
+#	new file:   BMC/BMC/InputManager.cpp
+#	new file:   BMC/BMC/InputManager.h
+#	new file:   BMC/BMC/Map.h
+#	new file:   BMC/BMC/Material.cpp
+#	new file:   BMC/BMC/Material.h
+#	new file:   BMC/BMC/MeshData.h
+#	new file:   BMC/BMC/ReadMe.txt
+#	new file:   BMC/BMC/Renderer.cpp
+#	new file:   BMC/BMC/Renderer.h
+#	new file:   BMC/BMC/Resource.h
+#	new file:   BMC/BMC/Route.h
+#	new file:   BMC/BMC/Simulation.cpp
+#	new file:   BMC/BMC/Simulation.h
+#	new file:   BMC/BMC/TimeManager.cpp
+#	new file:   BMC/BMC/TimeManager.h
+#	new file:   BMC/BMC/TrackType.h
+#	new file:   BMC/BMC/TrainType.h
+#	new file:   BMC/BMC/Transform.cpp
+#	new file:   BMC/BMC/Transform.h
+#	new file:   BMC/BMC/config.txt
+#	new file:   BMC/BMC/small.ico
+#	new file:   BMC/BMC/stdafx.cpp
+#	new file:   BMC/BMC/stdafx.h
+#	new file:   BMC/BMC/targetver.h
+#	new file:   BMC/Debug/BMC.exe
+#	new file:   BMC/Debug/BMC.pdb
+#	new file:   CPU Emulators/CPU_6 RISC 64 bit/Emulator/CPUEmulator3.VC.VC.opendb
+#	new file:   CPU Emulators/CPU_6 RISC 64 bit/Emulator/CPUEmulator3.VC.db
+#	modified:   CPU Emulators/CPU_6 RISC 64 bit/Emulator/CPUEmulator3/CPU.h
+#	modified:   CPU Emulators/CPU_6 RISC 64 bit/Emulator/CPUEmulator3/CPUEmulator3.cpp
+#	modified:   CPU Emulators/CPU_6 RISC 64 bit/Emulator/CPUEmulator3/CPUEmulator3.vcxproj
+#	modified:   CPU Emulators/CPU_6 RISC 64 bit/Emulator/CPUEmulator3/CPUEmulator3.vcxproj.filters
+#	modified:   CPU Emulators/CPU_6 RISC 64 bit/cpu.txt
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker.VC.db
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/CodeBreaker.cpp
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/CodeBreaker.vcxproj
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/CodeBreaker.vcxproj.filters
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Debug/CodeBreaker.tlog/CL.read.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Debug/CodeBreaker.tlog/CL.write.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Debug/CodeBreaker.tlog/CodeBreaker.lastbuildstate
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Debug/CodeBreaker.tlog/cl.command.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Debug/CodeBreaker.tlog/link.command.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Debug/CodeBreaker.tlog/link.read.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Debug/CodeBreaker.tlog/link.write.1.tlog
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Debug/vc140.idb
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Debug/vc140.pdb
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/CMakeLists.txt
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Cholesky
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/CholmodSupport
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Core
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Dense
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Eigen
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Eigenvalues
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Geometry
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Householder
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/IterativeLinearSolvers
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Jacobi
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/LU
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/MetisSupport
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/OrderingMethods
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/PaStiXSupport
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/PardisoSupport
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/QR
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/QtAlignedMalloc
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/SPQRSupport
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/SVD
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/Sparse
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/SparseCholesky
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/SparseCore
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/SparseLU
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/SparseQR
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/StdDeque
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/StdList
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/StdVector
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/SuperLUSupport
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/UmfPackSupport
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Cholesky/LDLT.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Cholesky/LLT.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Cholesky/LLT_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/CholmodSupport/CholmodSupport.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Array.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/ArrayBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/ArrayWrapper.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Assign.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/AssignEvaluator.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Assign_MKL.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/BandMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Block.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/BooleanRedux.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CommaInitializer.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/ConditionEstimator.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CoreEvaluators.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CoreIterators.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CwiseBinaryOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CwiseNullaryOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CwiseTernaryOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CwiseUnaryOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/CwiseUnaryView.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/DenseBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/DenseCoeffsBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/DenseStorage.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Diagonal.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/DiagonalMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/DiagonalProduct.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Dot.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/EigenBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/ForceAlignedAccess.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Fuzzy.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/GeneralProduct.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/GenericPacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/GlobalFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/IO.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Inverse.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Map.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/MapBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/MathFunctionsImpl.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Matrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/MatrixBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/NestByValue.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/NoAlias.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/NumTraits.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/PermutationMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/PlainObjectBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Product.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/ProductEvaluators.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Random.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Redux.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Ref.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Replicate.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/ReturnByValue.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Reverse.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Select.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/SelfAdjointView.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/SelfCwiseBinaryOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Solve.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/SolveTriangular.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/SolverBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/StableNorm.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Stride.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Swap.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Transpose.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Transpositions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/TriangularMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/VectorBlock.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/VectorwiseOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/Visitor.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AVX/Complex.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AVX/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AVX/PacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AVX/TypeCasting.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AVX512/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AVX512/PacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AltiVec/Complex.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AltiVec/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/AltiVec/PacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/CUDA/Complex.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/CUDA/Half.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/CUDA/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/CUDA/PacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/CUDA/PacketMathHalf.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/CUDA/TypeCasting.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/Default/Settings.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/NEON/Complex.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/NEON/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/NEON/PacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/SSE/Complex.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/SSE/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/SSE/PacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/SSE/TypeCasting.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/ZVector/Complex.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/ZVector/MathFunctions.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/arch/ZVector/PacketMath.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/functors/AssignmentFunctors.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/functors/BinaryFunctors.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/functors/NullaryFunctors.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/functors/StlFunctors.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/functors/TernaryFunctors.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/functors/UnaryFunctors.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/GeneralBlockPanelKernel.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/GeneralMatrixMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/GeneralMatrixMatrixTriangular_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/GeneralMatrixMatrix_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/GeneralMatrixVector.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/GeneralMatrixVector_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/Parallelizer.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/SelfadjointMatrixMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/SelfadjointMatrixMatrix_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/SelfadjointMatrixVector.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/SelfadjointMatrixVector_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/SelfadjointProduct.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/SelfadjointRank2Update.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/TriangularMatrixMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/TriangularMatrixMatrix_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/TriangularMatrixVector.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/TriangularMatrixVector_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/TriangularSolverMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/TriangularSolverMatrix_BLAS.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/products/TriangularSolverVector.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/BlasUtil.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/Constants.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/DisableStupidWarnings.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/ForwardDeclarations.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/MKL_support.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/Macros.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/Memory.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/Meta.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/NonMPL2.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/ReenableStupidWarnings.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/StaticAssert.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Core/util/XprHelper.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/ComplexEigenSolver.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/ComplexSchur.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/ComplexSchur_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/EigenSolver.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/HessenbergDecomposition.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/RealQZ.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/RealSchur.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/RealSchur_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Eigenvalues/Tridiagonalization.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/AlignedBox.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/AngleAxis.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/EulerAngles.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Homogeneous.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Hyperplane.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/OrthoMethods.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/ParametrizedLine.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Quaternion.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Rotation2D.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/RotationBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Scaling.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Transform.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Translation.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/Umeyama.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Geometry/arch/Geometry_SSE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Householder/BlockHouseholder.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Householder/Householder.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Householder/HouseholderSequence.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/BasicPreconditioners.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/BiCGSTAB.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/ConjugateGradient.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/IncompleteCholesky.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/IncompleteLUT.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/IterativeSolverBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/LeastSquareConjugateGradient.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/IterativeLinearSolvers/SolveWithGuess.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/Jacobi/Jacobi.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/LU/Determinant.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/LU/FullPivLU.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/LU/InverseImpl.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/LU/PartialPivLU.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/LU/PartialPivLU_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/LU/arch/Inverse_SSE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/MetisSupport/MetisSupport.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/OrderingMethods/Amd.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/OrderingMethods/Eigen_Colamd.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/OrderingMethods/Ordering.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/PaStiXSupport/PaStiXSupport.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/PardisoSupport/PardisoSupport.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/QR/ColPivHouseholderQR.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/QR/ColPivHouseholderQR_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/QR/CompleteOrthogonalDecomposition.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/QR/FullPivHouseholderQR.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/QR/HouseholderQR.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/QR/HouseholderQR_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SPQRSupport/SuiteSparseQRSupport.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SVD/BDCSVD.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SVD/JacobiSVD.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SVD/JacobiSVD_LAPACKE.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SVD/SVDBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SVD/UpperBidiagonalization.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCholesky/SimplicialCholesky.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCholesky/SimplicialCholesky_impl.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/AmbiVector.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/CompressedStorage.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/ConservativeSparseSparseProduct.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/MappedSparseMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseAssign.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseBlock.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseColEtree.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseCompressedBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseCwiseBinaryOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseCwiseUnaryOp.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseDenseProduct.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseDiagonalProduct.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseDot.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseFuzzy.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseMap.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseMatrixBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparsePermutation.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseProduct.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseRedux.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseRef.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseSelfAdjointView.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseSolverBase.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseSparseProductWithPruning.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseTranspose.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseTriangularView.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseUtil.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseVector.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/SparseView.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseCore/TriangularSolver.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLUImpl.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_Memory.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_Structs.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_SupernodalMatrix.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_Utils.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_column_bmod.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_column_dfs.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_copy_to_ucol.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_gemm_kernel.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_kernel_bmod.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_panel_bmod.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_panel_dfs.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_pivotL.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_pruneL.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseLU/SparseLU_relax_snode.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SparseQR/SparseQR.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/StlSupport/StdDeque.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/StlSupport/StdList.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/StlSupport/StdVector.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/StlSupport/details.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/SuperLUSupport/SuperLUSupport.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/UmfPackSupport/UmfPackSupport.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/misc/Image.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/misc/Kernel.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/misc/RealSvd2x2.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/misc/blas.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/misc/lapack.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/misc/lapacke.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/misc/lapacke_mangling.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/plugins/ArrayCwiseBinaryOps.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/plugins/ArrayCwiseUnaryOps.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/plugins/BlockMethods.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/plugins/CommonCwiseBinaryOps.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/plugins/CommonCwiseUnaryOps.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/plugins/MatrixCwiseBinaryOps.h
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Hill.cpp
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Release/CodeBreaker.tlog/CL.read.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Release/CodeBreaker.tlog/CL.write.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Release/CodeBreaker.tlog/CodeBreaker.lastbuildstate
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Release/CodeBreaker.tlog/cl.command.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Release/CodeBreaker.tlog/link.command.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Release/CodeBreaker.tlog/link.read.1.tlog
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/Release/CodeBreaker.tlog/link.write.1.tlog
+#	new file:   Code Breaking/CodeBreaker/CodeBreaker/Release/vc140.pdb
+#	modified:   Code Breaking/CodeBreaker/CodeBreaker/input.txt
+#	modified:   Code Breaking/CodeBreaker/Debug/CodeBreaker.exe
+#	modified:   Code Breaking/CodeBreaker/Debug/CodeBreaker.pdb
+#	modified:   Code Breaking/CodeBreaker/Release/CodeBreaker.exe
+#	new file:   Code Breaking/CodeBreaker/Release/CodeBreaker.iobj
+#	new file:   Code Breaking/CodeBreaker/Release/CodeBreaker.ipdb
+#	modified:   Code Breaking/CodeBreaker/Release/CodeBreaker.pdb
+#	modified:   Code Breaking/CodeBreaker/Release/input.txt
+#	modified:   Code Breaking/CodeBreakerGUI/Amsco.ui
+#	modified:   Code Breaking/CodeBreakerGUI/Bifid.cpp
+#	deleted:    Code Breaking/CodeBreakerGUI/Ciphers To-Do/Hill.cpp
+#	modified:   Code Breaking/CodeBreakerGUI/CodeBreakerGUI.pro
+#	new file:   Code Breaking/CodeBreakerGUI/CodeBreakerGUI.pro.user.691cb8e
+#	new file:   Code Breaking/CodeBreakerGUI/CodeBreakerGUI.pro.user.8ed1025
+#	deleted:    Code Breaking/CodeBreakerGUI/CodeBreakerGUI.pro.user.f4da361
+#	modified:   Code Breaking/CodeBreakerGUI/CodeBreakerMain.cpp
+#	modified:   Code Breaking/CodeBreakerGUI/CodeBreakerMain.h
+#	modified:   Code Breaking/CodeBreakerGUI/CodeBreakerMain.ui
+#	modified:   Code Breaking/CodeBreakerGUI/Hill.cpp
+#	modified:   Code Breaking/CodeBreakerGUI/Hill.h
+#	modified:   Code Breaking/CodeBreakerGUI/Hill.ui
+#	modified:   Code Breaking/CodeBreakerGUI/columnartransposition.cpp
+#	modified:   Code Breaking/CodeBreakerGUI/columnartransposition.h
+#	modified:   Code Breaking/CodeBreakerGUI/columnartransposition.ui
+#	modified:   Code Breaking/CodeBreakerGUI/guesscipher.cpp
+#	modified:   Code Breaking/CodeBreakerGUI/guesscipher.ui
+#	modified:   Code Breaking/CodeBreakerGUI/main.cpp
+#	modified:   Code Breaking/CodeBreakerGUI/words.txt
+#	new file:   FSTest/FSTest.sln
+#	new file:   FSTest/FSTest/App.config
+#	new file:   FSTest/FSTest/AssemblyInfo.fs
+#	new file:   FSTest/FSTest/FSTest.fsproj
+#	new file:   FSTest/FSTest/Program.fs
+#	new file:   FSTest/FSTest/bin/Debug/FSTest.XML
+#	new file:   FSTest/FSTest/bin/Debug/FSTest.exe
+#	new file:   FSTest/FSTest/bin/Debug/FSTest.exe.config
+#	new file:   FSTest/FSTest/bin/Debug/FSTest.pdb
+#	new file:   FSTest/FSTest/bin/Debug/FSharp.Core.dll
+#	new file:   FSTest/FSTest/bin/Debug/FSharp.Core.xml
+#	new file:   FSTest2/FSTest2.sln
+#	new file:   FSTest2/FSTest2/App.config
+#	new file:   FSTest2/FSTest2/AssemblyInfo.fs
+#	new file:   FSTest2/FSTest2/FSTest2.fsproj
+#	new file:   FSTest2/FSTest2/Program.fs
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1.VC.db
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1.sln
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/ConsoleApplication1.vcxproj
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/ConsoleApplication1.vcxproj.filters
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/ConsoleA.9633C0F7.tlog/CL.command.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/ConsoleA.9633C0F7.tlog/CL.read.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/ConsoleA.9633C0F7.tlog/CL.write.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/ConsoleA.9633C0F7.tlog/ConsoleApplication1.lastbuildstate
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/ConsoleA.9633C0F7.tlog/link.command.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/ConsoleA.9633C0F7.tlog/link.read.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/ConsoleA.9633C0F7.tlog/link.write.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/vc140.idb
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Debug/vc140.pdb
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/ConsoleA.9633C0F7.tlog/CL.command.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/ConsoleA.9633C0F7.tlog/CL.read.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/ConsoleA.9633C0F7.tlog/CL.write.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/ConsoleA.9633C0F7.tlog/ConsoleApplication1.lastbuildstate
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/ConsoleA.9633C0F7.tlog/link.command.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/ConsoleA.9633C0F7.tlog/link.read.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/ConsoleA.9633C0F7.tlog/link.write.1.tlog
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Release/vc140.pdb
+#	deleted:    Graphics Work/ConsoleApplication1/ConsoleApplication1/Source.cpp
+#	deleted:    Graphics Work/ConsoleApplication1/Debug/ConsoleApplication1.exe
+#	deleted:    Graphics Work/ConsoleApplication1/Debug/ConsoleApplication1.pdb
+#	deleted:    Graphics Work/ConsoleApplication1/Release/ConsoleApplication1.exe
+#	deleted:    Graphics Work/ConsoleApplication1/Release/ConsoleApplication1.iobj
+#	deleted:    Graphics Work/ConsoleApplication1/Release/ConsoleApplication1.ipdb
+#	deleted:    Graphics Work/ConsoleApplication1/Release/ConsoleApplication1.pdb
+#	modified:   Graphics Work/DirectXTest2/Debug/DirectXTest2.exe
+#	modified:   Graphics Work/DirectXTest2/Debug/DirectXTest2.pdb
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2.VC.db
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Debug/DirectXTest2.tlog/CL.read.1.tlog
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Debug/vc140.idb
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Debug/vc140.pdb
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/DirectXTest2.vcxproj
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/FractalFault.cpp
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/FractalFault.h
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Release/DirectXTest2.tlog/CL.write.1.tlog
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Release/DirectXTest2.tlog/link.command.1.tlog
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Release/DirectXTest2.tlog/link.read.2.tlog
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Release/DirectXTest2.tlog/link.write.1.tlog
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Release/vc140.pdb
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/Terrain.cpp
+#	modified:   Graphics Work/DirectXTest2/DirectXTest2/fractalfault.hlsl
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/CL.command.1.tlog
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/CL.read.1.tlog
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/CL.write.1.tlog
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/DirectXTest2.lastbuildstate
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/link.command.1.tlog
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/link.read.1.tlog
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/link.write.1.tlog
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/DirectXTest2.tlog/unsuccessfulbuild
+#	new file:   Graphics Work/DirectXTest2/DirectXTest2/x64/Release/vc140.pdb
+#	new file:   Graphics Work/DirectXTest2/Release/DirectXTest2.exe
+#	modified:   Graphics Work/DirectXTest2/Release/DirectXTest2.iobj
+#	modified:   Graphics Work/DirectXTest2/Release/DirectXTest2.ipdb
+#	modified:   Graphics Work/DirectXTest2/Release/DirectXTest2.pdb
+#	new file:   Graphics Work/GameEngine1/Debug/DSC_4436.tga
+#	new file:   Graphics Work/GameEngine1/Debug/GameEngine1.exe
+#	new file:   Graphics Work/GameEngine1/Debug/GameEngine1.pdb
+#	new file:   Graphics Work/GameEngine1/Debug/Track.fbx
+#	new file:   Graphics Work/GameEngine1/Debug/Track_Outline.fbx
+#	new file:   Graphics Work/GameEngine1/Debug/Track_Start.fbx
+#	new file:   Graphics Work/GameEngine1/Debug/shaders.hlsl
+#	new file:   Graphics Work/GameEngine1/Debug/test.fbx
+#	new file:   Graphics Work/GameEngine1/Debug/test.tga
+#	new file:   Graphics Work/GameEngine1/GameEngine1.VC.db
+#	new file:   Graphics Work/GameEngine1/GameEngine1.sln
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Camera.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Component.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/CompositeObject.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/DSC_4436.tga
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/CL.command.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/CL.read.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/CL.write.6.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/GameEngine1.lastbuildstate
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/link.command.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/link.read.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/link.write.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/GameEngine1.tlog/unsuccessfulbuild
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/vc140.idb
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Debug/vc140.pdb
+#	new file:   Graphics Work/GameEngine1/GameEngine1/FractalFault.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/FractalFault.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/GameEngine1.vcxproj
+#	new file:   Graphics Work/GameEngine1/GameEngine1/GameEngine1.vcxproj.filters
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Geometry.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Geometry.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/GraphicsController.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/GraphicsController.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/InputManager.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/InputManager.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Material.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Material.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/MaterialManager.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/MaterialManager.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/MeshData.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/MeshData.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/MeshLoader.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/MeshLoader.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/ObjectManager.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/ObjectManager.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Perlin.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Perlin.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/CL.command.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/CL.read.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/CL.write.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/GameEngine1.lastbuildstate
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/link.command.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/link.read.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/link.write.1.tlog
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/GameEngine1.tlog/unsuccessfulbuild
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Release/vc140.pdb
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Renderer.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Renderer.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Script.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/ShipController.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/ShipController.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Terrain.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Terrain.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Texture.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Texture.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/TimeManager.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/TimeManager.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Track.fbx
+#	new file:   Graphics Work/GameEngine1/GameEngine1/TrackLayout.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/TrackLayout.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Track_Outline.fbx
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Track_Start.fbx
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Transform.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/Transform.h
+#	new file:   Graphics Work/GameEngine1/GameEngine1/fractalfault.hlsl
+#	new file:   Graphics Work/GameEngine1/GameEngine1/main.cpp
+#	new file:   Graphics Work/GameEngine1/GameEngine1/shaders.hlsl
+#	new file:   Graphics Work/GameEngine1/GameEngine1/shaders1.hlsl
+#	new file:   Graphics Work/GameEngine1/GameEngine1/test.fbx
+#	new file:   Graphics Work/GameEngine1/GameEngine1/test.tga
+#	new file:   Graphics Work/GameEngine1/GameEngine1/~AutoRecover.GameEngine1.vcxproj
+#	new file:   Graphics Work/GameEngine1/Release/GameEngine1.exe
+#	new file:   Graphics Work/GameEngine1/Release/GameEngine1.iobj
+#	new file:   Graphics Work/GameEngine1/Release/GameEngine1.ipdb
+#	new file:   Graphics Work/GameEngine1/Release/GameEngine1.pdb
+#	new file:   Graphics Work/GameEngine1/Release/Track.fbx
+#	new file:   Graphics Work/GameEngine1/Release/shaders.hlsl
+#	new file:   Graphics Work/GameEngine1/Release/test.fbx
+#	new file:   Graphics Work/GameEngine1/Release/test.tga
+#	new file:   IOTest/Debug/IOTest.exe
+#	new file:   IOTest/Debug/IOTest.pdb
+#	new file:   IOTest/IOTest.VC.db
+#	new file:   IOTest/IOTest.sln
+#	new file:   IOTest/IOTest/Debug/IOTest.tlog/CL.command.1.tlog
+#	new file:   IOTest/IOTest/Debug/IOTest.tlog/CL.read.1.tlog
+#	new file:   IOTest/IOTest/Debug/IOTest.tlog/CL.write.1.tlog
+#	new file:   IOTest/IOTest/Debug/IOTest.tlog/IOTest.lastbuildstate
+#	new file:   IOTest/IOTest/Debug/IOTest.tlog/link.command.1.tlog
+#	new file:   IOTest/IOTest/Debug/IOTest.tlog/link.read.1.tlog
+#	new file:   IOTest/IOTest/Debug/IOTest.tlog/link.write.1.tlog
+#	new file:   IOTest/IOTest/Debug/vc140.idb
+#	new file:   IOTest/IOTest/Debug/vc140.pdb
+#	new file:   IOTest/IOTest/IOTest.cpp
+#	new file:   IOTest/IOTest/IOTest.vcxproj
+#	new file:   IOTest/IOTest/IOTest.vcxproj.filters
+#	new file:   IOTest/IOTest/ReadMe.txt
+#	new file:   IOTest/IOTest/Release/IOTest.tlog/CL.command.1.tlog
+#	new file:   IOTest/IOTest/Release/IOTest.tlog/CL.read.1.tlog
+#	new file:   IOTest/IOTest/Release/IOTest.tlog/CL.write.1.tlog
+#	new file:   IOTest/IOTest/Release/IOTest.tlog/IOTest.lastbuildstate
+#	new file:   IOTest/IOTest/Release/IOTest.tlog/link.command.1.tlog
+#	new file:   IOTest/IOTest/Release/IOTest.tlog/link.read.1.tlog
+#	new file:   IOTest/IOTest/Release/IOTest.tlog/link.write.1.tlog
+#	new file:   IOTest/IOTest/Release/vc140.pdb
+#	new file:   IOTest/IOTest/stdafx.cpp
+#	new file:   IOTest/IOTest/stdafx.h
+#	new file:   IOTest/IOTest/targetver.h
+#	new file:   IOTest/Release/IOTest.exe
+#	new file:   IOTest/Release/IOTest.iobj
+#	new file:   IOTest/Release/IOTest.ipdb
+#	new file:   IOTest/Release/IOTest.pdb
+#	modified:   Machine Learning/NeuralTest/creature.cpp
+#	modified:   Machine Learning/NeuralTest/creature.h
+#	modified:   Machine Learning/NeuralTest/geneticalgorithm.cpp
+#	modified:   Machine Learning/NeuralTest/geneticalgorithm.h
+#	modified:   Machine Learning/NeuralTest/genome.cpp
+#	modified:   Machine Learning/NeuralTest/genome.h
+#	modified:   Machine Learning/NeuralTest/global.cpp
+#	modified:   Machine Learning/NeuralTest/mainwindow.cpp
+#	modified:   Machine Learning/NeuralTest/mainwindow.h
+#	modified:   Machine Learning/NeuralTest/species.cpp
+#	modified:   Machine Learning/NeuralTest/species.h
+#	modified:   MandelbrotSet/Debug/MandelbrotSet.exe
+#	modified:   MandelbrotSet/Debug/MandelbrotSet.pdb
+#	modified:   MandelbrotSet/Debug/shaders.hlsl
+#	new file:   MandelbrotSet/MandelbrotSet.VC.VC.opendb
+#	modified:   MandelbrotSet/MandelbrotSet.VC.db
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/MandelbrotSet.tlog/CL.command.1.tlog
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/MandelbrotSet.tlog/CL.read.1.tlog
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/MandelbrotSet.tlog/CL.write.1.tlog
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/MandelbrotSet.tlog/MandelbrotSet.lastbuildstate
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/MandelbrotSet.tlog/link.command.1.tlog
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/MandelbrotSet.tlog/link.read.1.tlog
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/MandelbrotSet.tlog/link.write.1.tlog
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/vc140.idb
+#	modified:   MandelbrotSet/MandelbrotSet/Debug/vc140.pdb
+#	modified:   MandelbrotSet/MandelbrotSet/main.cpp
+#	modified:   MandelbrotSet/MandelbrotSet/shaders.hlsl
+#	modified:   Misc Python/ascii.bat
+#	modified:   Misc Python/ascii.py
+#	new file:   Misc Python/download.jpg
+#	new file:   Misc Python/out.txt
+#	new file:   Misc Python/out1.txt
+#	new file:   NoobGame/NoobGame/.gitignore
+#	new file:   NoobGame/NoobGame/.idea/codeStyleSettings.xml
+#	new file:   NoobGame/NoobGame/.idea/compiler.xml
+#	new file:   NoobGame/NoobGame/.idea/copyright/profiles_settings.xml
+#	new file:   NoobGame/NoobGame/.idea/gradle.xml
+#	new file:   NoobGame/NoobGame/.idea/misc.xml
+#	new file:   NoobGame/NoobGame/.idea/modules.xml
+#	new file:   NoobGame/NoobGame/.idea/runConfigurations.xml
+#	new file:   NoobGame/NoobGame/app/.gitignore
+#	new file:   NoobGame/NoobGame/app/build.gradle
+#	new file:   NoobGame/NoobGame/app/libs/TestClient.jar
+#	new file:   NoobGame/NoobGame/app/libs/netty-all-4.1.6.Final.jar
+#	new file:   NoobGame/NoobGame/app/proguard-rules.pro
+#	new file:   NoobGame/NoobGame/app/src/androidTest/java/mobile/lilrocks/com/ExampleInstrumentedTest.java
+#	new file:   NoobGame/NoobGame/app/src/main/AndroidManifest.xml
+#	new file:   NoobGame/NoobGame/app/src/main/assets/frag.glsl
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/armor/Kevlar.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/armor/Nothing.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/armor/TankPlates.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/armor/WeakMetalPlates.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/armor/interceptorvest.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/maps/map01.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/terrain/building.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/terrain/forest.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/terrain/plains.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/units/AltilleryTank.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/units/HeavyTank.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/units/Infantry.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/units/Jeep.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/units/Nothing.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/units/Tank.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/weapons/HMG.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/weapons/LRC.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/weapons/MG.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/weapons/Nothing.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/weapons/rifle.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/items/weapons/rocketLauncher.txt
+#	new file:   NoobGame/NoobGame/app/src/main/assets/textures/terrain/forest.png
+#	new file:   NoobGame/NoobGame/app/src/main/assets/textures/terrain/grass2.png
+#	new file:   NoobGame/NoobGame/app/src/main/assets/textures/units/Infantry.png
+#	new file:   NoobGame/NoobGame/app/src/main/assets/textures/units/Jeep.png
+#	new file:   NoobGame/NoobGame/app/src/main/assets/vtx.glsl
+#	new file:   NoobGame/NoobGame/app/src/main/ic_launcher-web.png
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/Utils.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/activities/GameActivity.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/activities/MainMenuActivity.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/activities/ServerSelectActivity.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/GameController.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/World.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/assets/Asset.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/assets/Manager.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/assets/Terrain.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/assets/Unit.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/player/AIPlayer.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/player/ClientPlayer.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/player/IPlayer.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/gameplay/player/ServerPlayer.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/graphics/GameRenderer.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/graphics/GraphicsUtils.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/graphics/MapView.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/graphics/Sprite.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/graphics/SurfaceView.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/graphics/TextureManager.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/input/InputController.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/network/NetworkHandler.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/network/NetworkThread.java
+#	new file:   NoobGame/NoobGame/app/src/main/java/mobile/lilrocks/com/network/ServerGame.java
+#	new file:   NoobGame/NoobGame/app/src/main/res/layout/activity_game.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/layout/activity_main.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/layout/activity_server_select.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/mipmap-hdpi/ic_launcher.png
+#	new file:   NoobGame/NoobGame/app/src/main/res/mipmap-mdpi/ic_launcher.png
+#	new file:   NoobGame/NoobGame/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+#	new file:   NoobGame/NoobGame/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+#	new file:   NoobGame/NoobGame/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+#	new file:   NoobGame/NoobGame/app/src/main/res/values-v21/styles.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/values-w820dp/dimens.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/values/attrs.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/values/colors.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/values/dimens.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/values/strings.xml
+#	new file:   NoobGame/NoobGame/app/src/main/res/values/styles.xml
+#	new file:   NoobGame/NoobGame/app/src/test/java/mobile/lilrocks/com/ExampleUnitTest.java
+#	new file:   NoobGame/NoobGame/build.gradle
+#	new file:   NoobGame/NoobGame/gradle.properties
+#	new file:   NoobGame/NoobGame/gradle/wrapper/gradle-wrapper.jar
+#	new file:   NoobGame/NoobGame/gradle/wrapper/gradle-wrapper.properties
+#	new file:   NoobGame/NoobGame/gradlew
+#	new file:   NoobGame/NoobGame/gradlew.bat
+#	new file:   NoobGame/NoobGame/settings.gradle
+#
+

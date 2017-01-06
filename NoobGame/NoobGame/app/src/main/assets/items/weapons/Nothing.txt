@@ -1,0 +1,10 @@
+weaponName=Nothing
+baseWeight=0
+baseMinRange=1
+baseMaxRange=1
+baseMaxAmmo=-1
+weaponType=Nothing
+baseDamage=0
+effectiveAgainst=Null
+slightlyEffectiveAgainst=Null
+slightlyEffectiveDamageModifier=0

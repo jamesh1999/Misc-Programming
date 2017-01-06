@@ -1,14 +1,13 @@
 #ifndef HILL_H
 #define HILL_H
 
+#include <string>
 #include <QString>
 #include <QWidget>
-#include <QThread>
-#include <vector>
 #include "Cipher.h"
 
 namespace Ui {
-class Hill;
+class hill;
 }
 
 namespace Cipher
@@ -23,39 +22,33 @@ namespace Cipher
         void progress(int);
         void setPlainText(QString);
         void appendToConsole(QString);
-        void storeKey(QString, double);
 
     protected:
-        std::string decrypt(unsigned,const std::vector<unsigned>&, const std::string&);
+        std::string decrypt(const std::string&, unsigned, std::vector<unsigned>);
 
     public slots:
-        void crack(bool,int,QString,QString);
-        void useKey(QString);
-    public:
-        std::vector<unsigned> stored_key;
+        void crack(QString);
     };
 
-    class Hill : public QWidget, public ICipher
+    class HillCipher : public QWidget, public ICipher
     {
         Q_OBJECT
         Q_INTERFACES(Cipher::ICipher)
 
     public:
-        explicit Hill(QWidget *parent = 0);
-        ~Hill();
+        explicit HillCipher(QWidget *parent = 0);
+        ~HillCipher();
 
         void start(QString);
         void cancel();
         ICipherWorker* getWorker();
 
     private:
-        Ui::Hill *ui;
+        Ui::hill *ui;
         HillWorker* worker;
-        std::vector<unsigned> stored_key;
 
     signals:
-        void crack(bool,int,QString,QString);
-        void useKey(QString);
+        void crack(QString);
     };
 }
 

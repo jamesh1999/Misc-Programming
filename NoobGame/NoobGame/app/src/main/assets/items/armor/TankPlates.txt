@@ -1,0 +1,6 @@
+armorName=TankPlates
+armorType=Tank
+armorWeight=15
+armorMobilityDebuff=3
+armorHPBonus=6
+ArmorDamageReist=6

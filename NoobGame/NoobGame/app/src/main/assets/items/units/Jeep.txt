@@ -1,0 +1,12 @@
+unitName=Jeep
+baseCost=1000
+baseSight=6
+baseHP=10
+baseMaxFuel=99
+baseMovement=4
+unitType=Jeep
+activeAblities[]=
+passiveAbilities[]=
+weaponSlots=1
+maxWeight=25
+image=Jeep.png

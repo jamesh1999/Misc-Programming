@@ -9,8 +9,9 @@
 #include "genome.h"
 
 #define TURN_SPEED PI/16
-#define FORWARD_SPEED 0.015
-#define HEALTH_LOSS 0.05
+#define FORWARD_SPEED 0.03
+#define HEALTH_LOSS 0.15
+#define MOVEMENT_LOSS 0.04
 
 class Creature
 {

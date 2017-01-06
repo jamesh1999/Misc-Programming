@@ -1,8 +1,8 @@
 import pygame
 import random
  
-IMG=pygame.image.load("_CSC0439.JPG")
-XEDGE=200
+IMG=pygame.image.load("download.jpg")
+XEDGE=2000
 
 def convert_ascii(img,xedge):
 	greyscale = [" "," `","`'","'.`","'.",".-'","-^","^,","\\/:\"","~!_<>",":<>~",";:","=+","()+|?","i|j","jil1","l17{}","tv[]","rcI","fuJ2","oxLO3%","nsyzaC*","VYC","Y4569","ehNTZ0&","bwkdAFP","DX8$","pqGU","gKQS","BE","mRW#","H#","HM","M@H","M@H","M@","M@"]

@@ -1,2 +1,2 @@
-python ascii.py
+python3 ascii.py
 pause

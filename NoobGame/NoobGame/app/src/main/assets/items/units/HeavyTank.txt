@@ -1,0 +1,12 @@
+unitName=HeavyTank
+baseCost=2000
+baseSight=5
+baseHP=10
+baseMaxFuel=99
+baseMovement=3
+unitType=Tank
+activeAblities[]=
+passiveAbilities[]=
+weaponSlots=1
+maxWeight=150
+image=Jeep.png

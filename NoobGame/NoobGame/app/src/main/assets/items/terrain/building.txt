@@ -1,0 +1,5 @@
+terrainName=building
+bonusDefenseValue=0.7
+capturable=true
+unitTypeCost=[Infantry,1],[Jeep,4]
+image=building.png

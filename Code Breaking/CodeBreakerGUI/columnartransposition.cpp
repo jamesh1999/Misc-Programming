@@ -9,18 +9,28 @@
 
 using namespace Cipher;
 
-std::string ColumnarTranspositionWorker::decrypt(const std::vector<unsigned>& key, const std::string& text)
+std::string ColumnarTranspositionWorker::decrypt(const std::vector<unsigned>& key, const std::string& text, bool readVertical)
 {
     std::string decoded = text;
     unsigned val = text.size() / key.size();
-    for (unsigned i = 0; i < val; ++i)
-        for (unsigned j = 0; j < key.size(); ++j)
-            decoded[i * key.size() + j] = text[i + key[j] * val];
+
+    if(readVertical)
+    {
+        for (unsigned i = 0; i < val; ++i)
+            for (unsigned j = 0; j < key.size(); ++j)
+                decoded[i * key.size() + j] = text[i + key[j] * val];
+    }
+    else
+    {
+        for (unsigned i = 0; i < val; ++i)
+            for (unsigned j = 0; j < key.size(); ++j)
+                decoded[i * key.size() + j] = text[i * key.size() + key[j]];
+    }
 
     return decoded;
 }
 
-void ColumnarTranspositionWorker::crack(QString qtext)
+void ColumnarTranspositionWorker::crack(QString qtext, bool readVertical)
 {
     std::string text = qtext.toStdString();
 
@@ -40,7 +50,7 @@ void ColumnarTranspositionWorker::crack(QString qtext)
             while (keep_working && std::next_permutation(parent_key.begin(), parent_key.end()))
             {
                 //Evaluate permutation
-                double score = evaluate(decrypt(parent_key, text));
+                double score = evaluate(decrypt(parent_key, text, readVertical));
 
                 //Compare scores changing parent if child is better
                 if (score > top_score)
@@ -61,7 +71,7 @@ void ColumnarTranspositionWorker::crack(QString qtext)
                 ss << std::endl;
                 emit appendToConsole(QString::fromStdString(ss.str()));
 
-                emit setPlainText(QString::fromStdString(decrypt(top_key, text)));
+                emit setPlainText(QString::fromStdString(decrypt(top_key, text, readVertical)));
             }
         }
     }
@@ -69,9 +79,9 @@ void ColumnarTranspositionWorker::crack(QString qtext)
     emit finished();
 }
 
-void ColumnarTranspositionWorker::useKey(QString text)
+void ColumnarTranspositionWorker::useKey(QString text, bool readVertical)
 {
-    emit setPlainText(QString::fromStdString(decrypt(stored_key, text.toStdString())));
+    emit setPlainText(QString::fromStdString(decrypt(stored_key, text.toStdString(), readVertical)));
     emit finished();
 }
 
@@ -85,8 +95,8 @@ ColumnarTransposition::ColumnarTransposition(QWidget *parent) : QWidget(parent),
     worker->moveToThread(&worker_thread);
 
     connect(&worker_thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
-    connect(this, SIGNAL(useKey(QString)), worker, SLOT(useKey(QString)));
-    connect(this, SIGNAL(crack(QString)), worker, SLOT(crack(QString)));
+    connect(this, SIGNAL(useKey(QString, bool)), worker, SLOT(useKey(QString, bool)));
+    connect(this, SIGNAL(crack(QString, bool)), worker, SLOT(crack(QString, bool)));
 
     worker_thread.start();
 }
@@ -110,10 +120,10 @@ void ColumnarTransposition::start(QString text)
     if(ui->use_key->isChecked())
     {
         worker->stored_key = stored_key;
-        useKey(text);
+        useKey(text, ui->checkBox->isChecked());
     }
     else
-        crack(text);
+        crack(text, ui->checkBox->isChecked());
 }
 
 void ColumnarTransposition::cancel()

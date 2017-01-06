@@ -1,0 +1,10 @@
+weaponName=HMG
+baseWeight=10
+baseMinRange=1
+baseMaxRange=1
+baseMaxAmmo=50
+weaponType=Gun
+baseDamage=60
+effectiveAgainst=Jeep
+slightlyEffectiveAgainst=Infantry
+slightlyEffectiveDamageModifier=0.6

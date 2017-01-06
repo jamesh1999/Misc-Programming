@@ -27,11 +27,11 @@ namespace Cipher
         void appendToConsole(QString);
 
     protected:
-        std::string decrypt(const std::vector<unsigned>&, const std::string&);
+        std::string decrypt(const std::vector<unsigned>&, const std::string&, bool);
 
     public slots:
-        void crack(QString);
-        void useKey(QString);
+        void crack(QString, bool);
+        void useKey(QString, bool);
     };
 
     class ColumnarTransposition : public QWidget, public ICipher
@@ -56,8 +56,8 @@ namespace Cipher
         std::vector<unsigned> stored_key;
 
     signals:
-        void crack(QString);
-        void useKey(QString);
+        void crack(QString, bool);
+        void useKey(QString, bool);
     private slots:
         void on_edit_key_clicked();
     };

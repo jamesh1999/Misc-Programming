@@ -1,0 +1,12 @@
+unitName=Tank
+baseCost=1500
+baseSight=10
+baseHP=10
+baseMaxFuel=99
+baseMovement=4
+unitType=Tank
+activeAblities[]=
+passiveAbilities[]=
+weaponSlots=2
+maxWeight=100
+image=Jeep.png

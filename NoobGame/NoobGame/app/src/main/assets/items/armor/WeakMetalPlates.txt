@@ -1,0 +1,6 @@
+armorName=WeakMetalPlates
+armorType=Jeep
+armorWeight=10
+armorMobilityDebuff=3
+armorHPBonus=4
+ArmorDamageReist=6

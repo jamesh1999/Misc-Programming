@@ -8,10 +8,10 @@ void Terrain::ApplyHeightmap(MeshData* mesh)
 	for (int i = 0; i < 101 * 101; ++i)
 		perlinTex[i] = 0.0f;
 
-	//Perlin::GeneratePerlin(perlinTex, 101, 101, 3.0f, 0.015);
-	//Perlin::GeneratePerlin(perlinTex, 101, 101, 1.4f, 0.05);
-	//Perlin::GeneratePerlin(perlinTex, 101, 101, 0.4f, 0.2);
-	//Perlin::GeneratePerlin(perlinTex, 101, 101, 0.1f, 0.4);
+	Perlin::GeneratePerlin(perlinTex, 101, 101, 3.0f, 0.0002);
+	Perlin::GeneratePerlin(perlinTex, 101, 101, 1.4f, 0.0004);
+	Perlin::GeneratePerlin(perlinTex, 101, 101, 0.4f, 0.006);
+	Perlin::GeneratePerlin(perlinTex, 101, 101, 0.1f, 0.012);
 	FractalFault(perlinTex, 101, 101, 140000);
 
 	ThermalErosion(perlinTex, 101, 101, 40, 0.007f);

@@ -1,0 +1,6 @@
+armorName=Kevlar
+armorType=Infantry
+armorWeight=1
+armorMobilityDebuff=1
+armorHPBonus=1
+ArmorDamageReist=1

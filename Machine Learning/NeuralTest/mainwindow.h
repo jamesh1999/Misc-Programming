@@ -15,7 +15,7 @@
 #include "creature.h"
 #include "geneticalgorithm.h"
 
-#define FOOD_COUNT 20
+#define FOOD_COUNT 60
 
 namespace Ui {
 class MainWindow;
@@ -32,14 +32,13 @@ public:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
-    Creature m_creature;
+    std::vector<Creature> m_creature;
     std::vector<Food> m_food;
     QPen outlinePen;
     QBrush foodBrush;
     QBrush creatureBrush;
     QTimer *m_updateTimer;
-    QTimer *m_foodTimer;
-    GeneticAlgorithm ga;
+    NN::GeneticAlgorithm ga;
 
     void initScene();
 

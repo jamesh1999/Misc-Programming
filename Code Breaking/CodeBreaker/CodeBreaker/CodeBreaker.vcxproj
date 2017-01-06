@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\My Downloads\eigen-eigen-26667be4f70b\eigen-eigen-26667be4f70b;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -52,6 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\My Downloads\eigen-eigen-26667be4f70b\eigen-eigen-26667be4f70b;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -87,6 +89,7 @@
     <ClInclude Include="ColumnarTransposition.h" />
     <ClInclude Include="FourSquare.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Hill.h" />
     <ClInclude Include="Playfair.h" />
     <ClInclude Include="PolybiusSquare.h" />
     <ClInclude Include="Quadgrams.h" />
@@ -107,6 +110,7 @@
     <ClCompile Include="ColumnarTransposition.cpp" />
     <ClCompile Include="FourSquare.cpp" />
     <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="Hill.cpp" />
     <ClCompile Include="Playfair.cpp" />
     <ClCompile Include="PolybiusSquare.cpp" />
     <ClCompile Include="RailFence.cpp" />

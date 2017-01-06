@@ -48,20 +48,20 @@ typedef struct
 
 typedef struct
 {
-    double disjointWeight = 1.0;
-    double excessWeight = 1.0;
-    double connectionWeightWeight = 0.01;
+    double disjointWeight = 0.5;
+    double excessWeight = 0.5;
+    double connectionWeightWeight = 0.04;
     double neuronBiasWeight = 0.01;
-    bool normalize = true;
+    bool normalize = false;
 
 } CompatibilitySettings;
 
 class Genome
 {
-private:
+public:
     std::vector<ConnectionGene> m_connection_genes;
     std::vector<NeuronGene> m_neuron_genes;
-    double m_score;
+    double m_score = 0.0;
 
 public:
     Genome() = default;
@@ -80,10 +80,13 @@ public:
     void Trim();
 
     void SetScore(double);
+    double GetScore();
 
     double GetIncompatibility(const Genome&, const CompatibilitySettings&);
     double GetIncompatibility(const Genome&);
     double operator^(const Genome&);
+
+    static Genome GetBase(int,int);
 };
 
 }

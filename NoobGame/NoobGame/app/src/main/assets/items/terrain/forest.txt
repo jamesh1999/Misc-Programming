@@ -1,0 +1,5 @@
+terrainName=forest
+bonusDefenseValue=0.3
+capturable=false
+unitTypeCost=[Tank,2],[Infantry,1],[Jeep,3]
+image=forest.png

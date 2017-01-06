@@ -76,6 +76,9 @@ GuessCipher::~GuessCipher()
 
 void GuessCipher::guessCipher()
 {
+    if(text.length() == 0)
+        return;
+
     //Identify most likely ciphers
     std::vector<char> letters; //Unique characters
     unsigned etacnt = 0; //Total frequency of ETA

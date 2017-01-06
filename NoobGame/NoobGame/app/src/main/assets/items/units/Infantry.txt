@@ -1,0 +1,12 @@
+unitName=Infantry
+baseCost=1000
+baseSight=2
+baseHP=10
+baseMaxFuel=99
+baseMovement=2
+unitType=Infantry
+activeAblities[]=Capture
+passiveAbilities[]=
+weaponSlots=2
+maxWeight=4
+image=Infantry.png

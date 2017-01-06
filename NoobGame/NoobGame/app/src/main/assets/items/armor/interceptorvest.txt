@@ -1,0 +1,6 @@
+armorName=interceptorvest
+armorType=Infantry
+armorWeight=2
+armorMobilityDebuff=1
+armorHPBonus=2
+ArmorDamageReist=2

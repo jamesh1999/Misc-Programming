@@ -22,18 +22,14 @@ inline int convertSigned(unsigned val, int signBit)
 	return (static_cast<int>(val - INT_MIN) + INT_MIN) >> signBit; //Negative value returned
 }
 
-
-CPU::CPU()
+//Takes an unsigned and sign-extends it before returning a signed int
+inline int64_t convertSigned(uint64_t val, int signBit)
 {
-	imm = 0;
-	rs1 = nullptr;
-	rs2 = nullptr;
-	rd = nullptr;
-	funct7 = 0;
-	funct3 = 0;
+	val <<= signBit; //Shift sign bit into most significant bit
 
-	m_done = false;
-	instructions_completed = 0;
+	if (val <= INT64_MAX)
+		return static_cast<int>(val) >> signBit; //Positive value returned
+	return (static_cast<int>(val - INT64_MIN) + INT64_MIN) >> signBit; //Negative value returned
 }
 
 //Read file and write data to RAM
@@ -49,9 +45,16 @@ void CPU::start(std::string filename)
 
 	program_file.close();
 
-	m_ram.loadProgram(data, 0);
+	loadProgram(data, 0);
 
 	loop(); //Start main loop
+}
+
+//Takes a program and loads it into RAM from 'start' onwards
+void CPU::loadProgram(std::vector<unsigned char> data, unsigned start) const
+{
+	for (auto b = data.cbegin(); b != data.cend(); ++b)
+		m_ram[(b - data.cbegin()) + start] = *b;
 }
 
 void CPU::loop()
@@ -61,8 +64,8 @@ void CPU::loop()
 	while (!m_done)
 	{
 		operation();
-		m_pc.setValue(m_pc.getValue() + 4); //Move the program counter to the next instruction
-		m_registers[0].clear(); //Ensure that x0 (ZERO) remains at 0
+		m_pc += 4; //Move the program counter to the next instruction
+		m_registers[0] = 0; //Ensure that x0 (ZERO) remains at 0
 		++instructions_completed;
 	}
 
@@ -72,317 +75,21 @@ void CPU::loop()
 	std::cout << "Instructions ran: " << instructions_completed << std::endl;
 	std::cout << "Time taken: " << seconds << "s" << std::endl;
 	std::cout << "Instructions per second: " << static_cast<long>(instructions_completed / seconds) << "s-1" << std::endl;
-	std::cout << "FP: " << m_registers[2].getValue() << std::endl;
-	std::cout << "SP: " << m_registers[14].getValue() << std::endl;
+	std::cout << "FP: " << m_registers[16] << std::endl;
+	std::cout << "SP: " << m_registers[15] << std::endl;
 }
 
 inline void CPU::operation()
 {
-	m_ir.setValue(m_ram.read(4, m_pc.getValue())); //Copy instruction to instruction register
-	unsigned opcode = (m_ir.getValue() >> 25) & 0x1f; //Get the opcode for the instruction
+	m_ir = read(4, m_pc); //Copy instruction to instruction register
+	unsigned opcode = m_ir >> 25; //Get the opcode for the instruction
+	rdest = (m_ir >> 20) & 0x1f;
+	rega = (m_ir >> 15) & 0x1f;
+	regb = (m_ir >> 10) & 0x1f;
+	imm = m_ir & 0xfffff;
 
-	switch (m_ir.getValue() >> 30) //Switch instruction format and opcode
-	{
-	case 0:
-		lSplit(); //L-type instructions
-
-		switch (opcode)
-		{
-		case 0:
-			cpu_lui();
-			break;
-		case 1:
-			cpu_jal();
-			break;
-		case 2:
-			cpu_cwait();
-			break;
-		case 3:
-			cpu_time();
-			break;
-		case 4:
-			cpu_halt();
-			break;
-		}
-
-		break;
-	case 1:
-		rSplit(); //R-type instructions
-
-		switch (opcode)
-		{
-		case 0:
-			switch (funct3)
-			{
-			case 0:
-				cpu_add();
-				break;
-			case 1:
-				cpu_addu();
-				break;
-			case 2:
-				cpu_sub();
-				break;
-			case 3:
-				cpu_subu();
-				break;
-			case 4:
-				cpu_and();
-				break;
-			case 5:
-				cpu_or();
-				break;
-			case 6:
-				cpu_xor();
-				break;
-			case 7:
-				cpu_not();
-				break;
-			}
-			break;
-		case 1:
-			switch (funct3)
-			{
-			case 1:
-				cpu_shr();
-				break;
-			case 2:
-				cpu_shl();
-				break;
-			case 5:
-				cpu_shru();
-				break;
-			case 6:
-				cpu_shlu();
-				break;
-			}
-			break;
-		case 2:
-			switch (funct3)
-			{
-			case 0:
-				cpu_mul();
-				break;
-			case 1:
-				cpu_mulh();
-				break;
-			case 2:
-				cpu_div();
-				break;
-			case 3:
-				cpu_rem();
-				break;
-			case 4:
-				cpu_mulu();
-				break;
-			case 5:
-				cpu_mulhu();
-				break;
-			case 6:
-				cpu_divu();
-				break;
-			case 7:
-				cpu_remu();
-				break;
-			}
-			break;
-		case 3:
-			switch (funct3)
-			{
-			case 0:
-				cpu_bne();
-				break;
-			case 1:
-				cpu_blt();
-				break;
-			case 2:
-				cpu_beq();
-				break;
-			case 3:
-				cpu_ble();
-				break;
-			case 5:
-				cpu_bltu();
-				break;
-			case 7:
-				cpu_bleu();
-				break;
-			}
-			break;
-		}
-
-		break;
-	case 2:
-		iSplit(); //I-type instructions
-
-		switch (opcode)
-		{
-		case 1:
-			switch (funct3)
-			{
-			case 1:
-				cpu_lhu();
-				break;
-			case 2:
-				cpu_lbu();
-				break;
-			case 4:
-				cpu_lw();
-				break;
-			case 5:
-				cpu_lh();
-				break;
-			case 6:
-				cpu_lb();
-				break;
-			}
-			break;
-		case 2:
-			switch (funct3)
-			{
-			case 0:
-				cpu_addi();
-				break;
-			case 1:
-				cpu_addui();
-				break;
-			case 2:
-				cpu_subi();
-				break;
-			case 3:
-				cpu_subui();
-				break;
-			case 4:
-				cpu_andi();
-				break;
-			case 5:
-				cpu_ori();
-				break;
-			case 6:
-				cpu_xori();
-				break;
-			}
-			break;
-		case 3:
-			switch (funct3)
-			{
-			case 1:
-				cpu_shri();
-				break;
-			case 2:
-				cpu_shli();
-				break;
-			case 5:
-				cpu_shrui();
-				break;
-			case 6:
-				cpu_shlui();
-				break;
-			}
-			break;
-		case 4:
-			switch (funct3)
-			{
-			case 0:
-				cpu_muli();
-				break;
-			case 1:
-				cpu_mulhi();
-				break;
-			case 2:
-				cpu_divi();
-				break;
-			case 3:
-				cpu_remi();
-				break;
-			case 4:
-				cpu_mului();
-				break;
-			case 5:
-				cpu_mulhui();
-				break;
-			case 6:
-				cpu_divui();
-				break;
-			case 7:
-				cpu_remui();
-				break;
-			}
-			break;
-		case 5:
-			switch (funct3)
-			{
-			case 0:
-				cpu_sw();
-				break;
-			case 1:
-				cpu_sh();
-				break;
-			case 2:
-				cpu_sb();
-				break;
-			}
-			break;
-		case 6:
-			cpu_core();
-			break;
-		case 7:
-			cpu_jalr();
-			break;
-		case 8:
-			cpu_in();
-			break;
-		case 9:
-			cpu_out();
-			break;
-		}
-
-		break;
-	case 3:
-		irSplit(); //IR-type instructions
-
-		switch (opcode)
-		{
-		case 0:
-			cpu_amoswap();
-			break;
-		}
-
-		break;
-	}
-}
-
-//Split functions separate instruction and select registers
-
-inline void CPU::rSplit()
-{
-	funct7 = m_ir.getValue() & 127;
-	rs2 = &m_registers[(m_ir.getValue() >> 7) & 31];
-	rs1 = &m_registers[(m_ir.getValue() >> 12) & 31];
-	funct3 = (m_ir.getValue() >> 17) & 7;
-	rd = &m_registers[(m_ir.getValue() >> 20) & 31];
-}
-
-inline void CPU::iSplit()
-{
-	imm = m_ir.getValue() & 4095;
-	rs1 = &m_registers[(m_ir.getValue() >> 12) & 31];
-	funct3 = (m_ir.getValue() >> 17) & 7;
-	rd = &m_registers[(m_ir.getValue() >> 20) & 31];
-}
-
-inline void CPU::irSplit()
-{
-	imm = ((m_ir.getValue() & 127) << 3) + ((m_ir.getValue() >> 17) & 7);
-	rs2 = &m_registers[(m_ir.getValue() >> 7) & 31];
-	rs1 = &m_registers[(m_ir.getValue() >> 12) & 31];
-	rd = &m_registers[(m_ir.getValue() >> 20) & 31];
-}
-
-inline void CPU::lSplit()
-{
-	imm = m_ir.getValue() & 1048575;
-	rd = &m_registers[(m_ir.getValue() >> 20) & 31];
+	if (m_safe && opcode > 63) return;
+	(this->*m_operations[opcode])(); //Call function
 }
 
 
@@ -391,310 +98,259 @@ OPERATIONS
 --------------------------------- */
 
 
-inline void CPU::cpu_lui()
-{
-	rd->setValue(imm << 12);
-}
-
 inline void CPU::cpu_jal()
 {
-	rd->setValue(m_pc.getValue() + convertSigned(imm, 12) * 2);
-	m_pc.setValue(rd->getValue() - 4);
+	m_registers[rdest] = m_pc + convertSigned(imm & 0xfffff, 12) * 2;
+	m_pc = m_registers[rdest] - 4;
 }
 
 inline void CPU::cpu_addi()
 {
-	rd->setValue(rs1->getValue() + convertSigned(imm, 20));
-}
-
-inline void CPU::cpu_addui()
-{
-	rd->setValue(rs1->getValue() + imm);
+	m_registers[rdest] = m_registers[rega] + (imm & 0x7fff);
 }
 
 inline void CPU::cpu_subi()
 {
-	rd->setValue(rs1->getValue() - convertSigned(imm, 20));
-}
-
-inline void CPU::cpu_subui()
-{
-	rd->setValue(rs1->getValue() - imm);
+	m_registers[rdest] = m_registers[rega] - (imm & 0x7fff);
 }
 
 inline void CPU::cpu_andi()
 {
-	rd->setValue(rs1->getValue() & imm);
+	m_registers[rdest] = m_registers[rega] & (imm & 0x7fff);
 }
 
 inline void CPU::cpu_ori()
 {
-	rd->setValue(rs1->getValue() | imm);
+	m_registers[rdest] = m_registers[rega] | (imm & 0x7fff);
 }
 
 inline void CPU::cpu_xori()
 {
-	rd->setValue(rs1->getValue() ^ imm);
+	m_registers[rdest] = m_registers[rega] ^ (imm & 0x7fff);
 }
 
 inline void CPU::cpu_add()
 {
-	rd->setValue(rs1->getValue() + convertSigned(rs2->getValue(), 0));
-}
-
-inline void CPU::cpu_addu()
-{
-	rd->setValue(rs1->getValue() + rs2->getValue());
+	m_registers[rdest] = m_registers[rega] + m_registers[regb];
 }
 
 inline void CPU::cpu_sub()
 {
-	rd->setValue(rs1->getValue() - convertSigned(rs2->getValue(), 0));
-}
-
-inline void CPU::cpu_subu()
-{
-	rd->setValue(rs1->getValue() - rs2->getValue());
+	m_registers[rdest] = m_registers[rega] - m_registers[regb];
 }
 
 inline void CPU::cpu_and()
 {
-	rd->setValue(rs1->getValue() & rs2->getValue());
+	m_registers[rdest] = m_registers[rega] & m_registers[regb];
 }
 
 inline void CPU::cpu_or()
 {
-	rd->setValue(rs1->getValue() | rs2->getValue());
+	m_registers[rdest] = m_registers[rega] | m_registers[regb];
 }
 
 inline void CPU::cpu_xor()
 {
-	rd->setValue(rs1->getValue() ^ rs2->getValue());
+	m_registers[rdest] = m_registers[rega] ^ m_registers[regb];
 }
 
 inline void CPU::cpu_not()
 {
-	rd->setValue(!rs1->getValue());
+	m_registers[rdest] = !m_registers[rega];
 }
 
 inline void CPU::cpu_beq()
 {
-	if (rs1->getValue() == rs2->getValue())
+	if (m_registers[rega] == m_registers[regb])
 	{
-		rd->setValue(m_pc.getValue() + convertSigned(funct7, 25) * 2);
-		m_pc.setValue(rd->getValue() - 4);
+		m_registers[rdest] = (m_pc + convertSigned(imm & 0x3ff, 22) * 2);
+		m_pc = m_registers[rdest] - 4;
 	}
 }
 
 inline void CPU::cpu_bne()
 {
-	if (rs1->getValue() != rs2->getValue())
+	if (m_registers[rega] != m_registers[regb])
 	{
-		rd->setValue(m_pc.getValue() + convertSigned(funct7, 25) * 2);
-		m_pc.setValue(rd->getValue() - 4);
+		m_registers[rdest] = (m_pc + convertSigned(imm & 0x3ff, 22) * 2);
+		m_pc = m_registers[rdest] - 4;
 	}
 }
 
 inline void CPU::cpu_blt()
 {
-	if (convertSigned(rs1->getValue(), 0) < convertSigned(rs2->getValue(), 0))
+	if (convertSigned(m_registers[rega], 0) < convertSigned(m_registers[regb], 0))
 	{
-		rd->setValue(m_pc.getValue() + convertSigned(funct7, 25) * 2);
-		m_pc.setValue(rd->getValue() - 4);
+		m_registers[rdest] = (m_pc + convertSigned(imm & 0x3ff, 22) * 2);
+		m_pc = m_registers[rdest] - 4;
 	}
 }
 
 inline void CPU::cpu_ble()
 {
-	if (convertSigned(rs1->getValue(), 0) <= convertSigned(rs2->getValue(), 0))
+	if (convertSigned(m_registers[rega], 0) <= convertSigned(m_registers[regb], 0))
 	{
-		rd->setValue(m_pc.getValue() + convertSigned(funct7, 25) * 2);
-		m_pc.setValue(rd->getValue() - 4);
+		m_registers[rdest] = (m_pc + convertSigned(imm & 0x3ff, 22) * 2);
+		m_pc = m_registers[rdest] - 4;
 	}
 }
 
 inline void CPU::cpu_bltu()
 {
-	if (rs1->getValue() < rs2->getValue())
+	if (m_registers[rega] < m_registers[regb])
 	{
-		rd->setValue(m_pc.getValue() + convertSigned(funct7, 25) * 2);
-		m_pc.setValue(rd->getValue() - 4);
+		m_registers[rdest] = (m_pc + convertSigned(imm & 0x3ff, 22) * 2);
+		m_pc = m_registers[rdest] - 4;
 	}
 }
 
 inline void CPU::cpu_bleu()
 {
-	if (rs1->getValue() <= rs2->getValue())
+	if (m_registers[rega] <= m_registers[regb])
 	{
-		rd->setValue(m_pc.getValue() + convertSigned(funct7, 25) * 2);
-		m_pc.setValue(rd->getValue() - 4);
+		m_registers[rdest] = (m_pc + convertSigned(imm & 0x3ff, 22) * 2);
+		m_pc = m_registers[rdest] - 4;
 	}
 }
 
 inline void CPU::cpu_shri()
 {
-	rd->setValue(static_cast<unsigned>((static_cast<int>(rs1->getValue())) >> imm));
+	m_registers[rdest] = (static_cast<unsigned>((static_cast<int>(m_registers[rega])) >> (imm & 0x7fff)));
 }
 
 inline void CPU::cpu_shli()
 {
-	rd->setValue(static_cast<unsigned>((static_cast<int>(rs1->getValue())) << imm));
+	m_registers[rdest] = (static_cast<unsigned>((static_cast<int>(m_registers[rega])) << (imm & 0x7fff)));
 }
 
 inline void CPU::cpu_shrui()
 {
-	rd->setValue(rs1->getValue() >> imm);
+	m_registers[rdest] = (m_registers[rega] >> (imm & 0x7fff));
 }
 
 inline void CPU::cpu_shlui()
 {
-	rd->setValue(rs1->getValue() << imm);
+	m_registers[rdest] = (m_registers[rega] << (imm & 0x7fff));
 }
 
 inline void CPU::cpu_shr()
 {
-	rd->setValue(static_cast<unsigned>(static_cast<int>(rs1->getValue()) >> rd->getValue()));
+	m_registers[rdest] = (static_cast<unsigned>(static_cast<int>(m_registers[rega]) >> m_registers[rdest]));
 }
 
 inline void CPU::cpu_shl()
 {
-	rd->setValue(static_cast<unsigned>(static_cast<int>(rs1->getValue()) << rd->getValue()));
+	m_registers[rdest] = (static_cast<unsigned>(static_cast<int>(m_registers[rega]) << m_registers[rdest]));
 }
 
 inline void CPU::cpu_shru()
 {
-	rd->setValue(rs1->getValue() >> rd->getValue());
+	m_registers[rdest] = (m_registers[rega] >> m_registers[rdest]);
 }
 
 inline void CPU::cpu_shlu()
 {
-	rd->setValue(rs1->getValue() << rd->getValue());
+	m_registers[rdest] = (m_registers[rega] << m_registers[rdest]);
 }
 
 inline void CPU::cpu_muli()
 {
-	rd->setValue(convertSigned(rs1->getValue(), 0) * convertSigned(imm, 20));
-}
-
-inline void CPU::cpu_mulhi()
-{
-	rd->setValue((convertSigned(rs1->getValue(), 0) * convertSigned(imm, 20)) >> 32);
+	m_registers[rdest] = (convertSigned(m_registers[rega], 0) * convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_mului()
 {
-	rd->setValue(rs1->getValue() * imm);
-}
-
-inline void CPU::cpu_mulhui()
-{
-	rd->setValue((rs1->getValue() * imm) >> 32);
+	m_registers[rdest] = (m_registers[rega] * (imm & 0x7fff));
 }
 
 inline void CPU::cpu_divi()
 {
-	rd->setValue(convertSigned(rs1->getValue(), 0) / convertSigned(imm, 20));
+	m_registers[rdest] = (convertSigned(m_registers[rega], 0) / convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_divui()
 {
-	rd->setValue(rs1->getValue() / imm);
+	m_registers[rdest] = (m_registers[rega] / (imm & 0x7fff));
 }
 
 inline void CPU::cpu_remi()
 {
-	rd->setValue(convertSigned(rs1->getValue(), 0) % convertSigned(imm, 20));
+	m_registers[rdest] = (convertSigned(m_registers[rega], 0) % convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_remui()
 {
-	rd->setValue(rs1->getValue() % imm);
+	m_registers[rdest] = (m_registers[rega] % (imm & 0x7fff));
 }
 
 inline void CPU::cpu_mul()
 {
-	rd->setValue(convertSigned(rs1->getValue(), 0) * convertSigned(rs2->getValue(), 0));
-}
-
-inline void CPU::cpu_mulh()
-{
-	rd->setValue((convertSigned(rs1->getValue(), 0) * convertSigned(rs2->getValue(), 0)) >> 32);
+	m_registers[rdest] = (convertSigned(m_registers[rega], 0) * convertSigned(m_registers[regb], 0));
 }
 
 inline void CPU::cpu_mulu()
 {
-	rd->setValue(rs1->getValue() * rs2->getValue());
-}
-
-inline void CPU::cpu_mulhu()
-{
-	rd->setValue((rs1->getValue() * rs2->getValue()) >> 32);
+	m_registers[rdest] = (m_registers[rega] * m_registers[regb]);
 }
 
 inline void CPU::cpu_div()
 {
-	rd->setValue(convertSigned(rs1->getValue(), 0) / convertSigned(rs2->getValue(), 0));
+	m_registers[rdest] = (convertSigned(m_registers[rega], 0) / convertSigned(m_registers[regb], 0));
 }
 
 inline void CPU::cpu_divu()
 {
-	rd->setValue(rs1->getValue() / rs2->getValue());
+	m_registers[rdest] = (m_registers[rega] / m_registers[regb]);
 }
 
 inline void CPU::cpu_rem()
 {
-	rd->setValue(convertSigned(rs1->getValue(), 0) % convertSigned(rs2->getValue(), 0));
+	m_registers[rdest] = (convertSigned(m_registers[rega], 0) % convertSigned(m_registers[regb], 0));
 }
 
 inline void CPU::cpu_remu()
 {
-	rd->setValue(rs1->getValue() % rs2->getValue());
+	m_registers[rdest] = (m_registers[rega] % m_registers[regb]);
 }
 
 inline void CPU::cpu_sw()
 {
-	m_ram.set(4, rd->getValue(), rs1->getValue() + convertSigned(imm, 20));
+	write(8, m_registers[rdest], m_registers[rega] + convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_sh()
 {
-	m_ram.set(2, rd->getValue(), rs1->getValue() + convertSigned(imm, 20));
+	write(4, m_registers[rdest], m_registers[rega] + convertSigned((imm & 0x7fff), 17));
+}
+
+inline void CPU::cpu_ss()
+{
+	write(2, m_registers[rdest], m_registers[rega] + convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_sb()
 {
-	m_ram.set(1, rd->getValue(), rs1->getValue() + convertSigned(imm, 20));
+	write(1, m_registers[rdest], m_registers[rega] + convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_lw()
 {
-	rd->setValue(m_ram.read(4, rs1->getValue() + convertSigned(imm, 20)));
+	m_registers[rdest] = read(8, m_registers[rega] + convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_lh()
 {
-	rd->setValue(convertSigned(m_ram.read(2, rs1->getValue() + convertSigned(imm, 20)), 16));
+	m_registers[rdest] = read(4, m_registers[rega] + convertSigned((imm & 0x7fff), 17));
+}
+
+inline void CPU::cpu_ls()
+{
+	m_registers[rdest] = read(2, m_registers[rega] + convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_lb()
 {
-	rd->setValue(convertSigned(m_ram.read(1, rs1->getValue() + convertSigned(imm, 20)), 24));
-}
-
-inline void CPU::cpu_lhu()
-{
-	rd->setValue(m_ram.read(2, rs1->getValue() + convertSigned(imm, 20)));
-}
-
-inline void CPU::cpu_lbu()
-{
-	rd->setValue(m_ram.read(1, rs1->getValue() + convertSigned(imm, 20)));
-}
-
-inline void CPU::cpu_amoswap()
-{
-	rd->setValue(m_ram.read(4, rs1->getValue() + convertSigned(imm, 22)));
-	m_ram.set(4, rs2->getValue(), rs1->getValue() + convertSigned(imm, 22));
+	m_registers[rdest] = read(1, m_registers[rega] + convertSigned((imm & 0x7fff), 17));
 }
 
 inline void CPU::cpu_halt()
@@ -702,25 +358,18 @@ inline void CPU::cpu_halt()
 	m_done = true;
 }
 
+void CPU::cpu_swi()
+{
+	m_swi = true;
+}
+
 inline void CPU::cpu_jalr()
 {
-	rd->setValue(rs1->getValue() + convertSigned(imm, 20) * 2);
-	m_pc.setValue(rd->getValue() - 4);
+	m_registers[rdest] = m_registers[rega] + convertSigned((imm & 0x7fff), 17) * 2;
+	m_pc = m_registers[rdest] - 4;
 }
 
-inline void CPU::cpu_core()
-{
-}
-
-inline void CPU::cpu_cwait()
-{
-}
-
-inline void CPU::cpu_time()
-{
-}
-
-inline void CPU::cpu_in()
+inline void CPU::cpu_ind()
 {
 	static int cur_char = 0;
 
@@ -733,23 +382,28 @@ inline void CPU::cpu_in()
 
 	if (in_buffer.size() <= cur_char)
 	{
-		rd->setValue(0);
+		m_registers[rdest] = 0;
 		in_buffer.clear();
 	}
 	else
 	{
-		rd->setValue(in_buffer[cur_char]);
+		m_registers[rdest] = in_buffer[cur_char];
 		++cur_char;
 	}
 }
 
-inline void CPU::cpu_out()
+void CPU::cpu_ipi()
 {
-	rd->setValue(rs1->getValue());
-	if ((rd->getValue() & 0xff) == '\n')
+	m_ipi = true;
+}
+
+inline void CPU::cpu_outd()
+{
+	m_registers[rdest] = m_registers[rega];
+	if ((m_registers[rdest] & 0xff) == '\n')
 		std::cout << std::endl;
 	else
-		std::cout << static_cast<char>(rd->getValue() & 0xff);
+		std::cout << static_cast<char>(m_registers[rdest] & 0xff);
 }
 
 

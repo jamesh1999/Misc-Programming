@@ -20,11 +20,11 @@ void Creature::Update()
     auto outputs = m_nn.GetOutputs();
 
     //Left turn
-    if(outputs[0] > outputs[1])
+    if(outputs[0] > 0.5)
         m_rotation -= TURN_SPEED;
 
     //Right turn
-    else if(outputs[1] > outputs[0])
+    if(outputs[1] > 0.5)
         m_rotation += TURN_SPEED;
 
     //Clamp m_rotation
@@ -34,10 +34,11 @@ void Creature::Update()
         m_rotation -= 2 * PI;
 
     //Forward movement
-    if(outputs[2] > 0.0)
+    if(outputs[2] > 0.5)
     {
         m_position[0] += std::cos(m_rotation) * FORWARD_SPEED;
         m_position[1] += std::sin(m_rotation) * FORWARD_SPEED;
+        m_size -= MOVEMENT_LOSS;
     }
 
     //std::cout << outputs[0] << "," << outputs[1] << "," <<outputs[2] << std::endl;

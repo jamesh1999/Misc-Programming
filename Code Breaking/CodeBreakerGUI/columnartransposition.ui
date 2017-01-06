@@ -83,6 +83,19 @@
     <string>Edit Key</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>50</y>
+     <width>54</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Read Vertical</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

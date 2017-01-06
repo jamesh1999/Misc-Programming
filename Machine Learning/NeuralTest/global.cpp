@@ -1,3 +1,3 @@
 #include "global.h"
-int INNOVATION = 12;
-int N_ID = 7;
+int INNOVATION = 0;
+int N_ID = 0;

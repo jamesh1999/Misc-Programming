@@ -1,0 +1,10 @@
+weaponName=LRC
+baseWeight=10
+baseMinRange=5
+baseMaxRange=7
+baseMaxAmmo=50
+weaponType=Cannon
+baseDamage=50
+effectiveAgainst=Tank
+slightlyEffectiveAgainst=Jeep
+slightlyEffectiveDamageModifier=0.8

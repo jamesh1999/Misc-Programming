@@ -19,37 +19,12 @@ MainWindow::MainWindow(QWidget *parent) :
     foodBrush = QBrush(Qt::green);
     creatureBrush = QBrush(Qt::red);
 
-    //Create base DNA
-    std::vector<NN::NeuronGene> neurons;
-    for(int i = 0; i < 7; ++i)
-    {
-        NN::NeuronGene gene;
-        gene.id = i;
-        gene.type = i < 4 ? NN::SENSOR : NN::OUTPUT;
-        neurons.push_back(gene);
-    }
-
-    std::vector<NN::ConnectionGene> connections;
-    for(int i = 0; i < 12; ++i)
-    {
-        NN::ConnectionGene g;
-        g.weight = 1.0;
-        g.innovation = i;
-        g.source = i/3;
-        g.dest = 4 + (i%3);
-        g.active = true;
-        connections.push_back(g);
-    }
-
-    NN::Genome g;
-    g.SetGenomeGenes(neurons, connections);
-
     NN::MutationSettings settings;
     settings.use_function_delta = true;
-    settings.max_delta = 0.2;
+    settings.max_delta = 1.0;
     ga.m_mutation_settings = settings;
 
-    ga.Start(g);
+    ga.Start(NN::Genome::GetBase(4,3));
 
     initScene();
 
@@ -57,10 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_updateTimer = new QTimer(this);
     connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
     m_updateTimer->start(5);
-
-    m_foodTimer = new QTimer(this);
-    connect(m_foodTimer, SIGNAL(timeout()), this, SLOT(addFood()));
-    m_foodTimer->start(80);
 }
 
 MainWindow::~MainWindow()
@@ -70,21 +41,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::initScene()
 {
-    static int i = -1;
+    static int species = -1;
 
-    if(i >= 0)
-        ga.m_species[0].m_scores[i] = m_creature.GetScore();
+    if(species >= 0)
+        for(int i = 0; i < m_creature.size(); ++i)
+            ga.m_species[species].SetScore(i, m_creature[i].GetScore());
 
-    if(i == 9)
+    species += 1;
+
+    if(species == ga.m_species.size())
     {
+        species = 0;
         ga.Epoch();
-        i = -1;
     }
 
     m_food.clear();
-    m_creature = Creature();
-    m_creature.SetDNA(ga.m_species[0].m_individuals[++i]);
-    addFood();addFood();addFood();addFood();addFood();
+    m_creature.clear();
+    for(int i = 0; i < ga.m_species[species].GetSize(); ++i)
+    {
+        m_creature.push_back(Creature());
+        m_creature[m_creature.size()-1].SetDNA(ga.m_species[species].GetIndividual(i));
+    }
+    addFood();
 }
 
 void MainWindow::update()
@@ -92,45 +70,57 @@ void MainWindow::update()
     scene->clear();
 
     //Update creature
-    m_creature.Senses(m_food);
-    m_creature.Update();
-
-    if(m_creature.m_position[0] > 1.1f
-       || m_creature.m_position[0] < -0.1f
-       || m_creature.m_position[1] > 1.1f
-       || m_creature.m_position[1] < -0.1f)
-        m_creature.m_size = -999.9f;
-
-
-    if(m_creature.IsDead())
+    bool all_dead = true;
+    for(Creature& c : m_creature)
     {
-        initScene();
+        if(c.IsDead()) continue;
+        all_dead = false;
+
+        c.Senses(m_food);
+        c.Update();
+
+        if(c.m_position[0] > 1.1f
+           || c.m_position[0] < -0.1f
+           || c.m_position[1] > 1.1f
+           || c.m_position[1] < -0.1f)
+
+            c.m_size = -999.9f;
     }
+
+    if(all_dead)
+        initScene();
     else
     {
-        //Check if ate food
-        for(Food& f : m_food)
+        for(Creature& c : m_creature)
         {
-            float xDiff = (m_creature.m_position[0] - f.m_position[0]) * ui->world->width();
-            float yDiff = (m_creature.m_position[1] - f.m_position[1]) * ui->world->height();
-            float sqrDist = xDiff * xDiff + yDiff * yDiff;
+            if(c.IsDead()) continue;
 
-            float threshold = f.m_amount + m_creature.m_size;
-            threshold *= 0.8; //Amount to be overlapped before count as eaten
-            threshold = threshold * threshold;
-
-            //If collided
-            if(sqrDist < threshold)
+            //Check if ate food
+            for(Food& f : m_food)
             {
-                m_creature.m_size = std::sqrt(f.m_amount * f.m_amount + m_creature.m_size * m_creature.m_size);
-                f.m_amount = 0.0f;
+                double xDiff = (c.m_position[0] - f.m_position[0]) * ui->world->width();
+                double yDiff = (c.m_position[1] - f.m_position[1]) * ui->world->height();
+                double sqrDist = xDiff * xDiff + yDiff * yDiff;
+
+                double threshold = f.m_amount + c.m_size;
+                threshold *= 0.8; //Amount to be overlapped before count as eaten
+                threshold = threshold * threshold;
+
+                //If collided
+                if(sqrDist < threshold)
+                {
+                    c.m_size = std::sqrt(f.m_amount * f.m_amount + c.m_size * c.m_size);
+                    f.m_amount = 0.0f;
+                }
             }
+            //Draw creature
+            vector2 pos;
+            pos[0] = c.m_position[0] * ui->world->width() - c.m_size/2;
+            pos[1] = c.m_position[1] * ui->world->height() - c.m_size/2;
+            scene->addEllipse(pos[0], pos[1], c.m_size, c.m_size, outlinePen, creatureBrush);
         }
-        //Draw creature
-        vector2 pos;
-        pos[0] = m_creature.m_position[0] * ui->world->width() - m_creature.m_size/2;
-        pos[1] = m_creature.m_position[1] * ui->world->height() - m_creature.m_size/2;
-        scene->addEllipse(pos[0], pos[1], m_creature.m_size, m_creature.m_size, outlinePen, creatureBrush);
+
+        addFood();
 
         //Draw food
         for(Food& f : m_food)
@@ -145,20 +135,12 @@ void MainWindow::update()
 
 void MainWindow::addFood()
 {
-    if(m_food.size() < FOOD_COUNT)
-    {
+    while(m_food.size() < FOOD_COUNT)
         m_food.push_back(Food());
-        return;
-    }
 
     for(Food& f : m_food)
-    {
         if(f.m_amount == 0.0f)
-        {
             f = Food();
-            return;
-        }
-    }
 }
 
 void MainWindow::on_actionRestart_triggered()

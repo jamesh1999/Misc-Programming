@@ -1,0 +1,5 @@
+terrainName=plains
+bonusDefenseValue=0
+capturable=false
+unitTypeCost=[Tank,1],[Infantry,1],[Jeep,1]
+image=grass2.png

@@ -48,16 +48,16 @@ Rect mandlebrotRect { -3.0f, 2.5f, 2.0f, -2.5f };
 
 Vertex vbData[4]
 {
-	{ -1.0f, -1.0f, 0.0f, 0.0f },
-	{ -1.0f, 1.0f, 0.0f, 0.0f },
-	{ 1.0f, 1.0f, 0.0f, 0.0f },
-	{ 1.0f, -1.0f, 0.0f, 0.0f },
+	{ -1.0f, -1.0f },
+	{ -1.0f, 1.0f },
+	{ 1.0f, 1.0f },
+	{ 1.0f, -1.0f},
 };
 
 struct CBuffer
 {
 	int sf;
-	int pad1, pad2, pad3;
+	int p1, p2, p3;
 };
 
 double move_speed = 0.5;
@@ -146,7 +146,7 @@ void InitD3D(HWND hWnd)
 	D3D11_INPUT_ELEMENT_DESC iLayout[2]
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Vertex,x), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Vertex,tex_u), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Vertex,tex_u), D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 	device->CreateInputLayout(iLayout, 2, vtx->GetBufferPointer(), vtx->GetBufferSize(), &inputLayout);
 	deviceContext->IASetInputLayout(inputLayout);
@@ -194,31 +194,30 @@ void InitD3D(HWND hWnd)
 
 void D3DRender()
 {
-	//Update vb data
-	vbData[0].tex_u = mandlebrotRect.left;
-	vbData[1].tex_u = mandlebrotRect.left;
+	int sf = 63;
+	vbData[0].tex_u = mandlebrotRect.left *  std::pow(2, sf);
+	vbData[0].tex_v = mandlebrotRect.bottom * std::pow(2, sf);
 
-	vbData[2].tex_u = mandlebrotRect.right;
-	vbData[3].tex_u = mandlebrotRect.right;
+	vbData[1].tex_u = mandlebrotRect.left * std::pow(2, sf);
+	vbData[1].tex_v = mandlebrotRect.top * std::pow(2, sf);
 
-	vbData[0].tex_v = mandlebrotRect.bottom;
-	vbData[3].tex_v = mandlebrotRect.bottom;
+	vbData[2].tex_u = mandlebrotRect.right * std::pow(2, sf);
+	vbData[2].tex_v = mandlebrotRect.top * std::pow(2, sf);
 
-	vbData[1].tex_v = mandlebrotRect.top;
-	vbData[2].tex_v = mandlebrotRect.top;
+	vbData[3].tex_u = mandlebrotRect.right * std::pow(2, sf);
+	vbData[3].tex_v = mandlebrotRect.bottom * std::pow(2, sf);
 
 	D3D11_MAPPED_SUBRESOURCE mp;
 	deviceContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &mp);
 	memcpy(mp.pData, vbData, sizeof(Vertex) * 4);
 	deviceContext->Unmap(vertexBuffer, 0);
 
+
 	//Update cb data
-	int e;
-	frexp(mandlebrotRect.right - mandlebrotRect.left, &e);
 	deviceContext->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &mp);
-	reinterpret_cast<CBuffer*>(mp.pData)->sf = -e - 20;
+	reinterpret_cast<CBuffer*>(mp.pData)->sf = sf;
 	deviceContext->Unmap(constantBuffer, 0);
-	deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
+	deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
 
 	//Set vb
 	unsigned stride = sizeof(Vertex);

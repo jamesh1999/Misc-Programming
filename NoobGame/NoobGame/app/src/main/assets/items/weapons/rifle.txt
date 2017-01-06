@@ -1,0 +1,10 @@
+weaponName=rifle
+baseWeight=1
+baseMinRange=1
+baseMaxRange=1
+baseMaxAmmo=-1
+weaponType=Gun
+baseDamage=55
+effectiveAgainst=Infantry
+slightlyEffectiveAgainst=Jeep
+slightlyEffectiveDamageModifier=0.3

@@ -1,0 +1,22 @@
+[tracks]
+#0
+cost: 0.0
+obstruction: 0
+repulsion: 200000.0
+
+[trains]
+#0
+acceleration: 10000.0
+drag: 0.0
+capacity: 0
+startcost: 0.0
+mass: 1000.0
+runningcost: 0.0
+inclination: 0.0
+variableinclination: false
+deceleration: 40000.0
+
+[global]
+maxgx: 9999999999.0
+maxgy: 0.0
+maxgz: 0.0

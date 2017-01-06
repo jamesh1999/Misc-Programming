@@ -1,4 +1,4 @@
-cd .\Python Code
+cd ".\Python Code"
 cls
 @ECHO OFF
 
@@ -22,21 +22,21 @@ goto START
 
 :COMPILEPYC
 cls
-python Functions.py c
-copy ".\__pycache__\Py3D.cpython-32.pyc" "..\Compiled Files\Py3D.pyc"
+python3 Functions.py c
+copy ".\__pycache__\Py3D.cpython3-32.pyc" "..\Compiled Files\Py3D.pyc"
 pause
 goto START
 
 :COMPILEPYO
 cls
-python -O Functions.py c
-copy ".\__pycache__\Py3D.cpython-32.pyo" "..\Compiled Files\Py3D.pyo"
+python3 -O Functions.py c
+copy ".\__pycache__\Py3D.cpython3-32.pyo" "..\Compiled Files\Py3D.pyo"
 pause
 goto START
 
 :PROFILE
 cls
-python Functions.py p
+python3 Functions.py p
 pause
 goto START
 
@@ -56,19 +56,19 @@ goto RUN
 
 :PROGA
 cls
-python game1.py
+python3 game1.py
 pause
 goto START
 
 :PROGB
 cls
-python game2.py
+python3 game2.py
 pause
 goto START
 
 :PROGC
 cls
-python game3.py
+python3 game3.py
 pause
 goto START
 

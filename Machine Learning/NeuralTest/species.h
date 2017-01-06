@@ -2,7 +2,6 @@
 #define SPECIES_H
 
 #include "genome.h"
-#include "geneticalgorithm.h"
 
 namespace NN
 {
@@ -10,16 +9,26 @@ namespace NN
 class Species
 {
 friend class GeneticAlgorithm;
-
+friend bool compareSpecies(const Species&, const Species&);
+private:
     std::vector<Genome> m_individuals;
-    std::vector<double> m_scores;
-public:
-    Species();
+    Genome m_representative;
 
+    //For use by GeneticAlgorithm
+    double m_species_score;
+    unsigned starting_generation;
+    void SetBaseScore();
+
+public:
     int GetSize();
-    Genome GetIndividual();
-    double GetScore();
-    void SetScore(double);
+    Genome GetIndividual(int);
+    double GetScore(int);
+    void SetScore(int, double);
+
+    void SortBest();
+
+    Genome GetRepresentative();
+    void SetRepresentative(Genome);
 };
 
 }

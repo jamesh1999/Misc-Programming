@@ -1,0 +1,6 @@
+armorName=Nothing
+armorType=All
+armorWeight=0
+armorMobilityDebuff=0
+armorHPBonus=0
+ArmorDamageReist=0

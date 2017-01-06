@@ -1,0 +1,10 @@
+weaponName=MG
+baseWeight=4
+baseMinRange=1
+baseMaxRange=1
+baseMaxAmmo=50
+weaponType=Gun
+baseDamage=60
+effectiveAgainst=Infantry
+slightlyEffectiveAgainst=Jeep
+slightlyEffectiveDamageModifier=0.6

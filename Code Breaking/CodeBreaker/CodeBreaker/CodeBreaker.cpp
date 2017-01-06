@@ -21,6 +21,7 @@
 #include "Amsco.h"
 #include "BinaryConvert.h"
 #include "Cadenus.h"
+#include "Hill.h"
 
 
 typedef std::basic_string<TCHAR> tstring;
@@ -153,6 +154,9 @@ int _tmain(int argc, _TCHAR* argv[])
 				break;
 			case 'f':
 				fourSquare(text);
+				break;
+			case 'h':
+				hill(text);
 				break;
 			case 'l':
 				playfair(text);

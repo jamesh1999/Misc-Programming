@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 using namespace NN;
 
@@ -483,7 +484,7 @@ void Genome::SortGenes()
 }
 
 //Measure how incompatible two genomes are
-double Genome::GetIncompatibility(const Genome& other, , const CompatibilitySettings& settings)
+double Genome::GetIncompatibility(const Genome& other, const CompatibilitySettings& settings)
 {
     //Genomes shouldn't be empty
     assert(m_connection_genes.size() > 0 && other.m_connection_genes.size() > 0);
@@ -503,23 +504,41 @@ double Genome::GetIncompatibility(const Genome& other, , const CompatibilitySett
     while(mother_gene != m_connection_genes.end()
           || father_gene != other.m_connection_genes.end())
     {
-        //Excess genes
-        if(father_gene == other.m_connection_genes.end()
-           || mother_gene == m_connection_genes.end())
+        //Excess father genes
+        if(mother_gene == m_connection_genes.end())
+        {
             ++excess_cnt;
+            ++father_gene;
+        }
+
+        //Excess mother genes
+        else if(father_gene == other.m_connection_genes.end())
+        {
+            ++excess_cnt;
+            ++mother_gene;
+        }
 
         //Disjoint genes
-        else if(mother_gene->innovation != father_gene->innovation)
+        else if(mother_gene->innovation < father_gene->innovation)
+        {
             ++disjoint_cnt;
+            ++mother_gene;
+        }
+        else if(mother_gene->innovation > father_gene->innovation)
+        {
+            ++disjoint_cnt;
+            ++father_gene;
+        }
 
         //Genes match => compute weight difference
         else
         {
             weight_diff += std::fabs(father_gene->weight - mother_gene->weight);
             ++connection_match_cnt;
+            ++mother_gene;
+            ++father_gene;
         }
     }
-
     //Calculate neuron differences
 
     unsigned neuron_match_cnt = 0;
@@ -543,6 +562,8 @@ double Genome::GetIncompatibility(const Genome& other, , const CompatibilitySett
         {
             bias_diff += std::fabs(father_neuron->bias - mother_neuron->bias);
             ++neuron_match_cnt;
+            ++father_neuron;
+            ++mother_neuron;
         }
     }
 
@@ -575,4 +596,41 @@ double Genome::GetIncompatibility(const Genome& other)
 double Genome::operator^(const Genome& other)
 {
     return GetIncompatibility(other);
+}
+
+Genome Genome::GetBase(int sensors, int outputs)
+{
+    Genome g;
+
+    //Add neurons
+    NeuronGene n;
+    n.type = SENSOR;
+    for(int i = 0; i < sensors; ++i)
+    {
+        n.id = N_ID++;
+        g.m_neuron_genes.push_back(n);
+    }
+    n.type = OUTPUT;
+    for(int i = 0; i < outputs; ++i)
+    {
+        n.id = N_ID++;
+        g.m_neuron_genes.push_back(n);
+    }
+
+    //Add connections
+    ConnectionGene c;
+    for(int i = 0; i < sensors * outputs; ++i)
+    {
+        c.source = i % sensors;
+        c.dest = sensors + (i / sensors);
+        c.innovation = INNOVATION++;
+        g.m_connection_genes.push_back(c);
+    }
+
+    return g;
+}
+
+double Genome::GetScore()
+{
+    return m_score;
 }

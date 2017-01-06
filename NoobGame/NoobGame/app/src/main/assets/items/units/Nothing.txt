@@ -1,0 +1,12 @@
+unitName=Nothing
+baseCost=0
+baseSight=0
+baseHP=0
+baseMaxFuel=0
+baseMovement=0
+unitType=Null
+activeAblities[]=
+passiveAbilities[]=
+weaponSlots=0
+maxWeight=0
+image=nothing.png

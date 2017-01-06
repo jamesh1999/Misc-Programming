@@ -13,17 +13,6 @@ std::string BifidWorker::decrypt(int period, const std::string& key, const std::
     std::string result;
     result.resize(text.size());
 
-    std::string key1;
-    key1.resize(25);
-
-    for(int i = 0; i < 25; ++i)
-    {
-        char x = key[i];
-        if(x >= 'J') --x;
-
-        key1[TO_INT(x)] = i;
-    }
-
     for (unsigned i = 0; i < text.length(); i += period)
     {
         if (i + period > text.length())
@@ -35,23 +24,18 @@ std::string BifidWorker::decrypt(int period, const std::string& key, const std::
             char a = text[i + (j / 2)];
             char b = text[i + ((j + period) / 2)];
 
-            //Offset chars for missing letter
-            if(a >= 'J') --a;
-            if(b >= 'J') --b;
-
             //Get the coordinates of the letters that came from letter i+j
-            int a_part = key1[a];
-            int b_part = key1[b];
+            int a_part = key.find_first_of(a) / (j % 2
+                                                 ? 1
+                                                 : 5) % 5;
+            int b_part = key.find_first_of(b) / ((j + period) % 2
+                                                 ? 1
+                                                 : 5) % 5;
 
-            if(j % 2)
-                a_part /= 5;
-            if((j + period) % 2)
-                b_part /= 5;
-
-            result[i + j] = key[(a_part % 5) + (b_part % 5) * 5];
+            result[i + j] = key[a_part * 5 + b_part];
         }
-    }
-    return result;
+     }
+     return result;
 }
 
 void BifidWorker::crack(int period, QString qtext, QString key)
@@ -163,7 +147,6 @@ QString Bifid::getBaseKey(QString text)
     for(char c = 'A'; c <= 'Z'; ++c)
         if(c != missing)
             key += c;
-
     return key;
 }
 

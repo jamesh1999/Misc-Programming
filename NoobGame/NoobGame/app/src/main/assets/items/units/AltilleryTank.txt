@@ -1,0 +1,12 @@
+unitName=AltilleryTank
+baseCost=2500
+baseSight=3
+baseHP=10
+baseMaxFuel=99
+baseMovement=5
+unitType=Tank
+activeAblities[]=
+passiveAbilities[]=
+weaponSlots=1
+maxWeight=200
+image=Jeep.png

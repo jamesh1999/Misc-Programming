@@ -2,6 +2,7 @@
 #define __CODEBREAKERMAIN_INCLUDED__
 
 #include <QMainWindow>
+#include <QShortcut>
 
 namespace Ui {
 class CodeBreakerMain;
@@ -33,10 +34,18 @@ private slots:
 
     void on_actionAdd_Spaces_triggered();
 
+    void on_actionZoom_In_triggered();
+
+    void on_actionZoom_Out_triggered();
+
 private:
     Ui::CodeBreakerMain *ui;
     int connected_cipher = -1;
     bool is_working = false;
+
+    QShortcut* zoomIn;
+    QShortcut* zoomOut;
+    unsigned fontSize = 10;
 
     void decryptWithCipher(int);
 };

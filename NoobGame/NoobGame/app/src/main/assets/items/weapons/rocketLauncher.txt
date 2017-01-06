@@ -1,0 +1,10 @@
+weaponName=rocketLauncher
+baseWeight=2
+baseMinRange=1
+baseMaxRange=1
+baseMaxAmmo=3
+weaponType=rocketLauncher
+baseDamage=65
+effectiveAgainst=Jeep,Tank
+slightlyEffectiveAgainst=Infantry
+slightlyEffectiveDamageModifier=0.5

@@ -1,6 +1,7 @@
 #include <regex>
 #include <iostream>
 #include <vector>
+#include <QKeySequence>
 #include "CodeBreakerMain.h"
 #include "Globals.h"
 #include "ui_CodeBreakerMain.h"
@@ -20,6 +21,7 @@
 #include "Playfair.h"
 #include "PolybiusSquare.h"
 #include "Cadenus.h"
+#include "hill.h"
 #include "space.h"
 
 CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new Ui::CodeBreakerMain)
@@ -40,6 +42,7 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
     ui->stackedWidget->addWidget(new Cipher::SimpleSubstitution());
     ui->stackedWidget->addWidget(new Cipher::Trifid());
     ui->stackedWidget->addWidget(new Cipher::Vigenere());
+    ui->stackedWidget->addWidget(new Cipher::HillCipher());
 
 
     //Populate ciphers
@@ -50,6 +53,13 @@ CodeBreakerMain::CodeBreakerMain(QWidget *parent) : QMainWindow(parent), ui(new 
     }
 
     ui->cipher->setCurrentIndex(0);
+
+    //Set up zoom shortcuts
+    zoomIn = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Equal), this);
+    zoomOut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Minus), this);
+
+    connect(zoomIn, &QShortcut::activated, this, &CodeBreakerMain::on_actionZoom_In_triggered);
+    connect(zoomOut, &QShortcut::activated, this, &CodeBreakerMain::on_actionZoom_Out_triggered);
 }
 
 CodeBreakerMain::~CodeBreakerMain()
@@ -114,6 +124,7 @@ void CodeBreakerMain::on_guess_cipher_clicked()
     std::string text = ui->ciphertext->toPlainText().toStdString();
     std::transform(text.begin(), text.end(),text.begin(), toupper);
     pDialog->text = std::regex_replace(text, e, "");
+    pDialog->setFont(font());
 
     //Get all cipher data
     pDialog->num_ciphers = ui->cipher->count();
@@ -191,4 +202,21 @@ void CodeBreakerMain::appendToConsole(QString text)
 void CodeBreakerMain::on_actionAdd_Spaces_triggered()
 {
     ui->plaintext->setPlainText(QString::fromStdString(addSpaces(ui->plaintext->toPlainText().toStdString())));
+}
+
+//Zoom controls
+void CodeBreakerMain::on_actionZoom_In_triggered()
+{
+    fontSize += 2;
+    QFont f = font();
+    f.setPixelSize(fontSize);
+    setFont(f);
+}
+
+void CodeBreakerMain::on_actionZoom_Out_triggered()
+{
+    fontSize -= 2;
+    QFont f = font();
+    f.setPixelSize(fontSize);
+    setFont(f);
 }
