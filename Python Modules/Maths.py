@@ -49,13 +49,13 @@ def multiplyL(a,b):
 	return (aval*bval for aval,bval in zip(a,b))
 
 def addS(a,b):
-	return (aval+b for aval,bval in a)
+	return (aval+b for aval in a)
 
 def subtractS(a,b):
-	return (aval-b for aval,bval in a)
+	return (aval-b for aval in a)
 
 def divideS(a,b):
-	return (aval/b for aval,bval in a)
+	return (aval/b for aval in a)
 
 def multiplyS(a,b):
-	return (aval*b for aval,bval in a)
+	return (aval*b for aval in a)

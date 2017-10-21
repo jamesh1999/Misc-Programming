@@ -1,2 +1,2 @@
-python physics.py
+python3 physics.py
 pause
