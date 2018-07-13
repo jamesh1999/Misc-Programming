@@ -1,0 +1,230 @@
+.productContainer{
+    position: relative;
+    left: 50%;
+    margin-left: -40%;
+    width: 80%;
+}
+
+#redProd{
+    float: left;
+    width: 22%;
+    min-width: 250px;
+    height: 400px;
+    margin: 40px 5.5%;
+    outline-color: #f04a4a;
+    outline-style: solid;
+    outline-width: 2px;
+    background: #fde8e8;
+    position: relative;
+}
+
+#redProd .title{
+    background: #f04a4a;
+    height: 40px;
+    width: 100%;
+    padding-bottom: 400px;
+}
+
+#redProd .title h3{
+    color: #fde8e8;
+    text-align: center;
+    width: 100%;
+    font-size: 22px;
+    margin: 0;
+    padding-top: 4px;
+}
+
+#redProd .title p{
+    color: #fde8e8;
+    text-align: center;
+    width: 80%;
+    font-size: 16px;
+    margin: 10%;
+}
+
+#redProd:hover .title{
+    padding-bottom: 0;
+    -webkit-transition: padding-bottom 0.4s;
+    -webkit-transition-timing-function: ease;
+    transition: padding-bottom 0.4s;
+    -webkit-transition-timing-function: ease;
+}
+
+#redProd:hover .title img{
+    visibility: hidden;
+}
+
+#redProd:hover .title p{
+    visibility: hidden;
+}
+
+#blueProd{
+    float: left;
+    width: 22%;
+    min-width: 250px;
+    height: 400px;
+    margin: 40px 5.5%;
+    outline-color: #4a8af0;
+    outline-style: solid;
+    outline-width: 2px;
+    background: #e4efff;
+    position: relative;
+}
+
+#blueProd .title{
+    background: #4a8af0;
+    height: 40px;
+    width: 100%;
+    padding-bottom: 400px;
+}
+
+#blueProd .title h3{
+    color: #e4efff;
+    text-align: center;
+    width: 100%;
+    font-size: 22px;
+    margin: 0;
+    padding-top: 4px;
+}
+
+#blueProd .title p{
+    color: #e4efff;
+    text-align: center;
+    width: 80%;
+    font-size: 16px;
+    margin: 10%;
+}
+
+#blueProd:hover .title{
+    padding-bottom: 0;
+    -webkit-transition: padding-bottom 0.4s;
+    -webkit-transition-timing-function: ease;
+    transition: padding-bottom 0.4s;
+    -webkit-transition-timing-function: ease;
+}
+
+#blueProd:hover .title img{
+    visibility: hidden;
+}
+
+#blueProd:hover .title p{
+    visibility: hidden;
+}
+
+#orangeProd{
+    float: left;
+    width: 22%;
+    min-width: 250px;
+    height: 400px;
+    margin: 40px 5.5%;
+    outline-color: #f0b74a;
+    outline-style: solid;
+    outline-width: 2px;
+    background: #f8edd9;
+    position: relative;
+}
+
+#orangeProd .title{
+    background: #f0b74a;
+    height: 40px;
+    width: 100%;
+    padding-bottom: 400px;
+}
+
+#orangeProd .title h3{
+    color: #f8edd9;
+    text-align: center;
+    width: 100%;
+    font-size: 22px;
+    margin: 0;
+    padding-top: 4px;
+}
+
+#orangeProd .title p{
+    color: #f8edd9;
+    text-align: center;
+    width: 80%;
+    font-size: 16px;
+    margin: 10%;
+}
+
+#orangeProd:hover .title{
+    padding-bottom: 0;
+    -webkit-transition: padding-bottom 0.4s;
+    -webkit-transition-timing-function: ease;
+    transition: padding-bottom 0.4s;
+    -webkit-transition-timing-function: ease;
+}
+
+#orangeProd:hover .title img{
+    visibility: hidden;
+}
+
+#orangeProd:hover .title p{
+    visibility: hidden;
+}
+
+.title{
+    position: absolute;
+    z-index: 100;   
+}
+
+.title img{
+    margin-top: 20px;
+    width: 100%;   
+}
+
+.content{
+    position: absolute;
+    top: 50px;
+    height: 350px;
+    width: 100%;
+}
+
+.content img{
+    width: 100%;   
+}
+
+.content ul{
+    margin-top: 35px;   
+}
+
+@media screen and (max-width: 818px) {
+
+    #redProd{
+        width: 50%;
+        margin: 40px 25%;
+    }
+
+
+    #blueProd{
+        width: 50%;
+        margin: 40px 25%;
+    }
+
+    #orangeProd{
+        width: 50%;
+        margin: 40px 25%;
+    }
+    
+}
+
+@media screen and (max-width: 1416px) {
+
+    #redProd{
+        width: 32%;
+        margin: 40px 9%;
+    }
+
+
+    #blueProd{
+        width: 32%;
+        margin: 40px 9%;
+    }
+
+    #orangeProd{
+        width: 32%;
+        margin: 40px 9%;
+    }
+    
+}

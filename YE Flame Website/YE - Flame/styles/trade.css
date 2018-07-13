@@ -1,0 +1,9 @@
+#map{
+    min-height: 500px;
+}
+
+.tradeContainer{
+    min-height: 500px;
+    margin-left: 10%;
+    width: 80%;
+}

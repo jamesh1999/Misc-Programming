@@ -1,0 +1,23 @@
+Lots of misc. and unfinished projects:
+
+- F# test projects
+- GameAI/2048 AI:
+	- Minmax tree for 2048 w/alpha-beta pruning
+- MandlebrotSet:
+	- GPU based mandlebrot set generator
+	- DirectX based
+- Python Mandlebrot Set:
+	- CPU based generator as above using pygame
+- Pygame 2D Physics:
+	- Bouncing balls simulation
+- RPi Car:
+	- Transmits video from a raspberry pi server to a client
+	- Allows the client to control GPIO on the pi to drive around
+- Battleships:
+	- Battleships game in python using sockets for online
+- Arduino/Guitar Tuner:
+	- Calculates the frequency of audio & outputs via digital IO
+	- Designed for AtMega328P
+- Arduino/RC Clock Controller:
+	- Broadcasts 60kHz frequency identical to that from NPL
+	- Can be used to set RC clocks
